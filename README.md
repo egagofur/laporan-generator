@@ -75,7 +75,7 @@ membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
 | `laporan-generator.gif` | Output animasi (diputar di *header* README) |
 | `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
 
-Kalau mau coba bikin sendiri, langsung cek repo Manim-nya aja ya!
+Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk project kamu. Langsung cek repo Manim-nya aja ya!
 
 ---
 
