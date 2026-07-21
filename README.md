@@ -82,6 +82,17 @@ Ini *workflow* utama — biar AI yang generate seluruh laporan:
 
 ## Persyaratan
 
+**Tools yang diperlukan:**
+
+| Tool | Fungsi |
+|------|--------|
+| **Pandoc** | Konversi file Markdown ke format LaTeX |
+| **TeX Live** | *Engine* pdfLaTeX untuk *build* PDF dari LaTeX |
+| **ImageMagick** | Menghapus *alpha channel* pada gambar PNG |
+| **Font Nimbus** | Pengganti *open source* untuk Times New Roman |
+
+Pilih perintah instalasi sesuai distro kamu:
+
 ### Arch Linux
 ```bash
 sudo pacman -S pandoc texlive-core texlive-latex texlive-latexextra texlive-latexrecommended texlive-fontsextra texlive-fontsrecommended imagemagick
