@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="laporan-generator.gif" alt="Laporan Generator" width="100" style="border-radius: 50%;"/>
+  <img src="laporan-generator.gif" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>
@@ -82,15 +82,22 @@ Ini *workflow* utama — biar AI yang generate seluruh laporan:
 
 ## Persyaratan
 
-| Tool | Fungsi | Arch Linux | Ubuntu/Debian | RHEL/Fedora |
-|------|--------|------------|---------------|-------------|
-| Pandoc | Konversi Markdown → LaTeX | `sudo pacman -S pandoc` | `sudo apt install pandoc` | `sudo dnf install pandoc` |
-| TeX Live | pdfLaTeX + LaTeX kernel | `sudo pacman -S texlive-core texlive-latex texlive-latexextra texlive-latexrecommended` | `sudo apt install texlive-latex-base texlive-latex-extra texlive-latex-recommended` | `sudo dnf install texlive-scheme-medium texlive-collection-latexextra` |
-| ImageMagick | Alpha channel PNG | `sudo pacman -S imagemagick` | `sudo apt install imagemagick` | `sudo dnf install imagemagick` |
-| Font Nimbus | Times New Roman *substitute* | `sudo pacman -S texlive-fontsextra texlive-fontsrecommended` | `sudo apt install texlive-fonts-extra texlive-fonts-recommended` | `sudo dnf install texlive-collection-fontsrecommended` |
+### Arch Linux
+```bash
+sudo pacman -S pandoc texlive-core texlive-latex texlive-latexextra texlive-latexrecommended texlive-fontsextra texlive-fontsrecommended imagemagick
+```
 
-### Setup (satu kali)
+### Ubuntu / Debian
+```bash
+sudo apt install pandoc texlive-latex-base texlive-latex-extra texlive-latex-recommended texlive-fonts-extra texlive-fonts-recommended imagemagick
+```
 
+### RHEL / Fedora
+```bash
+sudo dnf install pandoc texlive-scheme-medium texlive-collection-latexextra texlive-collection-fontsrecommended imagemagick
+```
+
+### Setup (satu kali, semua distro)
 ```bash
 sudo fmtutil-sys --all
 ```
