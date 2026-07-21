@@ -6,7 +6,7 @@
 
 <p align="center">
   Pipeline otomatisasi laporan akademik — dari Markdown ke PDF dalam satu perintah.
-  <br>Referensi + tooling AI Agent untuk mahasiswa informatika.
+  <br>Referensi + tooling AI Agent.
 </p>
 
 <p align="center">
