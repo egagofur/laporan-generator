@@ -135,21 +135,18 @@ Output: `Laporan.pdf`
 ## Alur Pipeline
 
 ```
-isi-laporan.md ------------> Pandoc ----> Laporan.pdf
-cover.md ------------------> Pandoc
-daftar-pustaka.md ---------> Pandoc
-template.latex ------------> Pandoc
-logo/logo-kampus.jpg ------> Pandoc
-gambar/ -------------------> Pandoc
-                              |
-                              v
-                         pdfLaTeX
-                              |
-                              v
-                        ImageMagick
-                              |
-                              v
-                        Bash (orkestrasi)
+isi-laporan.md ────────────────┐
+cover.md ──────────────────────┤
+daftar-pustaka.md ─────────────┤─── Pandoc ─── Laporan.pdf
+template.latex ────────────────┤
+logo/logo-kampus.jpg ──────────┘
+gambar/ ───────────────────────┘
+                               │
+                               └── pdfLaTeX
+                                   │
+                                   ImageMagick
+                                   │
+                                   Bash (orkestrasi)
 ```
 
 ---
