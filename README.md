@@ -61,7 +61,7 @@ laporan-generator/
 
 ---
 
-## Logo
+## FYI
 
 Folder `logo/` berisi seluruh aset branding repositori ini, dibuat menggunakan
 [**Manim**](https://github.com/ManimCommunity/manim) — *Python library* untuk
@@ -75,20 +75,7 @@ membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
 | `laporan-generator.gif` | Output animasi (diputar di *header* README) |
 | `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
 
-Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk
-project kamu.
-
-### Cara Render Ulang
-
-```bash
-pip install manim
-
-# Static logo (PNG)
-manim -pr1080,1080 -s logo/logo.py PinwheelLogoStatic
-
-# Animated logo (GIF)
-manim -pr1080,1080 -qh --format=gif logo/animasi_logo.py PinwheelLogo
-```
+Kalau mau coba bikin sendiri, langsung cek repo Manim-nya aja ya!
 
 ---
 
