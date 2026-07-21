@@ -1,0 +1,23 @@
+# PDF output
+laporan-project.pdf
+*.pdf
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+
+# Temp
+/tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Video script (local only, not committed)
+video-script.md
