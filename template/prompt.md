@@ -110,7 +110,7 @@ laporan/
 ├── cover.md                  # Halaman sampul + kata pengantar
 ├── template.latex            # Template LaTeX
 ├── build.sh                  # Skrip build
-├── logo-kampus.jpg           # Logo institusi
+├── logo/logo-kampus.jpg           # Logo institusi
 ├── isi-laporan.md            # BAB 1-5 (atau 1-6)
 ├── daftar-pustaka.md         # Referensi
 └── gambar/                   # Screenshot/diagram (jika ada)
@@ -124,7 +124,7 @@ Gunakan format LaTeX untuk halaman sampul. Format:
 \vspace*{0.5cm}
 {\large\bfseries JUDUL LAPORAN}\\[0.3cm]
 {\normalsize Sub-judul laporan}\\[2.9cm]
-\includegraphics[width=4cm]{logo-kampus.jpg}\\[2.9cm]
+\includegraphics[width=4cm]{logo/logo-kampus.jpg}\\[2.9cm]
 {\large Disusun oleh:}\\[0.3cm]
 \begin{tabular}{lc}
 {\large\ Nama1} & NIM1 \\[3pt]
@@ -173,7 +173,7 @@ Folder laporan/ telah dibuat dengan file-file berikut:
   - daftar-pustaka.md (referensi)
   - template.latex (format LaTeX)
   - build.sh (skrip build)
-  - logo-kampus.jpg (logo institusi)
+  - logo/logo-kampus.jpg (logo institusi)
   - gambar/ (screenshot/diagram)
 
 Untuk menghasilkan PDF, jalankan:

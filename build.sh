@@ -12,7 +12,7 @@ cp "$OUTDIR/cover.md" "$TMPDIR/"
 cp "$OUTDIR/isi-laporan.md" "$TMPDIR/"
 cp "$OUTDIR/daftar-pustaka.md" "$TMPDIR/"
 cp "$OUTDIR/template.latex" "$TMPDIR/"
-cp "$OUTDIR/logo-kampus.jpg" "$TMPDIR/"
+cp "$OUTDIR/logo/logo-kampus.jpg" "$TMPDIR/"
 
 if [ -d "$OUTDIR/gambar" ]; then
   cp -r "$OUTDIR/gambar" "$TMPDIR/"

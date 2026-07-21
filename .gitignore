@@ -1,8 +1,5 @@
-# PDF output (kecuali Laporan.pdf — contoh hasil jadi)
 *.pdf
 !Laporan.pdf
-
-# LaTeX auxiliary files
 *.aux
 *.log
 *.out
@@ -11,22 +8,9 @@
 *.lot
 *.fls
 *.fdb_latexmk
-
-# Temp
 /tmp/
-
-# OS files
 .DS_Store
 Thumbs.db
-
-# GIF output
-*.gif
-
-# Logo source files (private branding, not part of pipeline)
-logo.py
-animasi_logo.py
-
-# Manim render output
 media/
 venv/
 __pycache__/

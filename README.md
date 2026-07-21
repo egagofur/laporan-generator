@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo-kampus.jpg" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
+  <img src="logo/laporan-generator.gif" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>
@@ -37,21 +37,26 @@ tugas kuliah, dan lain-lain yang berbasis *coding*.
 
 ```
 laporan-generator/
-├── template/               # Tooling — siap-copy ke project user
-│   ├── template.latex      #   Template LaTeX (format laporan)
-│   ├── build.sh            #   Skrip build otomatis
-│   ├── cover.md            #   Cover generic
-│   ├── daftar-pustaka.md   #   Daftar pustaka
-│   └── prompt.md           #   Instruksi AI Agent
-├── prompt.md               # Instruksi AI Agent (copy ke root project)
-├── cover.md                # Contoh cover
-├── template.latex          # Contoh template
-├── build.sh                # Contoh build script
-├── logo-kampus.jpg         # Logo contoh
-├── isi-laporan.md          # Contoh isi laporan (BAB 1–5)
-├── daftar-pustaka.md       # Contoh daftar pustaka
-├── Laporan.pdf             # Output contoh (langsung lihat hasilnya)
-└── README.md               # File ini
+├── logo/                       # Branding
+│   ├── logo.py                 #   Manim static source
+│   ├── animasi_logo.py         #   Manim animasi source
+│   ├── laporan-generator.gif   #   Logo README (animasi)
+│   └── logo-kampus.jpg         #   Logo cover PDF
+├── template/                   # Tooling — siap-copy ke project user
+│   ├── build.sh                #   Skrip build otomatis
+│   ├── cover.md                #   Cover generic
+│   ├── daftar-pustaka.md       #   Daftar pustaka
+│   ├── prompt.md               #   Instruksi AI Agent
+│   └── template.latex          #   Template LaTeX
+├── cover.md                    # Contoh cover
+├── build.sh                    # Contoh build script
+├── daftar-pustaka.md           # Contoh daftar pustaka
+├── isi-laporan.md              # Contoh isi laporan (BAB 1–5)
+├── template.latex              # Contoh template
+├── Laporan.pdf                 # Output contoh (langsung lihat hasilnya)
+├── README.md                   # File ini
+├── LICENSE                     # Lisensi MIT
+└── .gitignore
 ```
 
 ---
@@ -62,8 +67,8 @@ Ini *workflow* utama — biar AI yang generate seluruh laporan:
 
 ```
 1. Clone repo ini → lihat contoh Laporan.pdf (referensi)
-2. Copy prompt.md ke root project kamu
-3. Copy folder template/ → project-kamu/laporan/
+2. Copy folder template/ → project-kamu/laporan/
+3. Copy prompt.md dari template/ ke root project kamu
 4. Jalankan AI (OpenCode, Claude Code, Gemini CLI, dll.) di folder project kamu
 5. Load prompt.md ke AI:
      "Baca prompt.md dan generate laporan untuk project ini"
@@ -72,7 +77,7 @@ Ini *workflow* utama — biar AI yang generate seluruh laporan:
      cover.md, isi-laporan.md, daftar-pustaka.md
 8. Jalankan:
      cd laporan/ && chmod +x build.sh && ./build.sh
-9. → Laporan.pdf siap 🎉
+9. → Laporan.pdf siap
 ```
 
 > **Catatan:** Kamu juga bisa edit manual file `.md` di `laporan/` kalo mau
@@ -136,7 +141,7 @@ isi-laporan.md ───┐
 cover.md ─────────┤
 daftar-pustaka.md ─┤─── Pandoc ─── Laporan.pdf
 template.latex ───┤       │
-logo-kampus.jpg ───┘       └── pdfLaTeX (engine)
+logo/logo-kampus.jpg ─┘       └── pdfLaTeX (engine)
                                   │
                            ImageMagick (alpha PNG)
                                   │
