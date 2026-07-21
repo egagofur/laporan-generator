@@ -37,26 +37,26 @@ tugas kuliah, dan lain-lain yang berbasis *coding*.
 
 ```
 laporan-generator/
-├── logo/                       # Branding
-│   ├── logo.py                 #   Manim static source
-│   ├── animasi_logo.py         #   Manim animasi source
-│   ├── laporan-generator.gif   #   Logo README (animasi)
-│   └── logo-kampus.jpg         #   Logo cover PDF
-├── template/                   # Tooling — siap-copy ke project user
-│   ├── build.sh                #   Skrip build otomatis
-│   ├── cover.md                #   Cover generic
-│   ├── daftar-pustaka.md       #   Daftar pustaka
-│   ├── prompt.md               #   Instruksi AI Agent
-│   └── template.latex          #   Template LaTeX
-├── cover.md                    # Contoh cover
-├── build.sh                    # Contoh build script
-├── daftar-pustaka.md           # Contoh daftar pustaka
-├── isi-laporan.md              # Contoh isi laporan (BAB 1–5)
-├── template.latex              # Contoh template
-├── Laporan.pdf                 # Output contoh (langsung lihat hasilnya)
-├── README.md                   # File ini
-├── LICENSE                     # Lisensi MIT
-└── .gitignore
+|-- logo/                       # Branding
+|   |-- logo.py                 # Manim static source
+|   |-- animasi_logo.py         # Manim animasi source
+|   |-- laporan-generator.gif   # Logo README (animasi)
+|   |-- logo-kampus.jpg         # Logo cover PDF
+|-- template/                   # Tooling -- siap-copy ke project user
+|   |-- build.sh                # Skrip build otomatis
+|   |-- cover.md                # Cover generic
+|   |-- daftar-pustaka.md       # Daftar pustaka
+|   |-- prompt.md               # Instruksi AI Agent
+|   |-- template.latex          # Template LaTeX
+|-- cover.md                    # Contoh cover
+|-- build.sh                    # Contoh build script
+|-- daftar-pustaka.md           # Contoh daftar pustaka
+|-- isi-laporan.md              # Contoh isi laporan (BAB 1--5)
+|-- template.latex              # Contoh template
+|-- Laporan.pdf                 # Output contoh (langsung lihat hasilnya)
+|-- README.md                   # File ini
+|-- LICENSE                     # Lisensi MIT
+|-- .gitignore
 ```
 
 ## Cara Pakai (AI Agent Flow)
@@ -135,15 +135,22 @@ Output: `Laporan.pdf`
 ## Alur Pipeline
 
 ```
-isi-laporan.md ───┐
-cover.md ─────────┤
-daftar-pustaka.md ─┤─── Pandoc ─── Laporan.pdf
-template.latex ───┤       │
-logo/logo-kampus.jpg ─┘       └── pdfLaTeX (engine)
-                                  │
-                           ImageMagick (alpha PNG)
-                                  │
-                           Bash (orkestrasi build)
+cover.md + isi-laporan.md + daftar-pustaka.md + template.latex + logo-kampus.jpg + gambar/
+  |
+  v
+Pandoc
+  |
+  v
+pdfLaTeX
+  |
+  v
+ImageMagick
+  |
+  v
+Bash (orkestrasi build)
+  |
+  v
+Laporan.pdf
 ```
 
 ---
