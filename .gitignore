@@ -1,6 +1,6 @@
-# PDF output
-laporan-project.pdf
+# PDF output (kecuali Laporan.pdf — contoh hasil jadi)
 *.pdf
+!Laporan.pdf
 
 # LaTeX auxiliary files
 *.aux
