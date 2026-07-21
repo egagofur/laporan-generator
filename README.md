@@ -61,6 +61,37 @@ laporan-generator/
 
 ---
 
+## Logo
+
+Folder `logo/` berisi seluruh aset branding repositori ini, dibuat menggunakan
+[**Manim**](https://github.com/ManimCommunity/manim) — *Python library* untuk
+membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
+*fork* dari Manim asli 3Blue1Brown).
+
+| File | Deskripsi |
+|------|-----------|
+| `logo.py` | *Source* logo *static* (render → JPG untuk cover) |
+| `animasi_logo.py` | *Source* logo animasi (render → GIF untuk README) |
+| `laporan-generator.gif` | Output animasi (diputar di *header* README) |
+| `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
+
+Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk
+project kamu.
+
+### Cara Render Ulang
+
+```bash
+pip install manim
+
+# Static logo (PNG)
+manim -pr1080,1080 -s logo/logo.py PinwheelLogoStatic
+
+# Animated logo (GIF)
+manim -pr1080,1080 -qh --format=gif logo/animasi_logo.py PinwheelLogo
+```
+
+---
+
 ## Cara Pakai (AI Agent Flow)
 
 Ini *workflow* utama — biar AI yang generate seluruh laporan:
