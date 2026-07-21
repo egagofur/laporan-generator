@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="laporan-generator.gif" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
+  <img src="logo-kampus.jpg" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>

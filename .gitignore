@@ -19,6 +19,9 @@
 .DS_Store
 Thumbs.db
 
+# GIF output
+*.gif
+
 # Logo source files (private branding, not part of pipeline)
 logo.py
 animasi_logo.py
