@@ -124,7 +124,7 @@ Gunakan format LaTeX untuk halaman sampul. Format:
 \vspace*{0.5cm}
 {\large\bfseries JUDUL LAPORAN}\\[0.3cm]
 {\normalsize Sub-judul laporan}\\[2.9cm]
-\includegraphics[width=4cm]{logo/logo-kampus.jpg}\\[2.9cm]
+\includegraphics[width=4cm]{logo-kampus.jpg}\\[2.9cm]
 {\large Disusun oleh:}\\[0.3cm]
 \begin{tabular}{lc}
 {\large\ Nama1} & NIM1 \\[3pt]

@@ -54,23 +54,57 @@ cat > "$TMPDIR/t1jtm.fd" << 'FDEOF'
 
 \DeclareFontFamily{T1}{jtm}{}
 
-\DeclareFontShape{T1}{jtm}{c}{n}{<->\Jtms@@scale jtmr8tc}{}
-\DeclareFontShape{T1}{jtm}{m}{n}{<->\Jtms@@scale jtmr8te}{}
-\DeclareFontShape{T1}{jtm}{m}{it}{<->\Jtms@@scale jtmri8te}{}
-\DeclareFontShape{T1}{jtm}{m}{sl}{<->\Jtms@@scale jtmro8te}{}
-\DeclareFontShape{T1}{jtm}{m}{sc}{<->\Jtms@@scale jtmrc8te}{}
-\DeclareFontShape{T1}{jtm}{b}{n}{<-> ssub * jtm/bx/n}{}
-\DeclareFontShape{T1}{jtm}{b}{it}{<-> ssub * jtm/bx/it}{}
-\DeclareFontShape{T1}{jtm}{b}{sl}{<-> ssub * jtm/bx/sl}{}
-\DeclareFontShape{T1}{jtm}{b}{sc}{<-> ssub * jtm/bx/sc}{}
-\DeclareFontShape{T1}{jtm}{x}{n}{<->\Jtms@@scale jtmr8tw}{}
-\DeclareFontShape{T1}{jtm}{x}{it}{<->\Jtms@@scale jtmri8tw}{}
-\DeclareFontShape{T1}{jtm}{x}{sl}{<->\Jtms@@scale jtmro8tw}{}
-\DeclareFontShape{T1}{jtm}{x}{sc}{<->\Jtms@@scale jtmrc8tw}{}
-\DeclareFontShape{T1}{jtm}{bx}{n}{<->\Jtms@@scale jtmb8tv}{}
-\DeclareFontShape{T1}{jtm}{bx}{it}{<->\Jtms@@scale jtmbi8tv}{}
-\DeclareFontShape{T1}{jtm}{bx}{sl}{<->\Jtms@@scale jtmbo8tv}{}
-\DeclareFontShape{T1}{jtm}{bx}{sc}{<->\Jtms@@scale jtmbc8tv}{}
+\DeclareFontShape{T1}{jtm}{c}{n}{
+    <->\Jtms@@scale jtmr8tc
+}{}
+\DeclareFontShape{T1}{jtm}{m}{n}{
+    <->\Jtms@@scale jtmr8te
+}{}
+\DeclareFontShape{T1}{jtm}{m}{it}{
+    <->\Jtms@@scale jtmri8te
+}{}
+\DeclareFontShape{T1}{jtm}{m}{sl}{
+    <->\Jtms@@scale jtmro8te
+}{}
+\DeclareFontShape{T1}{jtm}{m}{sc}{
+    <->\Jtms@@scale jtmrc8te
+}{}
+\DeclareFontShape{T1}{jtm}{b}{n}{
+    <-> ssub * jtm/bx/n
+}{}
+\DeclareFontShape{T1}{jtm}{b}{it}{
+    <-> ssub * jtm/bx/it
+}{}
+\DeclareFontShape{T1}{jtm}{b}{sl}{
+    <-> ssub * jtm/bx/sl
+}{}
+\DeclareFontShape{T1}{jtm}{b}{sc}{
+    <-> ssub * jtm/bx/sc
+}{}
+\DeclareFontShape{T1}{jtm}{x}{n}{
+    <->\Jtms@@scale jtmr8tw
+}{}
+\DeclareFontShape{T1}{jtm}{x}{it}{
+    <->\Jtms@@scale jtmri8tw
+}{}
+\DeclareFontShape{T1}{jtm}{x}{sl}{
+    <->\Jtms@@scale jtmro8tw
+}{}
+\DeclareFontShape{T1}{jtm}{x}{sc}{
+    <->\Jtms@@scale jtmrc8tw
+}{}
+\DeclareFontShape{T1}{jtm}{bx}{n}{
+    <->\Jtms@@scale jtmb8tv
+}{}
+\DeclareFontShape{T1}{jtm}{bx}{it}{
+    <->\Jtms@@scale jtmbi8tv
+}{}
+\DeclareFontShape{T1}{jtm}{bx}{sl}{
+    <->\Jtms@@scale jtmbo8tv
+}{}
+\DeclareFontShape{T1}{jtm}{bx}{sc}{
+    <->\Jtms@@scale jtmbc8tv
+}{}
 
 \endinput
 FDEOF

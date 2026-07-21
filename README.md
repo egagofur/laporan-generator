@@ -12,8 +12,8 @@
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Pandoc-3.0+-blue?style=for-the-badge&logo=markdown"></a>
   <a href="#"><img src="https://img.shields.io/badge/LaTeX-pdflatex-008080?style=for-the-badge&logo=latex"></a>
-  <a href="#"><img src="https://img.shields.io/badge/ImageMagick-7.0+-orange?style=for-the-badge&logo=imagemagick"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash"></a>
+  <a href="#"><img src="https://img.shields.io/badge/ImageMagick-7.0+-orange?style=for-the-badge"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white"></a>
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></a>
 </p>
 
@@ -58,26 +58,6 @@ laporan-generator/
 ├── LICENSE                     # Lisensi MIT
 └── .gitignore
 ```
-
----
-
-## FYI
-
-Folder `logo/` berisi seluruh aset branding repositori ini, dibuat menggunakan
-[**Manim**](https://github.com/ManimCommunity/manim) — *Python library* untuk
-membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
-*fork* dari Manim asli 3Blue1Brown).
-
-| File | Deskripsi |
-|------|-----------|
-| `logo.py` | *Source* logo *static* (render → JPG untuk cover) |
-| `animasi_logo.py` | *Source* logo animasi (render → GIF untuk README) |
-| `laporan-generator.gif` | Output animasi (diputar di *header* README) |
-| `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
-
-Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk project kamu. Langsung cek repo Manim-nya aja ya!
-
----
 
 ## Cara Pakai (AI Agent Flow)
 
@@ -165,6 +145,24 @@ logo/logo-kampus.jpg ─┘       └── pdfLaTeX (engine)
                                   │
                            Bash (orkestrasi build)
 ```
+
+---
+
+## FYI
+
+Folder `logo/` berisi seluruh aset branding repositori ini, dibuat menggunakan
+[**Manim**](https://github.com/ManimCommunity/manim) — *Python library* untuk
+membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
+*fork* dari Manim asli 3Blue1Brown).
+
+| File | Deskripsi |
+|------|-----------|
+| `logo.py` | *Source* logo *static* (render → JPG untuk cover) |
+| `animasi_logo.py` | *Source* logo animasi (render → GIF untuk README) |
+| `laporan-generator.gif` | Output animasi (diputar di *header* README) |
+| `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
+
+Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk project kamu. Langsung cek repo Manim-nya aja ya!
 
 ---
 
