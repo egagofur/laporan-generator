@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo-kampus.jpg" alt="Laporan Generator" width="100"/>
+  <img src="laporan-generator.gif" alt="Laporan Generator" width="100"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>
