@@ -19,5 +19,12 @@ laporan-project.pdf
 .DS_Store
 Thumbs.db
 
-# Video script (local only, not committed)
-video-script.md
+# Logo source files (private branding, not part of pipeline)
+logo.py
+animasi_logo.py
+
+# Manim render output
+media/
+venv/
+__pycache__/
+*.pyc
