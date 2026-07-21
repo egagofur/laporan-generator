@@ -139,14 +139,14 @@ isi-laporan.md ────────────────┐
 cover.md ──────────────────────┤
 daftar-pustaka.md ─────────────┤─── Pandoc ─── Laporan.pdf
 template.latex ────────────────┤
-logo/logo-kampus.jpg ──────────┘
+logo/logo-kampus.jpg ──────────┤
 gambar/ ───────────────────────┘
                                │
-                               └── pdfLaTeX
-                                   │
-                                   ImageMagick
-                                   │
-                                   Bash (orkestrasi)
+                               ├── pdfLaTeX
+                               │
+                               ├── ImageMagick
+                               │
+                               └── Bash (orkestrasi)
 ```
 
 ---
