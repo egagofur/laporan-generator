@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo/laporan-generator.gif" alt="Laporan Generator" width="200" style="border-radius: 50%;"/>
+  <img src="logo.jpg" alt="Laporan Generator" width="200" height="200" style="border-radius: 50%; object-fit: cover;"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>
@@ -21,12 +21,9 @@
 
 ## Tentang
 
-Repositori ini menyediakan dua hal dalam satu tempat:
-
-1. **Referensi** — Contoh laporan akademik lengkap (BAB 1–5) yang langsung bisa di-*build* jadi PDF.
-   Cocok buat lihat struktur, gaya penulisan, dan format yang dihasilkan.
-2. **Tooling** — Template LaTeX, skrip *build*, dan instruksi AI Agent (`prompt.md`) yang bisa
-   di-*copy* ke project kamu untuk *generate* laporan sendiri secara otomatis.
+Repositori ini adalah contoh laporan akademik lengkap (BAB 1–5) yang bisa langsung kamu
+*clone* ke project kamu, jalankan AI Agent untuk me-*generate* ulang isinya sesuai project,
+dan *build* jadi PDF dalam satu perintah.
 
 Topik laporan mencakup project IT / informatika: web, *mobile*, *machine learning*, IoT,
 tugas kuliah, dan lain-lain yang berbasis *coding*.
@@ -37,49 +34,45 @@ tugas kuliah, dan lain-lain yang berbasis *coding*.
 
 ```
 laporan-generator/
-├── logo/                       # Branding
-│   ├── logo.py                 # Manim static source
-│   ├── animasi_logo.py         # Manim animasi source
-│   ├── laporan-generator.gif   # Logo README (animasi)
-│   └── logo-kampus.jpg         # Logo cover PDF
-├── template/                   # Tooling — siap-copy ke project user
-│   ├── build.sh                # Skrip build otomatis
-│   ├── cover.md                # Cover generic
-│   ├── daftar-pustaka.md       # Daftar pustaka
-│   ├── prompt.md               # Instruksi AI Agent
-│   └── template.latex          # Template LaTeX
-├── cover.md                    # Contoh cover
-├── build.sh                    # Contoh build script
-├── daftar-pustaka.md           # Contoh daftar pustaka
-├── isi-laporan.md              # Contoh isi laporan (BAB 1—5)
-├── template.latex              # Contoh template
-├── Laporan.pdf                 # Output contoh (langsung lihat hasilnya)
-├── README.md                   # File ini
-├── LICENSE                     # Lisensi MIT
+├── build.sh                 # Skrip build
+├── cover.md                 # Contoh cover → di-overwrite AI
+├── daftar-pustaka.md        # Contoh daftar pustaka → di-overwrite AI
+├── isi-laporan.md           # Contoh isi laporan (BAB 1—5) → di-overwrite AI
+├── template.latex           # Template LaTeX
+├── logo.jpg          # Logo (cover PDF & header README)
+├── prompt.md                # Instruksi AI Agent
+├── README.md                # File ini
+├── Laporan.pdf              # Output contoh (langsung lihat hasilnya)
+├── LICENSE                  # Lisensi MIT
 └── .gitignore
 ```
 
 ## Cara Pakai (AI Agent Flow)
 
-Ini *workflow* utama — biar AI yang generate seluruh laporan:
+Ini *workflow* utama — clone, jalanin AI, langsung build:
 
 ```
-1. Clone repo ini → lihat contoh Laporan.pdf (referensi)
-2. Copy folder template/ → project-kamu/laporan/
-3. Copy prompt.md dari template/ ke root project kamu
-4. Jalankan AI (OpenCode, Claude Code, Gemini CLI, dll.) di folder project kamu
-5. Load prompt.md ke AI:
+1. Clone repo ini ke dalam folder project kamu:
+
+     git clone https://github.com/muadzhdz/laporan-generator.git project-kamu/
+     cd project-kamu/
+
+2. Jalankan AI Agent (OpenCode, Claude Code, Gemini CLI, dll.):
+
      "Baca prompt.md dan generate laporan untuk project ini"
-6. AI akan scan project + tanya interaktif (judul, screenshot, dll.)
-7. AI generate file-file .md di dalam laporan/:
+
+3. AI akan scan project kamu + tanya interaktif (judul, fitur, screenshot, dll.)
+   → LANGSUNG overite file-file di repo ini:
      cover.md, isi-laporan.md, daftar-pustaka.md
-8. Jalankan:
-     cd laporan/ && chmod +x build.sh && ./build.sh
-9. → Laporan.pdf siap
+
+4. Jalankan build:
+
+     ./build.sh
+
+5. → Laporan.pdf siap
 ```
 
-> **Catatan:** Kamu juga bisa edit manual file `.md` di `laporan/` kalo mau
-> ubah konten setelah di-generate AI, tinggal `./build.sh` lagi.
+> **Catatan:** Mau ubah isi? Edit manual file `.md` terus `./build.sh` lagi.
 
 ---
 
@@ -123,8 +116,6 @@ sudo fmtutil-sys --all
 Kalo semua tools udah terinstal:
 
 ```bash
-cd laporan/
-chmod +x build.sh
 ./build.sh
 ```
 
@@ -139,7 +130,7 @@ isi-laporan.md ────────────────┐
 cover.md ──────────────────────┤
 daftar-pustaka.md ─────────────┤─── Pandoc ─── Laporan.pdf
 template.latex ────────────────┤
-logo/logo-kampus.jpg ──────────┤
+logo.jpg ────────────────┤
 gambar/ ───────────────────────┘
                                │
                                ├── pdfLaTeX
@@ -149,25 +140,6 @@ gambar/ ───────────────────────┘
                                └── Bash (orkestrasi)
 ```
 
----
-
-## FYI
-
-Folder `logo/` berisi seluruh aset branding repositori ini, dibuat menggunakan
-[**Manim**](https://github.com/ManimCommunity/manim) — *Python library* untuk
-membuat animasi dan grafis berbasis program (dikembangkan oleh komunitas,
-*fork* dari Manim asli 3Blue1Brown).
-
-| File | Deskripsi |
-|------|-----------|
-| `logo.py` | *Source* logo *static* (render → JPG untuk cover) |
-| `animasi_logo.py` | *Source* logo animasi (render → GIF untuk README) |
-| `laporan-generator.gif` | Output animasi (diputar di *header* README) |
-| `logo-kampus.jpg` | Output *static* (digunakan di cover PDF) |
-
-Kamu juga bisa pakai Manim untuk bikin logo atau animasi sendiri untuk project kamu. Langsung cek repo Manim-nya aja ya!
-
----
 
 ## Lisensi
 

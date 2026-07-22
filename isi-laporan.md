@@ -446,7 +446,7 @@ Pipeline otomatisasi dokumen terdiri dari tiga tahap utama yang berjalan secara 
 | isi-laporan.md   |---->|   | Pandoc |     |     |                  |
 | daftar-pustaka.md|     |   +--------+     |     | Format:          |
 | template.latex   |     |      |           |     | - A4, 12pt       |
-| logo/logo-kampus.jpg  |     |      v           |     | - Times New Roman |
+| logo.jpg  |     |      v           |     | - Times New Roman |
 | gambar/*.png     |     | +----------+     |     | - Spasi 1.5      |
 |                  |     | | pdflatex |     |     | - BAB Romawi     |
 +------------------+     | +----------+     |     | - Daftar Isi     |
@@ -473,7 +473,7 @@ Tahap input terdiri dari persiapan file-file sumber yang diperlukan:
 
 1. **File konten**: `cover.md` (halaman sampul), `isi-laporan.md` (BAB 1-5), `daftar-pustaka.md` (referensi)
 2. **File template**: `template.latex` (format dan layout)
-3. **File pendukung**: `logo/logo-kampus.jpg` (logo institusi), `gambar/*.png` (gambar pendukung)
+3. **File pendukung**: `logo.jpg` (logo institusi), `gambar/*.png` (gambar pendukung)
 
 Semua file sumber ditulis dalam format Markdown (kecuali template yang menggunakan LaTeX dan logo yang menggunakan JPG).
 
@@ -604,7 +604,7 @@ cp "$OUTDIR/cover.md" "$TMPDIR/"
 cp "$OUTDIR/isi-laporan.md" "$TMPDIR/"
 cp "$OUTDIR/daftar-pustaka.md" "$TMPDIR/"
 cp "$OUTDIR/template.latex" "$TMPDIR/"
-cp "$OUTDIR/logo/logo-kampus.jpg" "$TMPDIR/"
+cp "$OUTDIR/logo.jpg" "$TMPDIR/"
 ```
 
 Semua file sumber disalin ke direktori temporer untuk menjaga kebersihan direktori kerja.
@@ -730,7 +730,7 @@ Project Laporan Generator adalah implementasi nyata dari pipeline otomatisasi do
 1. **File konten**: `cover.md`, `isi-laporan.md`, `daftar-pustaka.md`
 2. **File template**: `template.latex`
 3. **Skrip build**: `build.sh`
-4. **File pendukung**: `logo/logo-kampus.jpg`
+4. **File pendukung**: `logo.jpg`
 
 Semua file berada dalam satu direktori yang merupakan root dari project. Struktur ini sengaja dibuat sederhana untuk memudahkan penggunaan dan modifikasi.
 
@@ -766,7 +766,7 @@ laporan-generator/
 ├── cover.md              # Halaman sampul
 ├── template.latex        # Template LaTeX
 ├── build.sh              # Skrip build
-├── logo/logo-kampus.jpg       # Logo institusi
+├── logo.jpg       # Logo institusi
 ├── isi-laporan.md        # BAB 1-5
 ├── daftar-pustaka.md     # Referensi
 ├── README.md             # Dokumentasi
@@ -785,7 +785,7 @@ Fungsi masing-masing file:
 
 **build.sh** --- Skrip Bash yang mengorkestrasi seluruh pipeline. Skrip ini menangani persiapan file, pemrosesan gambar, eksekusi Pandoc, dan pembersihan. Semua operasi dilakukan secara otomatis tanpa intervensi manual.
 
-**logo/logo-kampus.jpg** --- File gambar logo institusi yang ditampilkan pada halaman sampul. Logo dikonversi dari PNG ke JPG untuk mengurangi ukuran file dan meningkatkan kompatibilitas dengan pdfLaTeX.
+**logo.jpg** --- File gambar logo institusi yang ditampilkan pada halaman sampul. Logo dikonversi dari PNG ke JPG untuk mengurangi ukuran file dan meningkatkan kompatibilitas dengan pdfLaTeX.
 
 **isi-laporan.md** --- File utama yang berisi seluruh konten laporan dari BAB 1 sampai BAB 5. File ini ditulis dalam format Pandoc Markdown dan merupakan satu-satunya file yang perlu diedit untuk mengubah isi laporan.
 
@@ -863,7 +863,7 @@ cp "$OUTDIR/cover.md" "$TMPDIR/"
 cp "$OUTDIR/isi-laporan.md" "$TMPDIR/"
 cp "$OUTDIR/daftar-pustaka.md" "$TMPDIR/"
 cp "$OUTDIR/template.latex" "$TMPDIR/"
-cp "$OUTDIR/logo/logo-kampus.jpg" "$TMPDIR/"
+cp "$OUTDIR/logo.jpg" "$TMPDIR/"
 ```
 
 Semua file disalin ke direktori temporer untuk menjaga direktori kerja tetap bersih. File-file sisa kompilasi LaTeX (`.aux`, `.log`, `.out`, `.toc`) akan tertinggal di direktori temporer yang nantinya dihapus.

@@ -4,7 +4,7 @@
 {\large\bfseries OTOMATISASI PEMBUATAN DOKUMEN LAPORAN AKADEMIK}\\[0.1cm]
 {\large\bfseries MENGGUNAKAN PANDOC, LATEX, DAN MARKDOWN}\\[0.3cm]
 {\normalsize Laporan Dokumentasi Pipeline}\\[2.9cm]
-\includegraphics[width=4cm]{logo-kampus.jpg}\\[2.9cm]
+\includegraphics[width=4cm]{logo.jpg}\\[2.9cm]
 {\large Disusun oleh:}\\[0.3cm]
 \begin{tabular}{lc}
 {\large\ blablabla} & {\normalsize 101234567} \\[3pt]
@@ -12,7 +12,7 @@
 {\large\ blablabla} & {\normalsize 101234569}
 \end{tabular}\\[4cm]
 {\large\bfseries PROGRAM STUDI INFORMATIKA}\\
-{\large\bfseries UNIVERSITAS NUSANTARA}\\
+{\large\bfseries UNIVERSITAS EXAMPLE}\\
 {\large\bfseries TAHUN AKADEMIK 2026/2027}
 \end{center}
 \newpage
