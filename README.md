@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.jpg" alt="Laporan Generator" width="200" height="200" style="border-radius: 50%; object-fit: cover;"/>
+  <img src="logo.jpg" alt="Laporan Generator" width="200"/>
 </p>
 
 <h1 align="center">Laporan Generator</h1>
