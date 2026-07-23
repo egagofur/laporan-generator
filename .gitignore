@@ -1,4 +1,6 @@
 *.pdf
+*.docx
+*.html
 *.aux
 *.log
 *.out

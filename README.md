@@ -221,6 +221,8 @@ laporan-generator/
 └── .gitignore
 ```
 
+> Build artifact (`Laporan.pdf`, `Laporan.docx`, `Laporan.html`, `tmp/`) otomatis di-ignore Git.
+
 ---
 
 ## Alur Pipeline
