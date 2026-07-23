@@ -30,6 +30,14 @@
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newenvironment{CSLReferences}[2]%
+  {\par\addvspace{#2\baselineskip}\noindent
+   \renewcommand{\bibitem}[2][]{\item}%
+   \list{}{\setlength{\leftmargin}{#1\parindent}%
+           \setlength{\itemsep}{#2\baselineskip}%
+           \setlength{\parsep}{0pt}}%
+   \item\relax}%
+  {\endlist\par}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -56,6 +64,8 @@
 
 \renewcommand{\cftchappresnum}{BAB }
 \renewcommand{\cftchapnumwidth}{5em}
+\cftsetindents{section}{0em}{3em}
+\cftsetindents{subsection}{3em}{3.5em}
 \renewcommand{\cftdotsep}{1}
 
 \titleformat{\section}
@@ -110,6 +120,44 @@
 \frontmatter
 \pagestyle{fancy}
 \pagenumbering{roman}
+
+\thispagestyle{empty}
+\begin{center}
+\vspace*{1cm}
+{\large\bfseries $title$}\\[0.1cm]
+$if(subtitle)$
+{\large\bfseries $subtitle$}\\[0.3cm]
+$endif$
+
+$if(course)$
+\vspace{0.5cm}
+{\large\bfseries $course$}\\[0.1cm]
+$endif$
+
+$if(lecturer)$
+\vspace{0.3cm}
+{\normalsize Dosen Pengampu:}\\[0.1cm]
+{\large\bfseries $lecturer$}
+$endif$
+
+\vfill
+\includegraphics[width=4cm]{logo.jpg}
+
+\vfill
+{\large Disusun oleh:}\\[0.3cm]
+\begin{tabular}{lc}
+$for(author)$%
+{\large\ $author.name$} & {\normalsize $author.nim$} \\[3pt]
+$endfor$
+\end{tabular}
+
+\vfill
+{\large\bfseries $faculty$}\\
+{\large\bfseries $institution$}\\
+{\large\bfseries $year$}
+\vspace*{1cm}
+\end{center}
+\newpage
 
 $for(include-before)$
 $include-before$

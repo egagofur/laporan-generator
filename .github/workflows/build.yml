@@ -1,0 +1,31 @@
+name: Build Laporan PDF
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra \
+            texlive-latex-recommended texlive-fonts-extra texlive-fonts-recommended \
+            imagemagick
+          sudo fmtutil-sys --all
+
+      - name: Build PDF
+        run: ./build.sh
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Laporan
+          path: Laporan.pdf

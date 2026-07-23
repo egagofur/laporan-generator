@@ -1,0 +1,23 @@
+---
+title: "Otomatisasi Pembuatan Dokumen Laporan Akademik Menggunakan Pandoc, LaTeX, dan Markdown"
+subtitle: "Laporan Dokumentasi Pipeline"
+author:
+  - name: "Nama Mahasiswa 1"
+    nim: "101234567"
+  - name: "Nama Mahasiswa 2"
+    nim: "101234568"
+  - name: "Nama Mahasiswa 3"
+    nim: "101234569"
+lecturer: "Nama Dosen Pengampu"
+course: "Nama Mata Kuliah"
+institution: "Universitas Example"
+faculty: "Program Studi Informatika"
+year: "2026/2027"
+date: "Juli 2026"
+abstract: |
+  Laporan ini membahas pipeline otomatisasi dokumen akademik
+  menggunakan Markdown, Pandoc, LaTeX, dan Bash. Pipeline ini
+  memungkinkan penulisan konten laporan dalam format Markdown
+  yang kemudian dikonversi menjadi PDF profesional melalui
+  Pandoc dan pdfLaTeX.
+...

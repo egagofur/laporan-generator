@@ -9,10 +9,20 @@ TMPDIR=$(mktemp -d)
 trap "rm -rf $TMPDIR" EXIT
 
 cp "$OUTDIR/cover.md" "$TMPDIR/"
-cp "$OUTDIR/isi-laporan.md" "$TMPDIR/"
-cp "$OUTDIR/daftar-pustaka.md" "$TMPDIR/"
 cp "$OUTDIR/template.latex" "$TMPDIR/"
 cp "$OUTDIR/logo.jpg" "$TMPDIR/"
+cp "$OUTDIR/metadata.yml" "$TMPDIR/" 2>/dev/null || true
+cp "$OUTDIR/references.bib" "$TMPDIR/" 2>/dev/null || true
+cp "$OUTDIR/apa.csl" "$TMPDIR/" 2>/dev/null || true
+
+if [ -d "$OUTDIR/chapters" ]; then
+  cp "$OUTDIR/chapters"/*.md "$TMPDIR/"
+  INPUT_FILES="$TMPDIR/bab1-*.md $TMPDIR/bab2-*.md $TMPDIR/bab3-*.md $TMPDIR/bab4-*.md $TMPDIR/bab5-*.md"
+else
+  echo "ERROR: Direktori chapters/ tidak ditemukan."
+  echo "Buat folder chapters/ dengan file bab1-pendahuluan.md sampai bab5-penutup.md"
+  exit 1
+fi
 
 if [ -d "$OUTDIR/gambar" ]; then
   cp -r "$OUTDIR/gambar" "$TMPDIR/"
@@ -112,10 +122,14 @@ FDEOF
 cd "$TMPDIR"
 
 pandoc \
-  "isi-laporan.md" \
+  $INPUT_FILES \
   --template="template.latex" \
   --include-before-body="cover.md" \
-  --include-after-body="daftar-pustaka.md" \
+  --metadata-file="metadata.yml" \
+  --citeproc \
+  --bibliography="references.bib" \
+  --csl="apa.csl" \
+  --metadata=reference-section-title="DAFTAR PUSTAKA" \
   --top-level-division=chapter \
   --pdf-engine=pdflatex \
   --no-highlight \

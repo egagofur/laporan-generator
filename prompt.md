@@ -30,14 +30,21 @@ Jika tidak ada yang cocok: tanya user jenis project-nya.
 ================================================================================
 ## STEP 2 — TANYA INTERAKTIF (satu per satu)
 
-Tanya user satu per satu, jangan sekaligus:
+Tanya user satu per satu, jangan sekaligus. Gali informasi secara mendalam:
 
 1. "Judul laporan Anda?"
 2. "Nama anggota kelompok dan NIM/NPM? (format: Nama - NIM, pisah dengan koma)"
 3. "Nama universitas/sekolah dan program studi?"
-4. "Font yang digunakan? (default: Times New Roman)"
-5. "Ada screenshot atau gambar yang ingin disertakan? Jika ada, path folder gambarnya? (default: gambar/)"
-6. "Apakah ada bab khusus yang ingin ditambahkan/diubah? (default: sesuai jenis project)"
+4. "Mata kuliah atau mata pelajaran yang sedang Anda tempuh untuk project ini?"
+5. "Nama dosen/guru pengampu mata kuliah/pelajaran ini?"
+6. "Apakah ada nama asisten dosen, mentor, atau pihak lain yang ingin disebut di kata pengantar?"
+7. "Tahun ajaran berapa? (contoh: 2025/2026)"
+8. "Apakah ada template atau pedoman penulisan laporan dari dosen atau kampus? Jika ada, berikan filenya agar saya sesuaikan. Jika tidak, saya akan gunakan template default Laporan Generator."
+9. "Ceritakan latar belakang project Anda secara singkat — apa yang dibuat, masalah apa yang diselesaikan, teknologi apa yang dipakai?"
+10. "Struktur BAB 1 Pendahuluan — mau berapa sub-bab? \n\n  Pilihan:\n  - 2 sub-bab: Latar Belakang, Rumusan Masalah\n  - 3 sub-bab: + Tujuan\n  - 4 sub-bab: + Manfaat\n  - 5 sub-bab: + Batasan Masalah\n  - 6 sub-bab: + Sistematika Penulisan"
+11. "Font yang digunakan? (default: Times New Roman)"
+12. "Ada screenshot atau gambar yang ingin disertakan? Jika ada, path folder gambarnya? (default: gambar/)"
+13. "Apakah ada bab khusus yang ingin ditambahkan/diubah? (default: sesuai jenis project)"
 
 ================================================================================
 ## STEP 3 — STRUKTUR BAB
@@ -106,33 +113,28 @@ Gunakan struktur berikut sesuai jenis project:
 JANGAN buat folder baru. Langsung overwrite file-file yang sudah ada di root project:
 
 ```
-├── cover.md                  # [OVERWRITE] Halaman sampul + kata pengantar
-├── isi-laporan.md            # [OVERWRITE] BAB 1-5 (atau 1-6)
-├── daftar-pustaka.md         # [OVERWRITE] Referensi
-├── logo.jpg           # Logo institusi (jangan diubah)
-├── template.latex            # Template LaTeX (jangan diubah)
-├── build.sh                  # Skrip build (jangan diubah)
+├── cover.md                  # [OVERWRITE] Kata pengantar (cover dari template)
+├── chapters/                 # [OVERWRITE] BAB 1-5 (file terpisah per bab)
+│   ├── bab1-pendahuluan.md
+│   ├── bab2-tinjauan-pustaka.md
+│   ├── bab3-metodologi.md
+│   ├── bab4-hasil-dan-pembahasan.md
+│   └── bab5-penutup.md
+├── logo.jpg                  # JANGAN diubah — user ganti manual dengan logo kampus/sekolah
+├── template.latex            # JANGAN diubah — template LaTeX
+├── build.sh                  # JANGAN diubah — skrip build
+├── metadata.yml              # [OVERWRITE] Judul, penulis, institusi
+├── references.bib            # [OVERWRITE] Daftar pustaka BibTeX
 └── gambar/                   # Screenshot/diagram (buat baru kalo perlu)
 ```
 
 ### cover.md
-Gunakan format LaTeX untuk halaman sampul. Format:
+**Hanya** berisi kata pengantar. Halaman sampul sudah digenerate otomatis oleh `template.latex` dari `metadata.yml`.
 
-\thispagestyle{empty}
-\begin{center}
-\vspace*{0.5cm}
-{\large\bfseries JUDUL LAPORAN}\\[0.3cm]
-{\normalsize Sub-judul laporan}\\[2.9cm]
-\includegraphics[width=4cm]{logo.jpg}\\[2.9cm]
-{\large Disusun oleh:}\\[0.3cm]
-\begin{tabular}{lc}
-{\large\ Nama1} & NIM1 \\[3pt]
-{\large\ Nama2} & NIM2 \\[3pt]
-\end{tabular}\\[3cm]
-{\large\bfseries PROGRAM STUDI}\\
-{\large\bfseries UNIVERSITAS/SEKOLAH}\\
-{\large\bfseries TAHUN AKADEMIK}
-\end{center}
+Format kata pengantar:
+
+\chapter*{KATA PENGANTAR}
+Puji syukur ... (isi kata pengantar, sertakan ucapan terima kasih kepada dosen/guru pengampu dari metadata.yml jika ada)
 \newpage
 
 ### template.latex
@@ -141,23 +143,73 @@ JANGAN diubah — sudah ada di project dengan konfigurasi yang benar.
 ### build.sh
 JANGAN diubah — sudah ada di project dengan konfigurasi yang benar.
 
-### isi-laporan.md
-Tulis semua BAB dalam SATU file. Format:
-- `# BAB 1: JUDUL` untuk setiap bab
-- `## 1.1 Sub Bab` untuk sub-bab
+### chapters/bab*.md
+Tulis setiap BAB dalam file terpisah di direktori `chapters/`:
+- `chapters/bab1-pendahuluan.md` — BAB 1
+- `chapters/bab2-tinjauan-pustaka.md` — BAB 2
+- `chapters/bab3-metodologi.md` — BAB 3
+- `chapters/bab4-hasil-dan-pembahasan.md` — BAB 4
+- `chapters/bab5-penutup.md` — BAB 5 (atau bab6 kalo perlu)
+
+Format setiap file:
+- `# JUDUL BAB` (tanpa "BAB 1:" — template otomatis nambahin "BAB I")
+- `## Sub Bab` untuk sub-bab (tanpa nomor — template otomatis nambahin "1.1", "2.3", dll.)
+  - ❌ SALAH: `## 1.1 Latar Belakang` (akan jadi "1.1 1.1 Latar Belakang")
+  - ✅ BENAR: `## Latar Belakang` (otomatis jadi "1.1 Latar Belakang")
+- `### Sub-sub Bab` untuk sub-sub-bab (tanpa nomor — otomatis "1.1.1")
 - Tabel pakai format pipe
 - Gambar: `![](gambar/file.png)`
 - Kode: blok triple backtick
 - Matematika: `$...$` inline, `$$...$$` display
 - Sertakan kode/source code relevan dari project user sebagai contoh
-- Gunakan `\sloppy` jika ada teks yang overflow
-- Tambahkan `\tabcolsep=4pt` untuk tabel yang rapat
+- Jangan pakai `\sloppy` atau `\tabcolsep` — semua udah diatur di template
 
-### daftar-pustaka.md
-Cari referensi dari internet:
-- Buku, jurnal, dokumentasi resmi, artikel
-- Format APA
-- Minimal 5 referensi yang relevan
+### Validasi Output
+Setelah selesai generate semua file, periksa:
+- (a) Semua tabel punya header row dan separator (`|---|---|`)
+- (b) Semua path gambar (`![](...)`) mengarah ke file yang benar-benar ada
+- (c) Tidak ada karakter box-drawing (├, ─, └, │) di konten
+- (d) Daftar pustaka minimal 5 entry dan tidak ada referensi yang terlihat palsu
+- (e) Heading level 1 menggunakan format `# JUDUL` (tanpa "BAB I:" — template otomatis nambahin)
+- (f) Tidak ada manual numbering di heading level 2 (`## 1.1 Judul` ❌ → `## Judul` ✅) atau level 3
+
+### metadata.yml
+Overwrite dengan data user. Format:
+
+```yaml
+title: "Judul Laporan"
+subtitle: "Sub-judul (opsional)"
+author:
+  - name: "Nama Lengkap 1"
+    nim: "101234567"
+  - name: "Nama Lengkap 2"
+    nim: "101234568"
+lecturer: "Nama Dosen Pengampu"
+course: "Nama Mata Kuliah"
+institution: "Universitas/Sekolah"
+faculty: "Program Studi"
+year: "2025/2026"
+date: "Bulan Tahun"
+```
+
+### references.bib
+Daftar pustaka dalam format BibTeX. Citeproc otomatis generate daftar pustaka dari sini.
+
+```bibtex
+@book{key2024,
+  author    = {Nama, Penulis},
+  title     = {Judul Buku},
+  year      = {2024},
+  publisher = {Penerbit}
+}
+```
+
+**⚠️ PERINGATAN — JANGAN HALUSINASI REFERENSI:**
+- JANGAN membuat referensi palsu. AI sering menghasilkan judul/DOI/penulis yang tidak nyata.
+- Jika user tidak memiliki referensi asli, gunakan dokumentasi resmi framework/tools yang digunakan project (misal: React docs, TensorFlow docs, dokumentasi Flutter).
+- Jika ragu, tanya user: "Apakah ada referensi (buku, jurnal, DOI, link) yang ingin dicantumkan?"
+- Referensi dari dokumentasi resmi dan GitHub repository lebih aman daripada referensi akademik palsu.
+- Minimal 5 entry yang relevan.
 
 ================================================================================
 ## STEP 5 — FINAL
@@ -168,13 +220,15 @@ Setelah semua file selesai di-overwrite, beri tahu user:
 === LAPORAN SIAP ===
 File-file berikut telah di-overwrite:
   - cover.md (halaman sampul)
-  - isi-laporan.md (BAB 1-5)
-  - daftar-pustaka.md (referensi)
+  - chapters/bab*.md (BAB 1-5)
+  - metadata.yml (judul, penulis, institusi)
+  - references.bib (daftar pustaka)
 
 Untuk menghasilkan PDF, jalankan:
   ./build.sh
 
 Pastikan Pandoc, TeX Live, dan ImageMagick sudah terinstall.
+  Atau pake Docker: docker compose run --rm laporan-generator
 """
 
 ================================================================================
