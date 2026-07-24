@@ -110,6 +110,33 @@ else
 fi
 echo ""
 
+# T11: Cek format BibTeX
+echo "[T11] References check"
+if grep -qE '^@[a-zA-Z]+{' references.bib 2>/dev/null; then
+  pass "references.bib memiliki struktur BibTeX valid"
+else
+  fail "references.bib tidak memiliki entri BibTeX valid"
+fi
+echo ""
+
+# T12: Cek target Makefile (init & view)
+echo "[T12] Makefile targets check"
+if grep -q 'init:' Makefile 2>/dev/null && grep -q 'view:' Makefile 2>/dev/null; then
+  pass "Makefile memiliki target init dan view"
+else
+  fail "Makefile tidak memiliki target init atau view"
+fi
+echo ""
+
+# T13: Cek recursive image processing
+echo "[T13] Recursive image processing check"
+if grep -q 'find.*gambar' build.sh 2>/dev/null; then
+  pass "build.sh mendukung pemrosesan gambar rekursif (find)"
+else
+  fail "build.sh belum mendukung pemrosesan gambar rekursif"
+fi
+echo ""
+
 echo "========================"
 echo "Hasil: $PASS passed, $FAIL failed"
 echo "========================"

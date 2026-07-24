@@ -30,6 +30,7 @@
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
 \newenvironment{CSLReferences}[2]%
   {\par\addvspace{#2\baselineskip}\noindent
    \renewcommand{\bibitem}[2][]{\item}%

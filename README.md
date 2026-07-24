@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/muadzhdz/laporan-generator/actions/workflows/build.yml"><img src="https://github.com/muadzhdz/laporan-generator/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
   <a href="#"><img src="https://img.shields.io/badge/Pandoc-3.0+-blue?style=for-the-badge&logo=markdown"></a>
   <a href="#"><img src="https://img.shields.io/badge/LaTeX-pdflatex-008080?style=for-the-badge&logo=latex"></a>
   <a href="#"><img src="https://img.shields.io/badge/ImageMagick-7.0+-orange?style=for-the-badge"></a>
@@ -85,7 +86,7 @@ Kalo mau nulis konten laporan manual tanpa AI:
 4. Atur metadata di metadata.yml:
      title, author (nama + NIM), lecturer, course, institution, faculty, year
 
-5. Isi daftar pustaka di references.bib (format BibTeX)
+5. Isi daftar pustaka di references.bib (format BibTeX) dan gunakan sitasi `[@citekey]` di Markdown
 
 6. Build PDF (lihat cara build di bawah)
 
@@ -170,12 +171,14 @@ sudo fmtutil-sys --all
 Kalo dependensi sudah terinstall.
 
 ```bash
+make init         # Aktifkan git pre-commit hook otomatis
 make lint-deps    # Cek apakah semua tools tersedia
 make build        # Build PDF (sama kaya ./build.sh)
+make view         # Buka file Laporan.pdf di PDF viewer
 make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
 make html         # Export ke HTML
-make test         # Jalankan test suite (25 tes)
+make test         # Jalankan test suite (13 tes komprehensif)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
@@ -275,6 +278,17 @@ Kamu cukup lakuin 3 langkah doang:
 Selesai. PDF kamu jadi.
 Gak perlu paham coding, gak perlu install Pandoc/LaTeX manual.
 AI Agent + Docker yang urus semuanya.
+
+---
+
+## Troubleshooting
+
+- **ImageMagick Security Policy Error (`attempt to perform an operation not allowed by the security policy 'PDF'`):**
+  Edit `/etc/ImageMagick-6/policy.xml` atau `/etc/ImageMagick-7/policy.xml`, cari baris `<policy domain="coder" rights="none" pattern="PDF" />` lalu ganti `rights="none"` menjadi `rights="read|write"`.
+- **Font TS1 / Nimbus missing saat pdflatex:**
+  Jalankan `sudo fmtutil-sys --all` di terminal untuk meregenerasi font map LaTeX.
+- **Permission Denied pada output `Laporan.pdf`:**
+  Jalankan `make init` atau pastikan Docker container dijalankan dengan UID/GID user lokal (`docker compose run --rm laporan-generator`).
 
 ---
 

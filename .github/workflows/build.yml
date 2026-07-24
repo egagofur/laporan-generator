@@ -21,6 +21,9 @@ jobs:
             imagemagick
           sudo fmtutil-sys --all
 
+      - name: Run Test Suite
+        run: ./test.sh
+
       - name: Build PDF
         run: ./build.sh
 

@@ -160,6 +160,7 @@ Format setiap file:
 - Tabel pakai format pipe
 - Gambar: `![](gambar/file.png)`
 - Kode: blok triple backtick
+- Sitasi: Gunakan format Markdown Pandoc `[@citekey]` atau `@citekey` (❌ SALAH: `\cite{citekey}`)
 - Matematika: `$...$` inline, `$$...$$` display
 - Sertakan kode/source code relevan dari project user sebagai contoh
 - Jangan pakai `\sloppy` atau `\tabcolsep` — semua udah diatur di template

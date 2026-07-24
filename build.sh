@@ -26,9 +26,7 @@ fi
 
 if [ -d "$OUTDIR/gambar" ]; then
   cp -r "$OUTDIR/gambar" "$TMPDIR/"
-  for f in "$TMPDIR/gambar/"*.png; do
-    [ -f "$f" ] && convert "$f" -alpha off "$f" 2>/dev/null || true
-  done
+  find "$TMPDIR/gambar" -type f \( -name "*.png" -o -name "*.PNG" \) -exec convert {} -alpha off {} \; 2>/dev/null || true
 fi
 
 # Generate fontools_ts1.enc

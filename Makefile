@@ -1,10 +1,22 @@
-.PHONY: build clean lint-deps watch docx html crossref test docker-build
+.PHONY: build clean lint-deps watch docx html crossref test docker-build init view
 
 build:
 	./build.sh
 
+init:
+	@git config core.hooksPath .githooks
+	@echo "✅ Git pre-commit hook berhasil diaktifkan!"
+
+view:
+	@if [ -f Laporan.pdf ]; then \
+		command -v xdg-open >/dev/null 2>&1 && xdg-open Laporan.pdf || open Laporan.pdf || echo "Laporan.pdf ada di: $(shell pwd)/Laporan.pdf"; \
+	else \
+		echo "ERROR: Laporan.pdf belum dibuat. Jalankan 'make build' terlebih dahulu."; \
+		exit 1; \
+	fi
+
 clean:
-	rm -f Laporan.pdf
+	rm -f Laporan.pdf Laporan.docx Laporan.html
 	rm -rf tmp/
 
 lint-deps:
