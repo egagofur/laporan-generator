@@ -1,4 +1,5 @@
 *.pdf
+!examples/*.pdf
 *.docx
 *.html
 *.aux

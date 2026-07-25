@@ -119,7 +119,7 @@ FDEOF
 
 cd "$TMPDIR"
 
-pandoc \
+if ! pandoc \
   $INPUT_FILES \
   --template="template.latex" \
   --include-before-body="cover.md" \
@@ -131,7 +131,16 @@ pandoc \
   --top-level-division=chapter \
   --pdf-engine=pdflatex \
   --no-highlight \
-  -o "$REPORT" 2>&1
+  -o "$REPORT" 2>&1; then
+  echo ""
+  echo "❌ BUILD GAGAL: Terjadi kesalahan saat kompilasi Pandoc/pdfLaTeX."
+  echo "Kemungkinan penyebab & solusi:"
+  echo "  1. Sintaks YAML di metadata.yml tidak valid -> Cek docs/metadata-schema.md"
+  echo "  2. Berkas gambar tidak ditemukan atau rusak -> Cek path gambar di chapters/"
+  echo "  3. Sintaks LaTeX/Markdown tidak didukung -> Cek docs/troubleshooting.md"
+  echo "  4. Gunakan Docker jika ada masalah dependensi lokal: docker compose run --rm laporan-generator"
+  exit 1
+fi
 
 echo ""
 echo "=== PDF BERHASIL DIBUAT ==="

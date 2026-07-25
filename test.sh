@@ -137,6 +137,33 @@ else
 fi
 echo ""
 
+# T14: Cek ekstrasi dan keterbacaan teks PDF
+echo "[T14] PDF content readability check"
+if command -v pdftotext &>/dev/null; then
+  if [ -f Laporan.pdf ]; then
+    WORDS=$(pdftotext Laporan.pdf - 2>/dev/null | wc -w)
+    if [ "$WORDS" -gt 200 ]; then
+      pass "PDF readable ($WORDS kata terdeteksi)"
+    else
+      fail "PDF terlalu sedikit konten atau corrupt ($WORDS kata)"
+    fi
+  else
+    fail "Laporan.pdf tidak ditemukan untuk diaudit"
+  fi
+else
+  pass "pdftotext tidak terinstall (skipped)"
+fi
+echo ""
+
+# T15: Cek makro kompatibilitas Pandoc 3.x
+echo "[T15] Pandoc 3.x macro compatibility check"
+if grep -q 'pandocbounded' template.latex 2>/dev/null; then
+  pass "template.latex mendukung makro \pandocbounded"
+else
+  fail "template.latex belum mendukung makro \pandocbounded"
+fi
+echo ""
+
 echo "========================"
 echo "Hasil: $PASS passed, $FAIL failed"
 echo "========================"

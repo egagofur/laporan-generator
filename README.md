@@ -18,23 +18,33 @@
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></a>
 </p>
 
-## Daftar Isi
+<p align="center">
+  <b><a href="GETTING-STARTED.md">🚀 Panduan Pemula (Zero to PDF)</a></b> •
+  <b><a href="CONTRIBUTING.md">🤝 Kontribusi</a></b> •
+  <b><a href="CHANGELOG.md">📜 Changelog</a></b> •
+  <b><a href="docs/troubleshooting.md">🔍 Troubleshooting</a></b> •
+  <b><a href="examples/Laporan-Akademik-Example.pdf">📄 Contoh PDF</a></b>
+</p>
+
+---
+
+## 📌 Daftar Isi
 
 - [AI Agent Flow (Cara Cepat)](#ai-agent-flow-cara-cepat)
 - [Manual Flow (Edit Sendiri)](#manual-flow-edit-sendiri)
 - [Build PDF — Pilih 1 dari 3 Cara](#build-pdf--pilih-1-dari-3-cara)
-- [Logo](#logo)
+- [Pusat Dokumentasi (Docs)](#pusat-dokumentasi-docs)
 - [Struktur File](#struktur-file)
 - [Alur Pipeline](#alur-pipeline)
 - [Lisensi](#lisensi)
 
 ---
 
-## AI Agent Flow (Cara Cepat)
+## ⚡ AI Agent Flow (Cara Cepat)
 
-Flow utama -- clone, jalanin AI Agent, langsung build.
+Flow utama: Clone repo $\rightarrow$ Jalankan AI Agent $\rightarrow$ Langsung Build.
 
-```
+```bash
 1. Clone repo ke folder project kamu:
      git clone https://github.com/muadzhdz/laporan-generator.git project-kamu
      cd project-kamu/
@@ -47,188 +57,115 @@ Flow utama -- clone, jalanin AI Agent, langsung build.
 
 4. AI akan:
    - Scan folder project kamu (tentukan jenis project: Web/ML/IoT/dll)
-   - Tanya kamu pertanyaan satu per satu:
-     (judul, anggota, universitas, dosen, matkul, tahun ajaran,
-     template kampus, latar belakang project, jumlah sub-bab bab 1,
-     screenshot, bab tambahan, font)
+   - Tanya kamu pertanyaan satu per satu (judul, anggota, dosen, matkul, dll)
    - Overwrite file-file berikut dengan konten sesuai project kamu:
      + chapters/bab*.md      (isi laporan per bab — tanpa manual numbering)
      + metadata.yml           (judul, penulis, dosen, matkul, institusi)
      + references.bib         (daftar pustaka format APA)
      + cover.md               (kata pengantar)
-   - File yang TIDAK diubah: template.latex, build.sh, logo.jpg, apa.csl
 
 5. Build PDF (lihat cara build di bawah)
-
-6. Laporan.pdf siap
 ```
 
 ---
 
-## Manual Flow (Edit Sendiri)
+## ✍️ Manual Flow (Edit Sendiri)
 
-Kalo mau nulis konten laporan manual tanpa AI:
+Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
-```
+```bash
 1. Clone repo:
      git clone https://github.com/muadzhdz/laporan-generator.git project-kamu
      cd project-kamu/
 
-2. Ganti logo.jpg dengan logo kampus atau sekolah kamu (nama file TETAP logo.jpg)
+2. Ganti logo.jpg dengan logo kampus/sekolah kamu (nama file TETAP logo.jpg)
 
-3. Edit isi laporan di chapters/bab*.md:
-     chapters/bab1-pendahuluan.md         -- BAB I
-     chapters/bab2-tinjauan-pustaka.md    -- BAB II
-     chapters/bab3-metodologi.md          -- BAB III
-     chapters/bab4-hasil-dan-pembahasan.md -- BAB IV
-     chapters/bab5-penutup.md             -- BAB V
+3. Edit isi laporan di chapters/bab*.md (BAB I s/d BAB V)
 
-4. Atur metadata di metadata.yml:
-     title, author (nama + NIM), lecturer, course, institution, faculty, year
+4. Atur metadata di metadata.yml (judul, penulis, dosen, matkul, institusi)
 
-5. Isi daftar pustaka di references.bib (format BibTeX) dan gunakan sitasi `[@citekey]` di Markdown
+5. Isi daftar pustaka di references.bib (format BibTeX) dan gunakan sitasi [@citekey] di Markdown
 
 6. Build PDF (lihat cara build di bawah)
-
-7. Laporan.pdf siap
-
-Note: kalo ada screenshot, taruh di folder gambar/ dan referensi pake ![](gambar/file.png)
 ```
 
 ---
 
-## Build PDF -- Pilih 1 dari 3 Cara
+## 🛠️ Build PDF -- Pilih 1 dari 3 Cara
 
-### Opsi 1: Docker (Paling Gampang)
-
-Tanpa instal Pandoc / TeX Live / ImageMagick di mesin lokal. Semua
-dependensi sudah di dalam container.
-
-**Butuh:** Docker Desktop terinstall
-
+### Opsi 1: Docker (Paling Gampang - Zero Dependencies)
 ```bash
-# Build PDF
 docker compose run --rm laporan-generator
-
-# Atau pake Makefile
-make docker-run         # Sama dengan docker compose run
-make docker-watch       # Auto-build saat file berubah
-make docker-build       # Build ulang image (kalo Dockerfile diubah)
 ```
-
-Perintah pertama kali akan download + build image (~5-10 menit tergantung koneksi).
-Selanjutnya eksekusi dalam hitungan detik.
-
-Ada 2 service di docker-compose.yml:
-| Service | Cara Jalan | Fungsi |
-|---------|-----------|--------|
-| laporan-generator | `docker compose run --rm laporan-generator` | Build PDF sekali jalan |
-| watch | `docker compose --profile watch run --rm watch` | Pantau perubahan file, auto rebuild |
-
-Output Laporan.pdf muncul di folder project (ter-mount via volume).
-Container jalan sebagai user ID host (UID/GID) biar file hasil gak jadi milik root.
-
----
 
 ### Opsi 2: Manual Install (Linux)
-
-**Butuh:** sudo access
-
-#### Ubuntu / Debian
 ```bash
-sudo apt install pandoc texlive-latex-base texlive-latex-extra \
-  texlive-latex-recommended texlive-fonts-extra \
-  texlive-fonts-recommended texlive-lang-other imagemagick
+# Ubuntu / Debian
+sudo apt install pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended imagemagick
 sudo fmtutil-sys --all
-```
-> *Catatan: kalo `texlive-lang-other` error, coba `texlive-lang-indonesian` (nama package beda tergantung versi OS).*
 
-#### Arch Linux
-```bash
-sudo pacman -S pandoc texlive-core texlive-latex texlive-latexextra \
-  texlive-latexrecommended texlive-fontsextra \
-  texlive-fontsrecommended texlive-langindonesian imagemagick
-sudo fmtutil-sys --all
-```
-
-#### Fedora / RHEL
-```bash
-sudo dnf install pandoc texlive-scheme-medium \
-  texlive-collection-latexextra texlive-collection-fontsrecommended \
-  texlive-lang-indonesian imagemagick
-sudo fmtutil-sys --all
-```
-
-#### Build
-```bash
+# Build
 ./build.sh
 ```
 
----
-
-### Opsi 3: Makefile
-
-Kalo dependensi sudah terinstall.
-
+### Opsi 3: Makefile Helpers
 ```bash
 make init         # Aktifkan git pre-commit hook otomatis
-make lint-deps    # Cek apakah semua tools tersedia
 make build        # Build PDF (sama kaya ./build.sh)
 make view         # Buka file Laporan.pdf di PDF viewer
 make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
 make html         # Export ke HTML
-make test         # Jalankan test suite (13 tes komprehensif)
+make test         # Jalankan test suite (15 kategori tes / 30 assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
 ---
 
-## Logo
+## 📚 Pusat Dokumentasi (Docs)
 
-**WAJIB** ganti `logo.jpg` dengan logo kampus atau sekolah kamu.
+Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
-- Nama file HARUS tetap `logo.jpg` (biar ditemukan template LaTeX)
-- Tampil di halaman cover PDF dengan lebar 4cm
-- Kalo pake AI Agent, file ini tidak di-overwrite (user ganti manual)
-- Format: JPG direkomendasikan. PNG dengan alpha channel otomatis diproses oleh build.sh
+- 🚀 **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
+- 📋 **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
+- 🎨 **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.latex`, font Nimbus Serif, margin, dan makro Pandoc 3.x.
+- 🔍 **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font map missing, dan izin Docker.
+- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)**: Pedoman berkontribusi, menambah template kampus baru, dan standar testing.
+- 📜 **[CHANGELOG.md](CHANGELOG.md)**: Catatan riwayat versi dan perubahan fitur.
 
 ---
 
-## Struktur File
+## 📂 Struktur File
 
 ```
 laporan-generator/
+├── GETTING-STARTED.md       # Panduan pemula (Zero to PDF)
+├── CONTRIBUTING.md          # Panduan kontribusi open-source
+├── CHANGELOG.md             # Catatan rilis versi
+├── docs/                    # Dokumentasi teknis terpisah
+│   ├── metadata-schema.md   # Skema metadata.yml
+│   ├── template-guide.md    # Arsitektur template LaTeX
+│   └── troubleshooting.md   # Solusi error lengkap
+├── examples/                # Contoh PDF laporan hasil kompilasi
+├── .github/                 # Workflows CI/CD, Issue & PR templates
 ├── apa.csl                  # Citation Style Language (APA)
 ├── build.sh                 # Skrip build utama
 ├── template.latex           # Template LaTeX (font, margin, format)
 ├── metadata.yml             # Judul, penulis, dosen, matkul, institusi
 ├── references.bib           # Daftar pustaka (BibTeX)
-├── chapters/                # Konten laporan per bab
-│   ├── bab1-pendahuluan.md
-│   ├── bab2-tinjauan-pustaka.md
-│   ├── bab3-metodologi.md
-│   ├── bab4-hasil-dan-pembahasan.md
-│   └── bab5-penutup.md
+├── chapters/                # Konten laporan per bab (bab1-5)
 ├── cover.md                 # Kata pengantar
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
-├── Makefile                 # Build, watch, test, docker
-├── test.sh                  # Test suite (25 tes)
-├── Dockerfile               # Container build
-├── docker-compose.yml       # Docker orchestration
-├── .githooks/               # Pre-commit hook (validasi build)
-├── .github/workflows/       # GitHub Actions CI/CD
-├── prompt.md                # Instruksi AI Agent (jangan diubah)
-├── README.md                # File ini
-├── LICENSE                  # Lisensi MIT
-└── .gitignore
+├── Makefile                 # Target build, watch, test, docker, init, view
+├── test.sh                  # Test suite (15 kategori tes)
+├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + TeX)
+├── docker-compose.yml       # Docker orchestration (UID/GID user mapping)
+└── prompt.md                # Instruksi AI Agent untuk pembuatan laporan
 ```
-
-> Build artifact (`Laporan.pdf`, `Laporan.docx`, `Laporan.html`, `tmp/`) otomatis di-ignore Git.
 
 ---
 
-## Alur Pipeline
+## 📄 Alur Pipeline
 
 ```
 chapters/bab*.md ---+                      
@@ -241,57 +178,8 @@ gambar/ ------------+                       +-- Bash (tmpdir + trap)
 apa.csl ------------+                       +-- container user (no root)
 ```
 
-Penjelasan singkat:
-1. Semua file sumber disalin ke direktori temporer
-2. Gambar PNG diproses (alpha channel dihapus via ImageMagick)
-3. Pandoc mengkonversi Markdown ke LaTeX menggunakan template
-4. Sitasi diformat APA via apa.csl (Citation Style Language)
-5. Font Nimbus Serif diaktifkan via encoding map
-6. pdfLaTeX mengkompilasi LaTeX menjadi PDF
-7. Direktori temporer dibersihkan otomatis (trap)
-
 ---
 
-## Untuk yang Baru Mulai (Zero Skill)
-
-Udah baca semua flow di atas tapi masih bingung? Gapapa.
-Kamu cukup lakuin 3 langkah doang:
-
-```
-1. Download repo ini ke folder project kamu:
-     git clone https://github.com/muadzhdz/laporan-generator.git project-kamu
-     cd project-kamu/
-
-2. Jalanin AI Agent (OpenCode, Claude Code, Antigravity CLI, dll):
-     "Baca prompt.md dan bantu aku bikin laporan untuk project ini"
-
-3. Diskusi aja sama AI Agent-nya.
-   Dia bakal nuntun kamu step by step, nanya judul, nama, screenshot,
-   sampe semua beres. Kamu tinggal jawab pertanyaannya doang.
-
-   Pas AI bilang selesai, jalanin ini di terminal:
-     docker compose run --rm laporan-generator
-
-   (Kalo belum punya Docker, download dulu dari https://docker.com)
-```
-
-Selesai. PDF kamu jadi.
-Gak perlu paham coding, gak perlu install Pandoc/LaTeX manual.
-AI Agent + Docker yang urus semuanya.
-
----
-
-## Troubleshooting
-
-- **ImageMagick Security Policy Error (`attempt to perform an operation not allowed by the security policy 'PDF'`):**
-  Edit `/etc/ImageMagick-6/policy.xml` atau `/etc/ImageMagick-7/policy.xml`, cari baris `<policy domain="coder" rights="none" pattern="PDF" />` lalu ganti `rights="none"` menjadi `rights="read|write"`.
-- **Font TS1 / Nimbus missing saat pdflatex:**
-  Jalankan `sudo fmtutil-sys --all` di terminal untuk meregenerasi font map LaTeX.
-- **Permission Denied pada output `Laporan.pdf`:**
-  Jalankan `make init` atau pastikan Docker container dijalankan dengan UID/GID user lokal (`docker compose run --rm laporan-generator`).
-
----
-
-## Lisensi
+## 📝 Lisensi
 
 MIT License. Lihat [LICENSE](LICENSE) untuk detail.
