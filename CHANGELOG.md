@@ -6,6 +6,27 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 
 ---
 
+## [1.2.0] - 2026-07-25
+
+### Added
+- **Release Automation Workflow**: Tambahan `.github/workflows/release.yml` untuk automated release ketika ada git tag push
+- **Remove All Emojis**: Menghapus semua emoji dari dokumentasi untuk tone yang lebih profesional dan akademik-appropriate
+- **Structured Case Study Examples**: Reorganisasi `examples/` menjadi 3 folder terstruktur:
+  - `01-Web-App/` — Laporan aplikasi React + Node.js
+  - `02-Machine-Learning/` — Laporan CNN image classification dengan PyTorch
+  - `03-IoT-Project/` — Laporan smart home monitoring dengan ESP32
+- **Standardized Test Output**: Update `test.sh` untuk menggunakan indicator output bersih ([OK] / [FAIL] / [ERROR])
+- **GitHub Discussions**: Enable Discussions untuk community Q&A, showcase, dan feature requests
+- **GitHub Stats Badges**: Tambah badges untuk Stars, Forks, Issues, dan Last Commit di README
+
+### Improved
+- Documentation consistency across all files (no emojis, professional tone)
+- Release automation dengan auto-build example PDF on tag push
+- Test output clarity dan debugging experience
+- README header dengan stats badges untuk professional appearance
+
+---
+
 ## [1.1.0] - 2026-07-25
 
 ### Added
