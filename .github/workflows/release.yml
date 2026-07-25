@@ -1,0 +1,50 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended imagemagick poppler-utils
+          sudo fmtutil-sys --all
+
+      - name: Run Test Suite
+        run: ./test.sh
+
+      - name: Build Report PDF
+        run: ./build.sh
+
+      - name: Extract Release Notes from CHANGELOG
+        id: changelog
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          NOTES=$(awk "/^## \[$VERSION\]/,/^---/" CHANGELOG.md | tail -n +2 | head -n -1 || echo "Release $VERSION")
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.RELEASE_NOTES }}
+          files: |
+            Laporan.pdf
+            examples/Laporan-Akademik-Example.pdf
+          draft: false
+          prerelease: false

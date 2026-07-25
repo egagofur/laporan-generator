@@ -1,10 +1,10 @@
-# 🤝 Panduan Berkontribusi (CONTRIBUTING)
+# Panduan Berkontribusi (CONTRIBUTING)
 
 Terima kasih telah tertarik untuk berkontribusi pada **Laporan Generator**! Project ini bersifat open-source dan sangat menyambut kontribusi dari komunitas, baik berupa perbaikan bug, penambahan fitur, penyempurnaan dokumentasi, maupun pembuatan template kampus baru.
 
 ---
 
-## 🛠️ Alur Kontribusi Cepat
+## Alur Kontribusi Cepat
 
 1. **Fork Repositori** ini ke akun GitHub Anda.
 2. **Clone** hasil fork ke komputer lokal Anda:
@@ -33,7 +33,7 @@ Terima kasih telah tertarik untuk berkontribusi pada **Laporan Generator**! Proj
 
 ---
 
-## 📋 Jenis Kontribusi yang Kami Terima
+## Jenis Kontribusi yang Kami Terima
 
 ### 1. Template Kampus / Institusi Baru
 Kami menyambut baik penambahan variasi template LaTeX resmi universitas/sekolah di Indonesia. Anda dapat menambahkan folder template baru di direktori `templates/`.
@@ -46,7 +46,7 @@ Meningkatkan instruksi pada `prompt.md` agar AI Agent dapat menghasilkan laporan
 
 ---
 
-## 🧪 Standar Pengujian Sebelum Submit PR
+## Standar Pengujian Sebelum Submit PR
 
 Sebelum membuat Pull Request, Anda **wajib** memastikan pengujian lokal lulus 100%:
 
@@ -63,7 +63,7 @@ make test
 
 ---
 
-## 📜 Pedoman Kode (Coding Standards)
+## Pedoman Kode (Coding Standards)
 
 - **Bash Script**: Ikuti praktik terbaik ShellCheck. Gunakan pengurutan variabel bertanda kutip dan penanganan error `set -e`.
 - **LaTeX Template**: Gunakan makro yang kompatibel dengan pdflatex. Hindari paket yang membutuhkan xelatex/lualatex jika tidak benar-benar diperlukan.

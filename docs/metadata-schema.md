@@ -1,10 +1,10 @@
-# 📋 Spesifikasi Skema Metadata (`metadata.yml`)
+# Spesifikasi Skema Metadata (metadata.yml)
 
-File `metadata.yml` digunakan oleh Pandoc dan template LaTeX untuk mengisikan informasi sampul (*cover page*), judul laporan, identitas penyusun, dosen pengampu, serta abstrak laporan.
+File `metadata.yml` digunakan oleh Pandoc dan template LaTeX untuk mengisikan informasi sampul (cover page), judul laporan, identitas penyusun, dosen pengampu, serta abstrak laporan.
 
 ---
 
-## 📑 Struktur File & Contoh Lengkap
+## Struktur File & Contoh Lengkap
 
 ```yaml
 ---
@@ -32,7 +32,7 @@ abstract: |
 
 ---
 
-## 🔍 Penjelasan Field Metadata
+## Penjelasan Field Metadata
 
 | Field | Tipe Data | Wajib? | Keterangan |
 |---|---|---|---|
@@ -51,7 +51,7 @@ abstract: |
 
 ---
 
-## 👥 Dukungan Multi-Author (Individu / Kelompok)
+## Dukungan Multi-Author (Individu / Kelompok)
 
 Skema ini mendukung jumlah penulis dinamis (1 orang hingga banyak orang):
 

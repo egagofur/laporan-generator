@@ -1,12 +1,12 @@
-# 🎨 Panduan Arsitektur Template LaTeX (`template.latex`)
+# Panduan Arsitektur Template LaTeX (template.latex)
 
 File `template.latex` merupakan jantung dari pemformatan visual PDF pada **Laporan Generator**. Template ini dirancang untuk memenuhi standar penyusunan laporan akademik resmi di Indonesia.
 
 ---
 
-## 🏛️ Desain Arsitektur & Pemilihan Font
+## Desain Arsitektur & Pemilihan Font
 
-### 1. Pemilihan Font (`Nimbus Serif / Times New Roman`)
+### 1. Pemilihan Font (Nimbus Serif / Times New Roman)
 * Standardisasi karya ilmiah di Indonesia mewajibkan penggunaan font tipe *Times New Roman* 12pt.
 * Untuk menjamin portabilitas kompilasi cross-platform pada mesin Linux, macOS, dan Docker tanpa tergantung pada font proprietary Microsoft, template menggunakan **Nimbus Serif** (`nimbus15.map` & `T1/jtm` font definition).
 * Font ini secara visual identik dengan Times New Roman dan didukung secara native oleh pdflatex.
@@ -25,9 +25,9 @@ File `template.latex` merupakan jantung dari pemformatan visual PDF pada **Lapor
 
 ---
 
-## 📖 Penomoran Bab dan Halaman
+## Penomoran Bab dan Halaman
 
-### 1. Format Bab & Heading (`titlesec` & `tocloft`)
+### 1. Format Bab & Heading (titlesec & tocloft)
 ```latex
 \renewcommand{\chaptername}{BAB}
 \renewcommand{\thechapter}{\Roman{chapter}}
@@ -38,21 +38,21 @@ File `template.latex` merupakan jantung dari pemformatan visual PDF pada **Lapor
 * **Sub-bab**: Diformat dengan Angka Arab (`1.1`, `1.2`, `2.1`).
 * **Sub-sub-bab**: Diformat dengan Angka Arab 3 tingkat (`1.1.1`, `1.1.2`).
 
-### 2. Penomoran Halaman (`frontmatter` vs `mainmatter`)
+### 2. Penomoran Halaman (frontmatter vs mainmatter)
 - **Bagian Depan** (Kata Pengantar, Daftar Isi): Menggunakan penomoran Romawi kecil (`i`, `ii`, `iii`) di bagian tengah bawah.
 - **Bagian Utama** (BAB I hingga BAB V): Menggunakan penomoran Angka Arab (`1`, `2`, `3`) berurutan.
 
 ---
 
-## 🛠️ Makro Penting Kompatibilitas Pandoc
+## Makro Penting Kompatibilitas Pandoc
 
-### 1. Makro Responsive Images (`\pandocbounded`)
+### 1. Makro Responsive Images (\pandocbounded)
 ```latex
 \providecommand{\pandocbounded}[1]{#1}
 ```
 * Menjamin kompatibilitas dengan Pandoc 3.x saat menyisipkan gambar `![](gambar/file.png)`.
 
-### 2. Pemrosesan Tabel (`tabular` & `longtable`)
+### 2. Pemrosesan Tabel (tabular & longtable)
 ```latex
 \renewcommand{\arraystretch}{1.2}
 \setlength{\tabcolsep}{4pt}
@@ -60,7 +60,7 @@ File `template.latex` merupakan jantung dari pemformatan visual PDF pada **Lapor
 ```
 * Mengatur spasi sel tabel agar terlihat rapi dan tidak terlalu rapat.
 
-### 3. Pewarnaan Blok Kode (`listings`)
+### 3. Pewarnaan Blok Kode (listings)
 ```latex
 \lstset{
   basicstyle=\footnotesize\ttfamily,

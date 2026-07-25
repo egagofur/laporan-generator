@@ -133,7 +133,7 @@ if ! pandoc \
   --no-highlight \
   -o "$REPORT" 2>&1; then
   echo ""
-  echo "❌ BUILD GAGAL: Terjadi kesalahan saat kompilasi Pandoc/pdfLaTeX."
+  echo "[ERROR] BUILD GAGAL: Terjadi kesalahan saat kompilasi Pandoc/pdfLaTeX."
   echo "Kemungkinan penyebab & solusi:"
   echo "  1. Sintaks YAML di metadata.yml tidak valid -> Cek docs/metadata-schema.md"
   echo "  2. Berkas gambar tidak ditemukan atau rusak -> Cek path gambar di chapters/"

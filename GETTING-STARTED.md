@@ -1,10 +1,10 @@
-# 🚀 Panduan Memulai: Zero to PDF (Laporan Generator)
+# Panduan Memulai: Zero to PDF (Laporan Generator)
 
-Selamat datang! Dokumen ini dirancang khusus untuk membantu Anda—baik pemula yang belum pernah mengetik kode maupun pengguna berpengalaman—untuk menghasilkan laporan akademik PDF berstandar profesional dalam waktu singkat.
+Selamat datang! Dokumen ini dirancang khusus untuk membantu Anda--baik pemula yang belum pernah mengetik kode maupun pengguna berpengalaman--untuk menghasilkan laporan akademik PDF berstandar profesional dalam waktu singkat.
 
 ---
 
-## 🎯 Pilih Jalur yang Sesuai dengan Anda
+## Pilih Jalur yang Sesuai dengan Anda
 
 | Jalur | Persyaratan | Cocok Untuk |
 |---|---|---|
@@ -87,7 +87,7 @@ make view
 
 ---
 
-## 📚 Glosarium Istilah Teknis
+## Glosarium Istilah Teknis
 
 * **Pandoc**: Program pengubah format dokumen (mengonversi Markdown menjadi dokumen LaTeX/PDF/Word/HTML).
 * **LaTeX**: Bahasa markup pemformatan dokumen tingkat tinggi yang biasa digunakan pada publikasi ilmiah internasional.
@@ -97,7 +97,7 @@ make view
 
 ---
 
-## ❓ FAQ & Troubleshooting Singkat
+## FAQ & Troubleshooting Singkat
 
 * **Q: Mengapa penomoran bab saya menjadi ganda seperti "BAB I: BAB 1"?**  
   *A:* Di file Markdown `chapters/bab*.md`, gunakan heading `# Judul Bab` tanpa menyertakan kata "BAB 1". Template LaTeX akan menambahkan kata "BAB I" secara otomatis.

@@ -5,7 +5,7 @@ build:
 
 init:
 	@git config core.hooksPath .githooks
-	@echo "✅ Git pre-commit hook berhasil diaktifkan!"
+	@echo "[OK] Git pre-commit hook berhasil diaktifkan!"
 
 view:
 	@if [ -f Laporan.pdf ]; then \

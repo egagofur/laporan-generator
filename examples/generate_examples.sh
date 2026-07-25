@@ -19,9 +19,9 @@ echo "Membuat sampel kompilasi laporan PDF..."
 
 if [ -f "$ROOT_DIR/Laporan.pdf" ]; then
   cp "$ROOT_DIR/Laporan.pdf" "$DIR/Laporan-Akademik-Example.pdf"
-  echo "✅ Contoh PDF berhasil disalin ke: $DIR/Laporan-Akademik-Example.pdf"
+  echo "[OK] Contoh PDF berhasil disalin ke: $DIR/Laporan-Akademik-Example.pdf"
 else
-  echo "❌ Gagal menghasilkan contoh PDF"
+  echo "[ERROR] Gagal menghasilkan contoh PDF"
   exit 1
 fi
 

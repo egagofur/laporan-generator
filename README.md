@@ -19,20 +19,20 @@
 </p>
 
 <p align="center">
-  <b><a href="GETTING-STARTED.md">🚀 Panduan Pemula (Zero to PDF)</a></b> •
-  <b><a href="CONTRIBUTING.md">🤝 Kontribusi</a></b> •
-  <b><a href="CHANGELOG.md">📜 Changelog</a></b> •
-  <b><a href="docs/troubleshooting.md">🔍 Troubleshooting</a></b> •
-  <b><a href="examples/Laporan-Akademik-Example.pdf">📄 Contoh PDF</a></b>
+  <b><a href="GETTING-STARTED.md">Panduan Pemula (Zero to PDF)</a></b> •
+  <b><a href="CONTRIBUTING.md">Kontribusi</a></b> •
+  <b><a href="CHANGELOG.md">Changelog</a></b> •
+  <b><a href="docs/troubleshooting.md">Troubleshooting</a></b> •
+  <b><a href="examples/Laporan-Akademik-Example.pdf">Contoh PDF</a></b>
 </p>
 
 ---
 
-## 📌 Daftar Isi
+## Daftar Isi
 
 - [AI Agent Flow (Cara Cepat)](#ai-agent-flow-cara-cepat)
 - [Manual Flow (Edit Sendiri)](#manual-flow-edit-sendiri)
-- [Build PDF — Pilih 1 dari 3 Cara](#build-pdf--pilih-1-dari-3-cara)
+- [Build PDF -- Pilih 1 dari 3 Cara](#build-pdf--pilih-1-dari-3-cara)
 - [Pusat Dokumentasi (Docs)](#pusat-dokumentasi-docs)
 - [Struktur File](#struktur-file)
 - [Alur Pipeline](#alur-pipeline)
@@ -40,9 +40,9 @@
 
 ---
 
-## ⚡ AI Agent Flow (Cara Cepat)
+## AI Agent Flow (Cara Cepat)
 
-Flow utama: Clone repo $\rightarrow$ Jalankan AI Agent $\rightarrow$ Langsung Build.
+Flow utama: Clone repo -> Jalankan AI Agent -> Langsung Build.
 
 ```bash
 1. Clone repo ke folder project kamu:
@@ -59,7 +59,7 @@ Flow utama: Clone repo $\rightarrow$ Jalankan AI Agent $\rightarrow$ Langsung Bu
    - Scan folder project kamu (tentukan jenis project: Web/ML/IoT/dll)
    - Tanya kamu pertanyaan satu per satu (judul, anggota, dosen, matkul, dll)
    - Overwrite file-file berikut dengan konten sesuai project kamu:
-     + chapters/bab*.md      (isi laporan per bab — tanpa manual numbering)
+     + chapters/bab*.md      (isi laporan per bab - tanpa manual numbering)
      + metadata.yml           (judul, penulis, dosen, matkul, institusi)
      + references.bib         (daftar pustaka format APA)
      + cover.md               (kata pengantar)
@@ -69,7 +69,7 @@ Flow utama: Clone repo $\rightarrow$ Jalankan AI Agent $\rightarrow$ Langsung Bu
 
 ---
 
-## ✍️ Manual Flow (Edit Sendiri)
+## Manual Flow (Edit Sendiri)
 
 Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
@@ -91,7 +91,7 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
 ---
 
-## 🛠️ Build PDF -- Pilih 1 dari 3 Cara
+## Build PDF -- Pilih 1 dari 3 Cara
 
 ### Opsi 1: Docker (Paling Gampang - Zero Dependencies)
 ```bash
@@ -122,20 +122,20 @@ make clean        # Hapus Laporan.pdf dan folder tmp/
 
 ---
 
-## 📚 Pusat Dokumentasi (Docs)
+## Pusat Dokumentasi (Docs)
 
 Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
-- 🚀 **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
-- 📋 **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
-- 🎨 **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.latex`, font Nimbus Serif, margin, dan makro Pandoc 3.x.
-- 🔍 **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font map missing, dan izin Docker.
-- 🤝 **[CONTRIBUTING.md](CONTRIBUTING.md)**: Pedoman berkontribusi, menambah template kampus baru, dan standar testing.
-- 📜 **[CHANGELOG.md](CHANGELOG.md)**: Catatan riwayat versi dan perubahan fitur.
+- **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
+- **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
+- **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.latex`, font Nimbus Serif, margin, dan makro Pandoc 3.x.
+- **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font map missing, dan izin Docker.
+- **[CONTRIBUTING.md](CONTRIBUTING.md)**: Pedoman berkontribusi, menambah template kampus baru, dan standar testing.
+- **[CHANGELOG.md](CHANGELOG.md)**: Catatan riwayat versi dan perubahan fitur.
 
 ---
 
-## 📂 Struktur File
+## Struktur File
 
 ```
 laporan-generator/
@@ -165,7 +165,7 @@ laporan-generator/
 
 ---
 
-## 📄 Alur Pipeline
+## Alur Pipeline
 
 ```
 chapters/bab*.md ---+                      
@@ -180,6 +180,6 @@ apa.csl ------------+                       +-- container user (no root)
 
 ---
 
-## 📝 Lisensi
+## Lisensi
 
 MIT License. Lihat [LICENSE](LICENSE) untuk detail.

@@ -154,13 +154,13 @@ Tulis setiap BAB dalam file terpisah di direktori `chapters/`:
 Format setiap file:
 - `# JUDUL BAB` (tanpa "BAB 1:" — template otomatis nambahin "BAB I")
 - `## Sub Bab` untuk sub-bab (tanpa nomor — template otomatis nambahin "1.1", "2.3", dll.)
-  - ❌ SALAH: `## 1.1 Latar Belakang` (akan jadi "1.1 1.1 Latar Belakang")
-  - ✅ BENAR: `## Latar Belakang` (otomatis jadi "1.1 Latar Belakang")
+  - SALAH: `## 1.1 Latar Belakang` (akan jadi "1.1 1.1 Latar Belakang")
+  - BENAR: `## Latar Belakang` (otomatis jadi "1.1 Latar Belakang")
 - `### Sub-sub Bab` untuk sub-sub-bab (tanpa nomor — otomatis "1.1.1")
 - Tabel pakai format pipe
 - Gambar: `![](gambar/file.png)`
 - Kode: blok triple backtick
-- Sitasi: Gunakan format Markdown Pandoc `[@citekey]` atau `@citekey` (❌ SALAH: `\cite{citekey}`)
+- Sitasi: Gunakan format Markdown Pandoc `[@citekey]` atau `@citekey` (SALAH: `\cite{citekey}`)
 - Matematika: `$...$` inline, `$$...$$` display
 - Sertakan kode/source code relevan dari project user sebagai contoh
 - Jangan pakai `\sloppy` atau `\tabcolsep` — semua udah diatur di template
@@ -172,7 +172,7 @@ Setelah selesai generate semua file, periksa:
 - (c) Tidak ada karakter box-drawing (├, ─, └, │) di konten
 - (d) Daftar pustaka minimal 5 entry dan tidak ada referensi yang terlihat palsu
 - (e) Heading level 1 menggunakan format `# JUDUL` (tanpa "BAB I:" — template otomatis nambahin)
-- (f) Tidak ada manual numbering di heading level 2 (`## 1.1 Judul` ❌ → `## Judul` ✅) atau level 3
+- (f) Tidak ada manual numbering di heading level 2 (`## 1.1 Judul` SALAH -> `## Judul` BENAR) atau level 3
 
 ### metadata.yml
 Overwrite dengan data user. Format:
@@ -205,7 +205,7 @@ Daftar pustaka dalam format BibTeX. Citeproc otomatis generate daftar pustaka da
 }
 ```
 
-**⚠️ PERINGATAN — JANGAN HALUSINASI REFERENSI:**
+**PERINGATAN -- JANGAN HALUSINASI REFERENSI:**
 - JANGAN membuat referensi palsu. AI sering menghasilkan judul/DOI/penulis yang tidak nyata.
 - Jika user tidak memiliki referensi asli, gunakan dokumentasi resmi framework/tools yang digunakan project (misal: React docs, TensorFlow docs, dokumentasi Flutter).
 - Jika ragu, tanya user: "Apakah ada referensi (buku, jurnal, DOI, link) yang ingin dicantumkan?"

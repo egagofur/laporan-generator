@@ -4,8 +4,8 @@ set -e
 PASS=0
 FAIL=0
 
-pass() { PASS=$((PASS+1)); echo "  ✅ $1"; }
-fail() { FAIL=$((FAIL+1)); echo "  ❌ $1"; }
+pass() { PASS=$((PASS+1)); echo "  [OK] $1"; }
+fail() { FAIL=$((FAIL+1)); echo "  [FAIL] $1"; }
 
 echo "=== Test Suite: Laporan Generator ==="
 echo ""

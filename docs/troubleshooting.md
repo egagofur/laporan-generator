@@ -1,10 +1,10 @@
-# 🔍 Panduan Penanganan Masalah (Troubleshooting)
+# Panduan Penanganan Masalah (Troubleshooting)
 
 Dokumen ini berisi daftar masalah umum, kode kesalahan, dan solusi langkah-demi-langkah saat menjalankan **Laporan Generator**.
 
 ---
 
-## 🛑 1. ImageMagick Security Policy Error
+## 1. ImageMagick Security Policy Error
 
 ### Gejala Error:
 ```text
@@ -33,7 +33,7 @@ Kebijakan keamanan default ImageMagick pada beberapa distribusi Linux (seperti U
 
 ---
 
-## 🛑 2. Missing Font Map (`NimbusSerif` / `fontools_ts1.enc`)
+## 2. Missing Font Map (NimbusSerif / fontools_ts1.enc)
 
 ### Gejala Error:
 ```text
@@ -57,7 +57,7 @@ sudo apt install texlive-fonts-extra texlive-fonts-recommended
 
 ---
 
-## 🛑 3. Undefined Control Sequence `\pandocbounded`
+## 3. Undefined Control Sequence \pandocbounded
 
 ### Gejala Error:
 ```text
@@ -77,7 +77,7 @@ Pastikan file `template.latex` Anda menyertakan baris berikut:
 
 ---
 
-## 🛑 4. Citasi "Undefined Reference"
+## 4. Citasi "Undefined Reference"
 
 ### Gejala Error:
 ```text
@@ -89,12 +89,12 @@ Di dalam Markdown, sintaks raw LaTeX `\cite{citekey}` digunakan alih-alih sintak
 
 ### Solusi:
 Gunakan sintaks sitasi Pandoc `[@citekey]` atau `@citekey` di file Markdown:
-- ❌ **Salah**: `Menurut \cite{he2016deep}...`
-- ✅ **Benar**: `Menurut [@he2016deep]...`
+- **Salah**: `Menurut \cite{he2016deep}...`
+- **Benar**: `Menurut [@he2016deep]...`
 
 ---
 
-## 🛑 5. Permission Denied pada `Laporan.pdf` (Docker Volume)
+## 5. Permission Denied pada Laporan.pdf (Docker Volume)
 
 ### Gejala Error:
 ```text
