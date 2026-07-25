@@ -19,6 +19,13 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/github/stars/muadzhdz/laporan-generator?style=flat-square&label=Stars" alt="Stars">
+  <img src="https://img.shields.io/github/forks/muadzhdz/laporan-generator?style=flat-square&label=Forks" alt="Forks">
+  <img src="https://img.shields.io/github/issues/muadzhdz/laporan-generator?style=flat-square&label=Issues" alt="Issues">
+  <img src="https://img.shields.io/github/last-commit/muadzhdz/laporan-generator?style=flat-square&label=Last%20Commit" alt="Last Commit">
+</p>
+
+<p align="center">
   <b><a href="GETTING-STARTED.md">Panduan Pemula (Zero to PDF)</a></b> •
   <b><a href="CONTRIBUTING.md">Kontribusi</a></b> •
   <b><a href="CHANGELOG.md">Changelog</a></b> •
