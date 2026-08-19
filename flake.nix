@@ -10,15 +10,14 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        tex = pkgs.texlive.combine {
-          inherit (pkgs.texlive)
-            collection-basic
-            collection-latex
-            collection-latexrecommended
-            collection-latexextra
-            collection-fontsrecommended
-            collection-langother;
-        };
+        tex = pkgs.texlive.withPackages (ps: [
+          ps.collection-basic
+          ps.collection-latex
+          ps.collection-latexrecommended
+          ps.collection-latexextra
+          ps.collection-fontsrecommended
+          ps.collection-langother
+        ]);
       in {
         devShells.default = pkgs.mkShell {
           name = "laporan-generator";
