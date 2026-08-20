@@ -13,13 +13,13 @@ echo ""
 # T1: Cek dependensi
 echo "[T1] Dependency check"
 if command -v pandoc &>/dev/null; then pass "pandoc tersedia"; else fail "pandoc tidak ada"; fi
-if command -v pdflatex &>/dev/null; then pass "pdflatex tersedia"; else fail "pdflatex tidak ada"; fi
+if command -v typst &>/dev/null; then pass "typst tersedia"; else fail "typst tidak ada"; fi
 if command -v convert &>/dev/null; then pass "imagemagick tersedia"; else fail "imagemagick tidak ada"; fi
 echo ""
 
 # T2: Cek file wajib
 echo "[T2] File structure check"
-for f in cover.md template.latex build.sh metadata.yml references.bib; do
+for f in cover.md template.typ build.sh metadata.yml references.bib; do
   if [ -f "$f" ]; then pass "$f ditemukan"; else fail "$f tidak ada"; fi
 done
 if [ -d chapters ] && ls chapters/bab*.md &>/dev/null; then
@@ -37,9 +37,9 @@ echo ""
 
 # T4: Cek template validity
 echo "[T4] Template check"
-if grep -q 'documentclass' template.latex; then pass "template punya documentclass"; else fail "template tanpa documentclass"; fi
-if grep -Fq 'pmboxdraw' template.latex; then pass "template pakai pmboxdraw (original)"; else fail "template tidak ada pmboxdraw"; fi
-if grep -Fq '\sloppy' template.latex; then pass "template pakai \sloppy (original)"; else fail "template tidak ada \sloppy"; fi
+if grep -q '^#set page' template.typ; then pass "template punya konfigurasi halaman (#set page)"; else fail "template tanpa #set page"; fi
+if grep -Fq '$body$' template.typ; then pass "template punya placeholder \$body\$"; else fail "template tanpa placeholder \$body\$"; fi
+if grep -Fq 'set heading(numbering' template.typ; then pass "template punya penomoran heading otomatis"; else fail "template tanpa penomoran heading"; fi
 echo ""
 
 # T5: Cek gitignore
@@ -155,12 +155,12 @@ else
 fi
 echo ""
 
-# T15: Cek makro kompatibilitas Pandoc 3.x
-echo "[T15] Pandoc 3.x macro compatibility check"
-if grep -q 'pandocbounded' template.latex 2>/dev/null; then
-  pass "template.latex mendukung makro \pandocbounded"
+# T15: Cek engine Typst pada pipeline
+echo "[T15] Typst engine check"
+if grep -q -- '--pdf-engine=typst' build.sh 2>/dev/null; then
+  pass "build.sh menggunakan pdf-engine typst"
 else
-  fail "template.latex belum mendukung makro \pandocbounded"
+  fail "build.sh belum menggunakan pdf-engine typst"
 fi
 echo ""
 

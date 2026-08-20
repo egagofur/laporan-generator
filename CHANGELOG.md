@@ -6,6 +6,20 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 
 ---
 
+## [2.0.0] - 2026-08-20
+
+### Changed
+- **Engine PDF berpindah dari LaTeX ke Typst**: Pipeline utama kini memakai `--pdf-engine=typst` dengan template baru `template.typ`, menggantikan `template.latex` (disimpan sebagai arsip legacy dan tidak lagi dipakai pipeline utama).
+- **Penomoran bab otomatis** (`BAB I`, `BAB II`, dst; sub-bab `1.1`, `1.1.1`) kini ditangani sepenuhnya oleh Typst via `set heading(numbering: ...)`.
+- **Dependensi jauh lebih ringan**: Hapus seluruh paket TeX Live (~3.5 GB) dari Dockerfile, flake.nix, dan CI. Sekarang cukup binary Typst (~25 MB) + Pandoc + ImageMagick.
+- **Dokumentasi di-update**: `README.md`, `docs/template-guide.md` (arsitektur `template.typ`), dan `docs/troubleshooting.md` (isu font Typst & sintaks raw).
+
+### Removed
+- `fmtutil-sys --all` dari Dockerfile dan CI workflows (khusus TeX Live).
+- Tes `template.latex` (documentclass, pmboxdraw, \sloppy, \pandocbounded) diganti dengan pemeriksaan spesifik Typst.
+
+---
+
 ## [1.2.0] - 2026-07-25
 
 ### Added

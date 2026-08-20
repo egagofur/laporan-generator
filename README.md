@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/muadzhdz/laporan-generator/actions/workflows/build.yml"><img src="https://github.com/muadzhdz/laporan-generator/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
   <a href="#"><img src="https://img.shields.io/badge/Pandoc-3.0+-blue?style=for-the-badge&logo=markdown"></a>
-  <a href="#"><img src="https://img.shields.io/badge/LaTeX-pdflatex-008080?style=for-the-badge&logo=latex"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Typst-0.15+-239DAD?style=for-the-badge"></a>
   <a href="#"><img src="https://img.shields.io/badge/ImageMagick-7.0+-orange?style=for-the-badge"></a>
   <a href="#"><img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white"></a>
   <a href="#"><img src="https://img.shields.io/badge/Nix-5277C3?style=for-the-badge&logo=nixos&logoColor=white"></a>
@@ -109,8 +109,10 @@ docker compose run --rm laporan-generator
 ### Opsi 2: Manual Install (Linux)
 ```bash
 # Ubuntu / Debian
-sudo apt install pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended imagemagick
-sudo fmtutil-sys --all
+sudo apt install pandoc imagemagick xz-utils
+wget -q https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz -O /tmp/typst.tar.xz
+tar -xJf /tmp/typst.tar.xz -C /tmp
+sudo mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
 
 # Build
 ./build.sh
@@ -130,7 +132,7 @@ make clean        # Hapus Laporan.pdf dan folder tmp/
 
 ### Opsi 4: Nix Flake (Reproducible - Zero Manual Install)
 
-Environment development lengkap (Pandoc 3.x, TeX Live, ImageMagick, Typst, ShellCheck, dan tooling lainnya) dalam satu perintah. Cocok untuk pengguna NixOS, pengguna dengan Nix terinstall, atau siapa saja yang ingin environment identik di semua perangkat tanpa install manual.
+Environment development lengkap (Pandoc 3.x, Typst, ImageMagick, ShellCheck, dan tooling lainnya) dalam satu perintah. Cocok untuk pengguna NixOS, pengguna dengan Nix terinstall, atau siapa saja yang ingin environment identik di semua perangkat tanpa install manual.
 
 ```bash
 # Masuk ke environment development
@@ -141,7 +143,7 @@ nix develop
 make test             # 30 assertions
 ```
 
-Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, TeX Live, atau ImageMagick secara manual.
+Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, Typst, atau ImageMagick secara manual.
 
 ---
 
@@ -151,8 +153,8 @@ Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 - **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
 - **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
-- **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.latex`, font Nimbus Serif, margin, dan makro Pandoc 3.x.
-- **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font map missing, dan izin Docker.
+- **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.typ`, font Libertinus Serif, margin, dan penomoran bab otomatis Typst.
+- **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font Typst, dan izin Docker.
 - **[CONTRIBUTING.md](CONTRIBUTING.md)**: Pedoman berkontribusi, menambah template kampus baru, dan standar testing.
 - **[CHANGELOG.md](CHANGELOG.md)**: Catatan riwayat versi dan perubahan fitur.
 
@@ -167,13 +169,14 @@ laporan-generator/
 ├── CHANGELOG.md             # Catatan rilis versi
 ├── docs/                    # Dokumentasi teknis terpisah
 │   ├── metadata-schema.md   # Skema metadata.yml
-│   ├── template-guide.md    # Arsitektur template LaTeX
+│   ├── template-guide.md    # Arsitektur template Typst
 │   └── troubleshooting.md   # Solusi error lengkap
 ├── examples/                # Contoh PDF laporan hasil kompilasi
 ├── .github/                 # Workflows CI/CD, Issue & PR templates
 ├── apa.csl                  # Citation Style Language (APA)
 ├── build.sh                 # Skrip build utama
-├── template.latex           # Template LaTeX (font, margin, format)
+├── template.typ             # Template Typst (font, margin, format)
+├── template.latex           # Template LaTeX (arsip legacy, tidak dipakai)
 ├── metadata.yml             # Judul, penulis, dosen, matkul, institusi
 ├── references.bib           # Daftar pustaka (BibTeX)
 ├── chapters/                # Konten laporan per bab (bab1-5)
@@ -181,9 +184,9 @@ laporan-generator/
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
 ├── Makefile                 # Target build, watch, test, docker, init, view
 ├── test.sh                  # Test suite (15 kategori tes)
-├── flake.nix                # Nix devShell (pandoc, TeX Live, ImageMagick, typst, tooling)
+├── flake.nix                # Nix devShell (pandoc, typst, ImageMagick, tooling)
 ├── flake.lock               # Lockfile untuk environment reproducible
-├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + TeX)
+├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + Typst)
 ├── docker-compose.yml       # Docker orchestration (UID/GID user mapping)
 └── prompt.md                # Instruksi AI Agent untuk pembuatan laporan
 ```
@@ -195,9 +198,9 @@ laporan-generator/
 ```
 chapters/bab*.md ---+                      
 cover.md -----------+                      
-metadata.yml -------+-- Pandoc --citeproc --+-- pdfLaTeX -- Laporan.pdf
+metadata.yml -------+-- Pandoc --citeproc --+-- Typst ------ Laporan.pdf
 references.bib -----+  --csl=apa.csl        |
-template.latex -----+                       +-- ImageMagick (alpha off)
+template.typ -------+                       +-- ImageMagick (alpha off)
 logo.jpg -----------+                       |
 gambar/ ------------+                       +-- Bash (tmpdir + trap)
 apa.csl ------------+                       +-- container user (no root)

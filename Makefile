@@ -22,7 +22,7 @@ clean:
 lint-deps:
 	@echo "Checking dependencies..."
 	@command -v pandoc >/dev/null 2>&1 || { echo "ERROR: pandoc not found"; exit 1; }
-	@command -v pdflatex >/dev/null 2>&1 || { echo "ERROR: pdflatex not found"; exit 1; }
+	@command -v typst >/dev/null 2>&1 || { echo "ERROR: typst not found"; exit 1; }
 	@command -v convert >/dev/null 2>&1 || { echo "ERROR: ImageMagick (convert) not found"; exit 1; }
 	@echo "All dependencies OK."
 

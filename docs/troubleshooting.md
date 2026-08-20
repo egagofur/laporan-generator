@@ -33,47 +33,40 @@ Kebijakan keamanan default ImageMagick pada beberapa distribusi Linux (seperti U
 
 ---
 
-## 2. Missing Font Map (NimbusSerif / fontools_ts1.enc)
+## 2. Font Tidak Ditemukan (Missing Font)
 
 ### Gejala Error:
 ```text
-! LaTeX Error: File `t1jtm.fd' not found.
-atau
-kpathsea: Running mktexmf fontools_ts1.enc failed.
+warning: font 'Nimbus Serif' not found, falling back to default
+warning: failed to resolve font 'Times New Roman'
 ```
 
 ### Penyebab:
-Map font `pdflatex` di mesin lokal belum teregenerasi setelah instalasi paket TeX Live.
+Font yang disebutkan di dalam `template.typ` tidak tersedia. Typst hanya memakai font yang dibundel di binary-nya (termasuk Libertinus Serif dan DejaVu Sans Mono) plus font yang terinstall di sistem.
 
 ### Solusi:
-Jalankan regenerasi map font sistem dengan perintah berikut:
-```bash
-sudo fmtutil-sys --all
-```
-Jika masalah berlanjut, pastikan paket `texlive-fonts-extra` dan `texlive-fonts-recommended` sudah terinstall:
-```bash
-sudo apt install texlive-fonts-extra texlive-fonts-recommended
-```
+1. Gunakan font bawaan Typst: `Libertinus Serif`, `DejaVu Sans Mono`, atau `New Computer Modern`.
+2. Jika ingin font sistem lain, pastikan font tersebut sudah terinstall di OS/container.
+3. Cek daftar font yang tersedia:
+   ```bash
+   typst fonts
+   ```
 
 ---
 
-## 3. Undefined Control Sequence \pandocbounded
+## 3. Syntax Error Raw Typst di cover.md
 
 ### Gejala Error:
 ```text
-! Undefined control sequence.
-l.370 \pandocbounded
+error: expected `)`, found `]`
+  ┌─ cover.md:5:1
 ```
 
 ### Penyebab:
-Pandoc versi 3.x secara otomatis membungkus tag gambar dengan makro `\pandocbounded`, namun makro tersebut belum terdefinisi di template LaTeX lama.
+Blok raw Typst di dalam `cover.md` (diapit ``` ```typst ```) memiliki kesalahan sintaks. Contoh yang sering terjadi: `block(align: center)` (tidak valid di Typst, gunakan `align(center)[block(...)]`) atau `ns.first()` (dihapus sejak Typst 0.13, gunakan `ns.at(0)`).
 
 ### Solusi:
-Pastikan file `template.latex` Anda menyertakan baris berikut:
-```latex
-\providecommand{\pandocbounded}[1]{#1}
-```
-*(Versi `template.latex` pada repositori ini sudah diperbarui untuk menangani isu ini secara otomatis)*.
+Periksa pesan error Typst yang menyebutkan posisi baris, lalu perbaiki blok raw di `cover.md` atau konstruksi template di `template.typ`.
 
 ---
 
@@ -81,11 +74,11 @@ Pastikan file `template.latex` Anda menyertakan baris berikut:
 
 ### Gejala Error:
 ```text
-LaTeX Warning: Citation 'he2016deep' on page 1 undefined.
+[WARNING] Citeproc: citation 'he2016deep' not found
 ```
 
 ### Penyebab:
-Di dalam Markdown, sintaks raw LaTeX `\cite{citekey}` digunakan alih-alih sintaks native Pandoc.
+Di dalam Markdown, sintaks sitasi tidak dikenali atau citekey tidak ada di `references.bib`.
 
 ### Solusi:
 Gunakan sintaks sitasi Pandoc `[@citekey]` atau `@citekey` di file Markdown:
