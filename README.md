@@ -6,7 +6,7 @@
 
 <p align="center">
    Pipeline otomatisasi laporan akademik dari Markdown ke PDF dalam satu perintah.
-   Format APA, cover profesional, support Docker. Bisa pake AI Agent untuk generate konten otomatis.
+   Format APA, cover profesional, support Docker & Nix. Bisa pake AI Agent untuk generate konten otomatis.
 </p>
 
 <p align="center">
@@ -15,6 +15,7 @@
   <a href="#"><img src="https://img.shields.io/badge/LaTeX-pdflatex-008080?style=for-the-badge&logo=latex"></a>
   <a href="#"><img src="https://img.shields.io/badge/ImageMagick-7.0+-orange?style=for-the-badge"></a>
   <a href="#"><img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Nix-5277C3?style=for-the-badge&logo=nixos&logoColor=white"></a>
   <a href="#"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"></a>
 </p>
 
@@ -39,7 +40,7 @@
 
 - [AI Agent Flow (Cara Cepat)](#ai-agent-flow-cara-cepat)
 - [Manual Flow (Edit Sendiri)](#manual-flow-edit-sendiri)
-- [Build PDF -- Pilih 1 dari 3 Cara](#build-pdf--pilih-1-dari-3-cara)
+- [Build PDF -- Pilih 1 dari 4 Cara](#build-pdf--pilih-1-dari-4-cara)
 - [Pusat Dokumentasi (Docs)](#pusat-dokumentasi-docs)
 - [Struktur File](#struktur-file)
 - [Alur Pipeline](#alur-pipeline)
@@ -98,7 +99,7 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
 ---
 
-## Build PDF -- Pilih 1 dari 3 Cara
+## Build PDF -- Pilih 1 dari 4 Cara
 
 ### Opsi 1: Docker (Paling Gampang - Zero Dependencies)
 ```bash
@@ -126,6 +127,21 @@ make html         # Export ke HTML
 make test         # Jalankan test suite (15 kategori tes / 30 assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
+
+### Opsi 4: Nix Flake (Reproducible - Zero Manual Install)
+
+Environment development lengkap (Pandoc 3.x, TeX Live, ImageMagick, Typst, ShellCheck, dan tooling lainnya) dalam satu perintah. Cocok untuk pengguna NixOS, pengguna dengan Nix terinstall, atau siapa saja yang ingin environment identik di semua perangkat tanpa install manual.
+
+```bash
+# Masuk ke environment development
+nix develop
+
+# Build PDF / test di dalam shell:
+./build.sh            # atau: make build
+make test             # 30 assertions
+```
+
+Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, TeX Live, atau ImageMagick secara manual.
 
 ---
 
@@ -165,6 +181,8 @@ laporan-generator/
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
 ├── Makefile                 # Target build, watch, test, docker, init, view
 ├── test.sh                  # Test suite (15 kategori tes)
+├── flake.nix                # Nix devShell (pandoc, TeX Live, ImageMagick, typst, tooling)
+├── flake.lock               # Lockfile untuk environment reproducible
 ├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + TeX)
 ├── docker-compose.yml       # Docker orchestration (UID/GID user mapping)
 └── prompt.md                # Instruksi AI Agent untuk pembuatan laporan
