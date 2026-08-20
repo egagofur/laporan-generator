@@ -1,4 +1,4 @@
-.PHONY: build clean lint-deps watch docx html crossref test docker-build init view
+.PHONY: build clean lint-deps watch docx html crossref test docker-build init view reference-docx
 
 build:
 	./build.sh
@@ -40,13 +40,21 @@ docx:
 		echo "ERROR: Direktori chapters/ tidak ditemukan."; \
 		exit 1; \
 	fi; \
-	pandoc chapters/bab*.md \
+	pandoc cover.md chapters/bab*.md \
 		--metadata-file=metadata.yml \
 		--citeproc --bibliography=references.bib \
 		--csl=apa.csl \
 		--metadata=reference-section-title="DAFTAR PUSTAKA" \
 		--top-level-division=chapter \
+		--reference-doc=reference.docx \
+		--lua-filter=docx.lua \
 		-o Laporan.docx 2>&1
+
+reference-docx:
+	@command -v pandoc >/dev/null 2>&1 || { echo "ERROR: pandoc not found"; exit 1; }
+	@command -v python3 >/dev/null 2>&1 || { echo "ERROR: python3 not found"; exit 1; }
+	pandoc --print-default-data-file reference.docx > /tmp/ref-default.docx
+	python3 scripts/make-reference-docx.py /tmp/ref-default.docx reference.docx
 
 html:
 	@if [ ! -d chapters ]; then \

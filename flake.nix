@@ -24,6 +24,7 @@
             pkgs.haskellPackages.pandoc-crossref
             pkgs.shellcheck
             pkgs.typst
+            pkgs.unzip
           ];
         };
       });

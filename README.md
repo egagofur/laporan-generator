@@ -125,8 +125,9 @@ make build        # Build PDF (sama kaya ./build.sh)
 make view         # Buka file Laporan.pdf di PDF viewer
 make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
+make reference-docx # Regenerasi reference.docx dari reference bawaan pandoc
 make html         # Export ke HTML
-make test         # Jalankan test suite (15 kategori tes / 30 assertions)
+make test         # Jalankan test suite (16 kategori tes / 39 assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
@@ -140,7 +141,7 @@ nix develop
 
 # Build PDF / test di dalam shell:
 ./build.sh            # atau: make build
-make test             # 30 assertions
+make test             # 39 assertions
 ```
 
 Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, Typst, atau ImageMagick secara manual.
@@ -183,7 +184,10 @@ laporan-generator/
 ├── cover.md                 # Kata pengantar
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
 ├── Makefile                 # Target build, watch, test, docker, init, view
-├── test.sh                  # Test suite (15 kategori tes)
+├── test.sh                  # Test suite (16 kategori tes)
+├── reference.docx           # Template gaya Word (A4, TNR 12pt, Heading 14pt)
+├── docx.lua                 # Filter penomoran BAB/1.1./1.1.1 untuk DOCX
+├── scripts/                 # Skrip bantu (make-reference-docx.py)
 ├── flake.nix                # Nix devShell (pandoc, typst, ImageMagick, tooling)
 ├── flake.lock               # Lockfile untuk environment reproducible
 ├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + Typst)
@@ -200,10 +204,16 @@ chapters/bab*.md ---+
 cover.md -----------+                      
 metadata.yml -------+-- Pandoc --citeproc --+-- Typst ------ Laporan.pdf
 references.bib -----+  --csl=apa.csl        |
-template.typ -------+                       +-- ImageMagick (alpha off)
+template.typ -------+                       +-- Typst ------ Laporan.pdf
 logo.jpg -----------+                       |
-gambar/ ------------+                       +-- Bash (tmpdir + trap)
-apa.csl ------------+                       +-- container user (no root)
+gambar/ ------------+                       +-- ImageMagick (alpha off)
+apa.csl ------------+                       +-- Bash (tmpdir + trap)
+                                            +-- container user (no root)
+
+-- Opsi export Word (.docx) --
+cover.md + chapters/bab*.md + metadata.yml -- Pandoc --reference-doc
+    = reference.docx (A4, TNR, heading) + --lua-filter=docx.lua
+    = Laporan.docx (dengan field DAFTAR ISI otomatis Word)
 ```
 
 ---

@@ -19,7 +19,7 @@ echo ""
 
 # T2: Cek file wajib
 echo "[T2] File structure check"
-for f in cover.md template.typ build.sh metadata.yml references.bib; do
+for f in cover.md template.typ build.sh metadata.yml references.bib reference.docx docx.lua; do
   if [ -f "$f" ]; then pass "$f ditemukan"; else fail "$f tidak ada"; fi
 done
 if [ -d chapters ] && ls chapters/bab*.md &>/dev/null; then
@@ -161,6 +161,55 @@ if grep -q -- '--pdf-engine=typst' build.sh 2>/dev/null; then
   pass "build.sh menggunakan pdf-engine typst"
 else
   fail "build.sh belum menggunakan pdf-engine typst"
+fi
+echo ""
+
+# T16: Cek kualitas DOCX export
+echo "[T16] DOCX export check"
+if command -v unzip &>/dev/null; then
+  if make docx >/dev/null 2>&1; then
+    pass "make docx sukses"
+    if [ -f Laporan.docx ]; then
+      DOCXML=$(unzip -p Laporan.docx word/document.xml 2>/dev/null)
+      STYXML=$(unzip -p Laporan.docx word/styles.xml 2>/dev/null)
+      if echo "$DOCXML" | grep -q 'BAB I PENDAHULUAN'; then
+        pass "docx punya penomoran BAB I (kapital)"
+      else
+        fail "docx tanpa penomoran BAB I"
+      fi
+      if echo "$DOCXML" | grep -q 'KATA PENGANTAR' && ! echo "$DOCXML" | grep -q 'BAB I KATA PENGANTAR'; then
+        pass "KATA PENGANTAR tanpa nomor bab"
+      else
+        fail "KATA PENGANTAR ke-numbering BAB I"
+      fi
+      if echo "$DOCXML" | grep -q 'instrText'; then
+        pass "docx punya field DAFTAR ISI (TOC)"
+      else
+        fail "docx tanpa field TOC"
+      fi
+      if echo "$STYXML" | grep -q 'Times New Roman'; then
+        pass "docx memakai Times New Roman"
+      else
+        fail "docx tanpa Times New Roman"
+      fi
+      if echo "$DOCXML" | grep -q 'w:w="11906"'; then
+        pass "docx ukuran halaman A4"
+      else
+        fail "docx bukan A4"
+      fi
+      if echo "$STYXML" | grep -q 'w:val="28"'; then
+        pass "Heading1 berukuran 14pt (sz 28)"
+      else
+        fail "Heading1 bukan 14pt"
+      fi
+    else
+      fail "Laporan.docx tidak dihasilkan"
+    fi
+  else
+    fail "make docx gagal"
+  fi
+else
+  pass "unzip tidak terinstall (skipped)"
 fi
 echo ""
 

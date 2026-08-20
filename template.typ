@@ -14,9 +14,9 @@
 
 #set heading(numbering: (..ns) => {
   if ns.len() == 1 {
-    "BAB " + numbering("I", ns.at(0)) + linebreak()
+    "BAB " + numbering("I", ns.at(0))
   } else if ns.len() == 2 {
-    numbering("1.1", ..ns)
+    numbering("1.1.", ..ns)
   } else {
     numbering("1.1.1", ..ns)
   }
@@ -26,22 +26,33 @@
   pagebreak(weak: true)
   align(center)[
     #block(inset: (top: 0.5em, bottom: 1em))[
-      #text(size: 14pt, weight: "bold")[#it]
+      #text(size: 14pt, weight: "bold")[
+        #if it.numbering != none [
+          #("BAB " + numbering("I", counter(heading).get().at(0)))
+          #h(0.5em)
+          #upper(it.body.text)
+        ] else [
+          #it.body
+        ]
+      ]
     ]
   ]
 }
 
 #show heading.where(level: 2): it => {
   block(inset: (top: 0.6em, bottom: 0.3em))[
-    #text(size: 12pt, weight: "bold")[#it]
+    #text(size: 12pt, weight: "bold")[#it.body]
   ]
 }
 
 #show heading.where(level: 3): it => {
   block(inset: (top: 0.4em, bottom: 0.2em))[
-    #text(size: 12pt, weight: "bold")[#it]
+    #text(size: 12pt, weight: "bold")[#it.body]
   ]
 }
+
+#show outline.entry.where(level: 1): set block(above: 0.9em, below: 0.2em)
+#show outline.entry.where(level: 1): set text(weight: "bold")
 
 #set table(stroke: 0.5pt + luma(140), inset: 4pt)
 #show table.header: set text(weight: "bold")
@@ -50,12 +61,12 @@
 
 #v(1cm)
 #align(center)[
-  #text(size: 14pt, weight: "bold")[$title$]
+  #text(size: 14pt, weight: "bold")[#upper("$title$")]
 ]
 $if(subtitle)$
 #v(0.3cm)
 #align(center)[
-  #text(size: 14pt, weight: "bold")[$subtitle$]
+  #text(size: 14pt, weight: "bold")[#upper("$subtitle$")]
 ]
 $endif$
 $if(course)$
@@ -91,11 +102,11 @@ $endfor$
 
 #v(1fr)
 #align(center)[
-  #text(size: 12pt, weight: "bold")[$faculty$]
+  #text(size: 14pt, weight: "bold")[$faculty$]
   #linebreak()
-  #text(size: 12pt, weight: "bold")[$institution$]
+  #text(size: 14pt, weight: "bold")[$institution$]
   #linebreak()
-  #text(size: 12pt, weight: "bold")[$year$]
+  #text(size: 14pt, weight: "bold")[$year$]
 ]
 #v(1cm)
 

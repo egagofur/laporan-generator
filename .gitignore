@@ -1,6 +1,7 @@
 *.pdf
 !examples/*.pdf
 *.docx
+!reference.docx
 *.html
 *.aux
 *.log

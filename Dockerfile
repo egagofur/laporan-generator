@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     xz-utils \
+    unzip \
     imagemagick \
     inotify-tools \
     make \
