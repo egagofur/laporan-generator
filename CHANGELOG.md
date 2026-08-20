@@ -10,13 +10,15 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 
 ### Added
 - **Export DOCX profesional**: `make docx` kini memakai `reference.docx` (template gaya Word) dan `docx.lua` (filter Lua). Hasil: halaman A4, margin 2/3/2.5/2.5 cm, Times New Roman 12pt justify spasi 1.5, Heading 1 (judul BAB) 14pt bold rata tengah, Heading 2/3 12pt bold rata kiri, penomoran `BAB I`/`1.1.`/`1.1.1` otomatis, field DAFTAR ISI Word (`TOC \o "1-3"`), dan KATA PENGANTAR tanpa nomor.
+- **Cover DOCX meniru cover PDF**: logo, judul seimbang (tanpa kata sendirian, `balance_title` DP), subjudul, mata kuliah, dosen pengampu, daftar penulis (nama + NIM), dan institusi (fakultas/kampus/tahun) memakai style khusus `CoverImage`, `CoverTitle`, `CoverSubtitle`, `CoverLine`, `CoverInstitution`; title block bawaan pandoc dinonaktifkan.
 - **`scripts/make-reference-docx.py`**: Skrip untuk meregenerasi `reference.docx` dari reference bawaan pandoc (`make reference-docx`).
-- **Test T16**: Validasi DOCX export (penomoran BAB, KATA PENGANTAR tanpa nomor, field TOC, Times New Roman, ukuran A4, Heading 14pt) -- total 39 assertions.
+- **Test T16**: Validasi DOCX export (penomoran BAB, KATA PENGANTAR tanpa nomor, field TOC, Times New Roman, ukuran A4, Heading 14pt, cover logo + style cover + title block hilang) -- total 43 assertions.
 - Dependensi `unzip` di flake.nix, Dockerfile, dan CI untuk inspeksi DOCX.
 
 ### Changed
-- **Format heading PDF mengikuti pedoman kampus**: Judul BAB (`BAB I PENDAHULUAN`) kini satu baris, huruf kapital, 14pt bold, rata tengah; sub-bab `1.1.` (titik di akhir) 12pt bold; DAFTAR ISI terstruktur (judul bold 14pt, dot leaders, indent sub-bab & sub-sub-bab, spasi antar bab).
-- **Judul sampul & info institusi 14pt kapital penuh** (`LAPORAN DOKUMENTASI PIPELINE`), judul laporan di-uppercase otomatis.
+- **Format heading PDF mengikuti pedoman kampus**: Judul BAB kini dua baris (`BAB II` di baris pertama, judul kapital di baris kedua), 14pt bold, rata tengah; sub-bab `1.1.` (titik di akhir) 12pt bold bernomor di body; DAFTAR ISI terstruktur (judul bold 14pt, dot leaders, indent sub-bab & sub-sub-bab, spasi antar bab) tetap satu baris.
+- **Judul sampul seimbang tanpa kata sendirian**: `balance-lines` (dynamic programming) membagi judul menjadi maksimal 4 baris berbentuk piramida, contoh: `SISTEM INFORMASI PEMESANAN / KANTIN SEKOLAH BERBASIS WEB / MENGGUNAKAN REACT DAN / NODE.JS`.
+- **Judul sampul & info institusi 14pt kapital penuh** (`LAPORAN DOKUMENTASI PIPELINE`), fakultas/kampus/tahun di-uppercase otomatis.
 - `make docx` kini menyertakan `cover.md` (KATA PENGANTAR + field DAFTAR ISI Word).
 
 ---

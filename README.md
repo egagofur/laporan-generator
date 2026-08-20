@@ -186,7 +186,7 @@ laporan-generator/
 ├── Makefile                 # Target build, watch, test, docker, init, view
 ├── test.sh                  # Test suite (16 kategori tes)
 ├── reference.docx           # Template gaya Word (A4, TNR 12pt, Heading 14pt)
-├── docx.lua                 # Filter penomoran BAB/1.1./1.1.1 untuk DOCX
+├── docx.lua                 # Filter penomoran BAB/1.1./1.1.1 + cover DOCX
 ├── scripts/                 # Skrip bantu (make-reference-docx.py)
 ├── flake.nix                # Nix devShell (pandoc, typst, ImageMagick, tooling)
 ├── flake.lock               # Lockfile untuk environment reproducible
@@ -213,7 +213,7 @@ apa.csl ------------+                       +-- Bash (tmpdir + trap)
 -- Opsi export Word (.docx) --
 cover.md + chapters/bab*.md + metadata.yml -- Pandoc --reference-doc
     = reference.docx (A4, TNR, heading) + --lua-filter=docx.lua
-    = Laporan.docx (dengan field DAFTAR ISI otomatis Word)
+    = Laporan.docx (cover page + field DAFTAR ISI otomatis Word)
 ```
 
 ---

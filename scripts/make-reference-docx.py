@@ -218,6 +218,81 @@ STYLES = {
     <w:szCs w:val="24"/>
   </w:rPr>
 </w:style>""",
+    "CoverImage": f"""<w:style w:type="paragraph" w:styleId="CoverImage">
+  <w:name w:val="Cover Image"/>
+  <w:basedOn w:val="Normal"/>
+  <w:qFormat/>
+  <w:pPr>
+    <w:spacing w:before="600" w:after="400"/>
+    <w:jc w:val="center"/>
+  </w:pPr>
+</w:style>""",
+    "CoverTitle": f"""<w:style w:type="paragraph" w:styleId="CoverTitle">
+  <w:name w:val="Cover Title"/>
+  <w:basedOn w:val="Normal"/>
+  <w:qFormat/>
+  <w:pPr>
+    <w:spacing w:before="400" w:after="200" w:line="300" w:lineRule="auto"/>
+    <w:jc w:val="center"/>
+  </w:pPr>
+  <w:rPr>
+    {TNR}
+    <w:color w:val="000000"/>
+    <w:sz w:val="28"/>
+    <w:szCs w:val="28"/>
+    <w:b/>
+    <w:bCs/>
+  </w:rPr>
+</w:style>""",
+    "CoverSubtitle": f"""<w:style w:type="paragraph" w:styleId="CoverSubtitle">
+  <w:name w:val="Cover Subtitle"/>
+  <w:basedOn w:val="Normal"/>
+  <w:qFormat/>
+  <w:pPr>
+    <w:spacing w:before="200" w:after="300" w:line="300" w:lineRule="auto"/>
+    <w:jc w:val="center"/>
+  </w:pPr>
+  <w:rPr>
+    {TNR}
+    <w:color w:val="000000"/>
+    <w:sz w:val="28"/>
+    <w:szCs w:val="28"/>
+    <w:b/>
+    <w:bCs/>
+  </w:rPr>
+</w:style>""",
+    "CoverLine": f"""<w:style w:type="paragraph" w:styleId="CoverLine">
+  <w:name w:val="Cover Line"/>
+  <w:basedOn w:val="Normal"/>
+  <w:qFormat/>
+  <w:pPr>
+    <w:spacing w:after="0" w:line="300" w:lineRule="auto"/>
+    <w:jc w:val="center"/>
+  </w:pPr>
+  <w:rPr>
+    {TNR}
+    <w:color w:val="000000"/>
+    <w:sz w:val="24"/>
+    <w:szCs w:val="24"/>
+  </w:rPr>
+</w:style>""",
+    "CoverInstitution": f"""<w:style w:type="paragraph" w:styleId="CoverInstitution">
+  <w:name w:val="Cover Institution"/>
+  <w:basedOn w:val="Normal"/>
+  <w:qFormat/>
+  <w:pPr>
+    <w:spacing w:after="0" w:line="300" w:lineRule="auto"/>
+    <w:jc w:val="center"/>
+  </w:pPr>
+  <w:rPr>
+    {TNR}
+    <w:color w:val="000000"/>
+    <w:sz w:val="28"/>
+    <w:szCs w:val="28"/>
+    <w:b/>
+    <w:bCs/>
+  </w:rPr>
+</w:style>""",
 }
 
 SECTPR = """<w:sectPr>

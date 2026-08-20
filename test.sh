@@ -202,6 +202,26 @@ if command -v unzip &>/dev/null; then
       else
         fail "Heading1 bukan 14pt"
       fi
+      if echo "$DOCXML" | grep -q 'w:drawing'; then
+        pass "cover docx memuat logo"
+      else
+        fail "cover docx tanpa logo"
+      fi
+      if echo "$DOCXML" | grep -q 'w:val="CoverTitle"'; then
+        pass "cover docx memakai style CoverTitle"
+      else
+        fail "cover docx tanpa style CoverTitle"
+      fi
+      if echo "$DOCXML" | grep -q 'w:val="CoverInstitution"'; then
+        pass "cover docx memakai style CoverInstitution"
+      else
+        fail "cover docx tanpa style CoverInstitution"
+      fi
+      if ! echo "$DOCXML" | grep -q 'w:val="Title"'; then
+        pass "title block bawaan pandoc dinonaktifkan"
+      else
+        fail "title block bawaan pandoc masih muncul"
+      fi
     else
       fail "Laporan.docx tidak dihasilkan"
     fi
