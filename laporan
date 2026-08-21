@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Laporan Generator CLI Helper (./laporan)
+# ==============================================================================
+set -e
+
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+show_banner() {
+    echo -e "${CYAN}${BOLD}"
+    echo "  ========================================================"
+    echo "                 LAPORAN GENERATOR CLI v2.2.0             "
+    echo "     Otomatisasi Dokumen Akademik (Typst + DOCX Engine)   "
+    echo "  ========================================================"
+    echo -e "${NC}"
+}
+
+show_help() {
+    show_banner
+    echo -e "${BOLD}Penggunaan:${NC} ./laporan <perintah>"
+    echo ""
+    echo -e "${BOLD}Perintah yang Tersedia:${NC}"
+    echo -e "  ${GREEN}build${NC}        Kompilasi PDF dan DOCX sekaligus"
+    echo -e "  ${GREEN}pdf${NC}          Kompilasi dokumen PDF (via Typst)"
+    echo -e "  ${GREEN}docx${NC}         Kompilasi dokumen Microsoft Word (.docx)"
+    echo -e "  ${GREEN}init${NC}         Wizard interaktif untuk konfigurasi awal metadata"
+    echo -e "  ${GREEN}check${NC}        Audit dependensi sistem dan struktur proyek"
+    echo -e "  ${GREEN}test${NC}         Jalankan suite pengujian otomatis (test.sh)"
+    echo -e "  ${GREEN}view${NC}         Buka dokumen Laporan.pdf di viewer"
+    echo -e "  ${GREEN}watch${NC}        Pantau perubahan berkas dan auto-rebuild (live)"
+    echo -e "  ${GREEN}clean${NC}        Bersihkan berkas output dan direktori sementara"
+    echo -e "  ${GREEN}help${NC}         Tampilkan panduan bantuan ini"
+    echo ""
+    echo -e "${YELLOW}Contoh:${NC} ./laporan build"
+}
+
+cmd_check() {
+    show_banner
+    echo -e "${BLUE}${BOLD}[1/2] Memeriksa Dependensi Sistem...${NC}"
+    
+    local all_ok=true
+
+    check_dep() {
+        local name="$1"
+        local cmd="$2"
+        local req="$3"
+        if command -v "$cmd" &>/dev/null; then
+            echo -e "  [${GREEN}OK${NC}] $name ($cmd) terpasang: $(command -v "$cmd")"
+        else
+            if [ "$req" = "required" ]; then
+                echo -e "  [${RED}FAIL${NC}] $name ($cmd) ${RED}TIDAK DITEMUKAN${NC} (Wajib)"
+                all_ok=false
+            else
+                echo -e "  [${YELLOW}INFO${NC}] $name ($cmd) tidak ditemukan (Opsional, untuk auto-inject nomor halaman Word)"
+            fi
+        fi
+    }
+
+    check_dep "Pandoc" "pandoc" "required"
+    check_dep "Typst" "typst" "required"
+    check_dep "ImageMagick" "magick" "required" 2>/dev/null || check_dep "ImageMagick" "convert" "required"
+    check_dep "Python 3" "python3" "required"
+    check_dep "LibreOffice" "soffice" "optional"
+
+    echo ""
+    echo -e "${BLUE}${BOLD}[2/2] Memeriksa Berkas Proyek...${NC}"
+    
+    check_file() {
+        local file="$1"
+        local desc="$2"
+        if [ -f "$file" ]; then
+            echo -e "  [${GREEN}OK${NC}] $desc ($file)"
+        else
+            echo -e "  [${RED}FAIL${NC}] $desc ($file) tidak ditemukan"
+            all_ok=false
+        fi
+    }
+
+    check_file "metadata.yml" "Metadata laporan"
+    check_file "cover.md" "Kata pengantar & outline"
+    check_file "template.typ" "Template Typst"
+    check_file "reference.docx" "Template Word"
+    check_file "references.bib" "Daftar pustaka"
+
+    echo ""
+    if [ "$all_ok" = true ]; then
+        echo -e "${GREEN}${BOLD}Semua dependensi dan berkas proyek lengkap dan siap digunakan!${NC}"
+    else
+        echo -e "${RED}${BOLD}Ada beberapa komponen yang kurang. Silakan lengkapi sebelum build.${NC}"
+        echo -e "${YELLOW}Tips: Gunakan 'nix develop' atau Docker untuk instalasi instan.${NC}"
+    fi
+}
+
+cmd_init() {
+    show_banner
+    echo -e "${CYAN}${BOLD}Wizard Konfigurasi Laporan Akademik${NC}"
+    echo "Isi data di bawah ini (tekan Enter untuk memakai nilai default):"
+    echo ""
+
+    read -rp "Judul Laporan [LAPORAN PROYEK AKADEMIK]: " in_title
+    in_title=${in_title:-"LAPORAN PROYEK AKADEMIK"}
+
+    read -rp "Subjudul [DOKUMENTASI DAN ANALISIS IMPLEMENTASI]: " in_subtitle
+    in_subtitle=${in_subtitle:-"DOKUMENTASI DAN ANALISIS IMPLEMENTASI"}
+
+    read -rp "Mata Kuliah [Proyek Perangkat Lunak]: " in_course
+    in_course=${in_course:-"Proyek Perangkat Lunak"}
+
+    read -rp "Dosen Pengampu [Dr. Nama Dosen, M.Kom.]: " in_lecturer
+    in_lecturer=${in_lecturer:-"Dr. Nama Dosen, M.Kom."}
+
+    read -rp "Nama Penulis 1 [Nama Mahasiswa]: " in_author
+    in_author=${in_author:-"Nama Mahasiswa"}
+
+    read -rp "NIM Penulis 1 [12345678]: " in_nim
+    in_nim=${in_nim:-"12345678"}
+
+    read -rp "Institusi/Universitas [UNIVERSITAS TEKNOLOGI]: " in_institution
+    in_institution=${in_institution:-"UNIVERSITAS TEKNOLOGI"}
+
+    read -rp "Fakultas [FAKULTAS ILMU KOMPUTER]: " in_faculty
+    in_faculty=${in_faculty:-"FAKULTAS ILMU KOMPUTER"}
+
+    read -rp "Tahun Akademik [2026/2027]: " in_year
+    in_year=${in_year:-"2026/2027"}
+
+    read -rp "Preset Margin (standard / skripsi-4433) [standard]: " in_margin
+    in_margin=${in_margin:-"standard"}
+
+    cat << YAML_EOF > metadata.yml
+title: "$in_title"
+subtitle: "$in_subtitle"
+course: "$in_course"
+lecturer: "$in_lecturer"
+author:
+  - name: "$in_author"
+    nim: "$in_nim"
+institution: "$in_institution"
+faculty: "$in_faculty"
+year: "$in_year"
+date: "$(date +'%B %Y')"
+margin_preset: "$in_margin"
+YAML_EOF
+
+    echo ""
+    echo -e "${GREEN}${BOLD}metadata.yml berhasil diperbarui!${NC}"
+    echo -e "Jalankan ${CYAN}./laporan build${NC} untuk mulai menghasilkan laporan."
+}
+
+cmd_build() {
+    show_banner
+    echo -e "${BLUE}${BOLD}1. Membangun Dokumen PDF (Typst Engine)...${NC}"
+    ./build.sh
+    echo ""
+    echo -e "${BLUE}${BOLD}2. Membangun Dokumen Microsoft Word (DOCX Multi-Pass)...${NC}"
+    make docx
+    echo ""
+    echo -e "${GREEN}${BOLD}Dokumen PDF dan DOCX berhasil dibuat!${NC}"
+    echo -e "  - ${CYAN}Laporan.pdf${NC}"
+    echo -e "  - ${CYAN}Laporan.docx${NC}"
+}
+
+cmd_pdf() {
+    show_banner
+    echo -e "${BLUE}${BOLD}Membangun Dokumen PDF...${NC}"
+    ./build.sh
+}
+
+cmd_docx() {
+    show_banner
+    echo -e "${BLUE}${BOLD}Membangun Dokumen DOCX...${NC}"
+    make docx
+}
+
+cmd_test() {
+    show_banner
+    echo -e "${BLUE}${BOLD}Menjalankan Test Suite...${NC}"
+    ./test.sh
+}
+
+cmd_view() {
+    make view
+}
+
+cmd_clean() {
+    make clean
+    echo -e "${GREEN}Berkas temporary berhasil dibersihkan.${NC}"
+}
+
+cmd_watch() {
+    make watch
+}
+
+# Main routing
+case "${1:-help}" in
+    build)
+        cmd_build
+        ;;
+    pdf)
+        cmd_pdf
+        ;;
+    docx)
+        cmd_docx
+        ;;
+    init)
+        cmd_init
+        ;;
+    check)
+        cmd_check
+        ;;
+    test)
+        cmd_test
+        ;;
+    view)
+        cmd_view
+        ;;
+    clean)
+        cmd_clean
+        ;;
+    watch)
+        cmd_watch
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        echo -e "${RED}Perintah tidak dikenal: $1${NC}"
+        echo "Gunakan './laporan help' untuk melihat daftar perintah."
+        exit 1
+        ;;
+esac

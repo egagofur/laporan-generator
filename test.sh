@@ -298,6 +298,29 @@ else
 fi
 echo ""
 
+echo "[T17] CLI Helper and Preset Guide check"
+if [ -x "./laporan" ]; then
+  pass "./laporan dapat dieksekusi"
+else
+  fail "./laporan bukan berkas executable"
+fi
+if ./laporan help | grep -q "LAPORAN GENERATOR CLI"; then
+  pass "./laporan help menampilkan panduan CLI"
+else
+  fail "./laporan help gagal"
+fi
+if grep -q "doc-margin" template.typ; then
+  pass "template.typ mendukung preset margin"
+else
+  fail "template.typ tidak memiliki variabel doc-margin"
+fi
+if [ -f "docs/campus-guide.md" ]; then
+  pass "docs/campus-guide.md tersedia"
+else
+  fail "docs/campus-guide.md tidak ditemukan"
+fi
+echo ""
+
 echo "========================"
 echo "Hasil: $PASS passed, $FAIL failed"
 echo "========================"

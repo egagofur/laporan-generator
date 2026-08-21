@@ -9,9 +9,11 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 ## [2.2.0] - 2026-08-21
 
 ### Added
+- **CLI Helper Terpadu (`./laporan`)**: Script CLI ramah pemula dengan perintah `./laporan init` (wizard konfigurasi interaktif), `./laporan build` (kompilasi PDF + DOCX sekaligus), `./laporan check` (audit dependensi & berkas), dan `./laporan test`.
+- **Dukungan Preset Margin Fleksibel (`docs/campus-guide.md`)**: Dukungan konfigurasi preset margin `standard` (2.5/2.5/2/3 cm) dan `skripsi-4433` (4/4/3/3 cm) di `template.typ` dan `metadata.yml`.
 - **Auto-injeksi nomor halaman Daftar Isi DOCX (`scripts/docx-pagenum.py`)**: Skrip dua tahap yang merender DOCX di background dan menyuntikkan nomor halaman aktual ke entri `PAGEREF` TOC sehingga tidak perlu update field manual di Word.
 - **Multi-section document partitioning (`scripts/finalize-docx.py`)**: Pengaturan 3 `sectPr` Word terpisah (Cover tanpa nomor, Front Matter bernomor romawi `i`, `ii`, dan BAB I restart otomatis ke angka Arab `1`, `2`, `3`).
-- **Peningkatan Test Suite ke 54 Assertions**: Pengujian DOCX mendalam mencakup validasi footer, penomoran romawi, decimal restart, spasi BAB 2 baris, dan verifikasi halaman TOC.
+- **Peningkatan Test Suite ke 58 Assertions**: 17 kategori pengujian mendalam mencakup validasi footer, penomoran romawi, decimal restart, spasi BAB 2 baris, preset margin, dan CLI helper.
 
 ### Changed
 - **Standarisasi Tipografi & Paritas Visual**:
@@ -21,6 +23,7 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
   - Tabel: Style `Compact` 12pt, padding sel bersih, tanpa indentasi pertama, border 0.5pt abu-abu.
   - Blok Kode: Style `SourceCode` 9pt `DejaVu Sans Mono`, rata kiri.
   - Daftar Isi: Panjang terkontrol presisi 1 halaman penuh.
+  - Daftar Pustaka: Auto hanging-indent 1.25 cm di PDF & DOCX.
 
 ---
 

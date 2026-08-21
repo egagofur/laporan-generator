@@ -18,3 +18,4 @@ media/
 venv/
 __pycache__/
 *.pyc
+.~lock.*

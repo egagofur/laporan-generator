@@ -3,14 +3,21 @@
   author: ($for(author)$"$author.name$"$sep$,$endfor$),
 )
 
+#let doc-margin = if "$margin_preset$" == "skripsi-4433" or "$margin_preset$" == "4-4-3-3" {
+  (top: 4cm, bottom: 3cm, left: 4cm, right: 3cm)
+} else {
+  (top: 2cm, bottom: 3cm, left: 2.5cm, right: 2.5cm)
+}
+
 #set page(
   paper: "a4",
-  margin: (top: 2cm, bottom: 3cm, left: 2.5cm, right: 2.5cm),
+  margin: doc-margin,
   numbering: none,
 )
 
 #set text(font: "Libertinus Serif", size: 12pt)
 #set par(justify: true, leading: 0.75em, first-line-indent: 1.25cm)
+#show bibliography: set par(hanging-indent: 1.25cm, first-line-indent: 0cm)
 
 #set heading(numbering: (..ns) => {
   if ns.len() == 1 {

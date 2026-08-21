@@ -101,12 +101,19 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
 ## Build PDF -- Pilih 1 dari 4 Cara
 
-### Opsi 1: Docker (Paling Gampang - Zero Dependencies)
+### Opsi 1: CLI Helper Terpadu (Paling Mudah)
+```bash
+./laporan init        # Wizard interaktif setup metadata (judul, penulis, NIM, dosen)
+./laporan build       # Build PDF dan DOCX sekaligus
+./laporan check       # Cek kelengkapan dependensi dan berkas proyek
+```
+
+### Opsi 2: Docker (Zero Dependencies)
 ```bash
 docker compose run --rm laporan-generator
 ```
 
-### Opsi 2: Manual Install (Linux)
+### Opsi 3: Manual Install (Linux)
 ```bash
 # Ubuntu / Debian
 sudo apt install pandoc imagemagick xz-utils
@@ -118,7 +125,7 @@ sudo mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
 ./build.sh
 ```
 
-### Opsi 3: Makefile Helpers
+### Opsi 4: Makefile Helpers
 ```bash
 make init         # Aktifkan git pre-commit hook otomatis
 make build        # Build PDF (sama kaya ./build.sh)
@@ -127,11 +134,11 @@ make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
 make reference-docx # Regenerasi reference.docx dari reference bawaan pandoc
 make html         # Export ke HTML
-make test         # Jalankan test suite (16 kategori tes / 54 assertions)
+make test         # Jalankan test suite (17 kategori tes / 58 assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
-### Opsi 4: Nix Flake (Reproducible - Zero Manual Install)
+### Opsi 5: Nix Flake (Reproducible - Zero Manual Install)
 
 Environment development lengkap (Pandoc 3.x, Typst, ImageMagick, ShellCheck, dan tooling lainnya) dalam satu perintah. Cocok untuk pengguna NixOS, pengguna dengan Nix terinstall, atau siapa saja yang ingin environment identik di semua perangkat tanpa install manual.
 
@@ -140,8 +147,8 @@ Environment development lengkap (Pandoc 3.x, Typst, ImageMagick, ShellCheck, dan
 nix develop
 
 # Build PDF / test di dalam shell:
-./build.sh            # atau: make build
-make test             # 54 assertions
+./laporan build       # Build PDF + DOCX
+make test             # 58 assertions
 ```
 
 Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, Typst, atau ImageMagick secara manual.
@@ -153,6 +160,7 @@ Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua per
 Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 - **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
+- **[docs/campus-guide.md](docs/campus-guide.md)**: Panduan preset margin (standard vs skripsi 4-4-3-3) dan format kampus Indonesia (UI, ITB, UGM, dll).
 - **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
 - **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.typ`, font Libertinus Serif, margin, dan penomoran bab otomatis Typst.
 - **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font Typst, dan izin Docker.
@@ -165,10 +173,12 @@ Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 ```
 laporan-generator/
+├── laporan                  # CLI Helper interaktif (./laporan build/init/check)
 ├── GETTING-STARTED.md       # Panduan pemula (Zero to PDF)
 ├── CONTRIBUTING.md          # Panduan kontribusi open-source
 ├── CHANGELOG.md             # Catatan rilis versi
 ├── docs/                    # Dokumentasi teknis terpisah
+│   ├── campus-guide.md      # Panduan preset kampus (UI, ITB, UGM, dll)
 │   ├── metadata-schema.md   # Skema metadata.yml
 │   ├── template-guide.md    # Arsitektur template Typst
 │   └── troubleshooting.md   # Solusi error lengkap
@@ -176,8 +186,8 @@ laporan-generator/
 ├── .github/                 # Workflows CI/CD, Issue & PR templates
 ├── apa.csl                  # Citation Style Language (APA)
 ├── build.sh                 # Skrip build utama
-├── template.typ             # Template Typst (font, margin, format)
-├── template.latex           # Template LaTeX (arsip legacy, tidak dipakai)
+├── template.typ             # Template Typst (font, margin preset, format)
+├── template.latex           # Template LaTeX (arsip legacy di branch legacy/latex-engine)
 ├── metadata.yml             # Judul, penulis, dosen, matkul, institusi
 ├── references.bib           # Daftar pustaka (BibTeX)
 ├── chapters/                # Konten laporan per bab (bab1-5)
