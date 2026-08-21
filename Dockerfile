@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     inotify-tools \
     make \
+    python3 \
+    poppler-utils \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

@@ -6,6 +6,24 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 
 ---
 
+## [2.2.0] - 2026-08-21
+
+### Added
+- **Auto-injeksi nomor halaman Daftar Isi DOCX (`scripts/docx-pagenum.py`)**: Skrip dua tahap yang merender DOCX di background dan menyuntikkan nomor halaman aktual ke entri `PAGEREF` TOC sehingga tidak perlu update field manual di Word.
+- **Multi-section document partitioning (`scripts/finalize-docx.py`)**: Pengaturan 3 `sectPr` Word terpisah (Cover tanpa nomor, Front Matter bernomor romawi `i`, `ii`, dan BAB I restart otomatis ke angka Arab `1`, `2`, `3`).
+- **Peningkatan Test Suite ke 54 Assertions**: Pengujian DOCX mendalam mencakup validasi footer, penomoran romawi, decimal restart, spasi BAB 2 baris, dan verifikasi halaman TOC.
+
+### Changed
+- **Standarisasi Tipografi & Paritas Visual**:
+  - Judul BAB: 14pt Bold, spasi setelah judul 2 baris penuh (`w:after="720"` / `bottom: 1.8em`).
+  - Sub-bab & Sub-sub-bab: 12pt Bold, jarak vertikal ke paragraf dibuat rapat dan proporsional.
+  - Isi Teks & Paragraf: 12pt Regular, 1.5 line spacing (`line="360"` / `leading: 0.75em`), 1.25 cm first-line indent.
+  - Tabel: Style `Compact` 12pt, padding sel bersih, tanpa indentasi pertama, border 0.5pt abu-abu.
+  - Blok Kode: Style `SourceCode` 9pt `DejaVu Sans Mono`, rata kiri.
+  - Daftar Isi: Panjang terkontrol presisi 1 halaman penuh.
+
+---
+
 ## [2.1.0] - 2026-08-20
 
 ### Added

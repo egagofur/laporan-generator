@@ -11,6 +11,7 @@
 local bab = 0
 local sub = 0
 local subsub = 0
+local toc_entries = {}
 
 local function is_unnumbered(el)
   for _, cls in ipairs(el.attr.classes or {}) do
@@ -37,8 +38,7 @@ local function roman(n)
   return out
 end
 
-local function balance_title(text, max_lines)
-  max_lines = max_lines or 4
+local function balance_title(text)
   local words = {}
   for w in text:gmatch("%S+") do
     words[#words + 1] = w
@@ -47,53 +47,70 @@ local function balance_title(text, max_lines)
   if n <= 1 or #text <= 55 then
     return { text }
   end
-  local lens = {}
-  for i, w in ipairs(words) do
-    lens[i] = #w
+  local function count_words(s)
+    local c = 0
+    for _ in s:gmatch("%S+") do
+      c = c + 1
+    end
+    return c
   end
-  local memo = {}
-  local function solve(i, k)
-    if k == 1 then
-      local line = table.concat(words, " ", i, n)
-      local mx = 0
-      for j = i, n do
-        mx = mx + lens[j]
-      end
-      mx = mx + (n - i)
-      local cost = mx + (n == i and 100 or 0)
-      return { { cost, { line }, mx } }
-    end
-    local key = i * 100 + k
-    if memo[key] then
-      return memo[key]
-    end
-    local res = {}
-    local cur, cur_len = "", 0
-    for j = i, n - k + 1 do
-      local add = lens[j] + (j > i and 1 or 0)
-      cur = cur == "" and words[j] or (cur .. " " .. words[j])
-      cur_len = cur_len + add
-      for _, cand in ipairs(solve(j + 1, k - 1)) do
-        local lines = { cur }
-        for _, l in ipairs(cand[2]) do
+  local function best_for(k)
+    local best, best_cost = nil, math.huge
+    local function rec(i, kk, cur, mx, single)
+      if kk == 1 then
+        local line = table.concat(words, " ", i, n)
+        local lines = {}
+        for _, l in ipairs(cur) do
           lines[#lines + 1] = l
         end
-        local mx = math.max(cur_len, cand[3])
-        res[#res + 1] = { mx + cand[1] - cand[3], lines, mx }
+        lines[#lines + 1] = line
+        local m = math.max(mx, #line)
+        local s = single + (count_words(line) <= 1 and 1 or 0)
+        local cost = m + 100 * s
+        if cost < best_cost then
+          best, best_cost = lines, cost
+        end
+        return
+      end
+      for j = i, n - kk + 1 do
+        local line = table.concat(words, " ", i, j)
+        local nxt = {}
+        for _, l in ipairs(cur) do
+          nxt[#nxt + 1] = l
+        end
+        nxt[#nxt + 1] = line
+        rec(
+          j + 1,
+          kk - 1,
+          nxt,
+          math.max(mx, #line),
+          single + (count_words(line) <= 1 and 1 or 0)
+        )
       end
     end
-    memo[key] = res
-    return res
+    rec(1, k, {}, 0, 0)
+    return best
   end
-  local best, best_cost = nil, math.huge
-  for k = 2, math.min(max_lines, n) do
-    for _, cand in ipairs(solve(1, k)) do
-      if cand[1] < best_cost then
-        best, best_cost = cand, cand[1]
+  local function mx_of(lines)
+    local m = 0
+    for _, l in ipairs(lines) do
+      m = math.max(m, #l)
+    end
+    return m
+  end
+  local function orphan(lines)
+    for _, l in ipairs(lines) do
+      if count_words(l) <= 1 then
+        return true
       end
     end
+    return false
   end
-  return best[2]
+  local two = best_for(2)
+  if not orphan(two) and mx_of(two) <= 50 then
+    return two
+  end
+  return best_for(3)
 end
 
 local function para(content, style)
@@ -105,6 +122,13 @@ end
 
 local function pagebreak()
   return pandoc.RawBlock("openxml", '<w:p><w:r><w:br w:type="page"/></w:r></w:p>')
+end
+
+local function spacer(before)
+  return pandoc.RawBlock(
+    "openxml",
+    '<w:p><w:pPr><w:spacing w:before="' .. before .. '"/></w:pPr></w:p>'
+  )
 end
 
 local function meta_str(meta, key)
@@ -119,24 +143,98 @@ function Header(el)
   if FORMAT ~= "docx" then
     return nil
   end
+  local title = pandoc.utils.stringify(el.content)
   if is_unnumbered(el) then
+    if el.level == 1 then
+      toc_entries[#toc_entries + 1] = {
+        level = 1,
+        id = el.identifier,
+        text = string.upper(title),
+      }
+    end
     return nil
   end
-  local title = pandoc.utils.stringify(el.content)
   if el.level == 1 then
     bab = bab + 1
     sub = 0
     subsub = 0
-    el.content = pandoc.Str("BAB " .. roman(bab) .. " " .. string.upper(title))
+    toc_entries[#toc_entries + 1] = {
+      level = 1,
+      id = el.identifier,
+      text = "BAB " .. roman(bab) .. " " .. string.upper(title),
+    }
+    el.content = pandoc.List{
+      pandoc.Str("BAB " .. roman(bab)),
+      pandoc.LineBreak(),
+      pandoc.Str(string.upper(title)),
+    }
   elseif el.level == 2 then
     sub = sub + 1
     subsub = 0
+    toc_entries[#toc_entries + 1] = {
+      level = 2,
+      id = el.identifier,
+      text = bab .. "." .. sub .. ". " .. title,
+    }
     el.content = pandoc.Str(bab .. "." .. sub .. ". " .. title)
   elseif el.level == 3 then
     subsub = subsub + 1
+    toc_entries[#toc_entries + 1] = {
+      level = 3,
+      id = el.identifier,
+      text = bab .. "." .. sub .. "." .. subsub .. " " .. title,
+    }
     el.content = pandoc.Str(bab .. "." .. sub .. "." .. subsub .. " " .. title)
   end
   return el
+end
+
+local function toc_entry(e)
+  local style, ind, bold = "TOC1", 0, "<w:rPr><w:b/></w:rPr>"
+  if e.level == 2 then
+    style, ind, bold = "TOC2", 720, ""
+  elseif e.level == 3 then
+    style, ind, bold = "TOC3", 1440, ""
+  end
+  return '<w:p><w:pPr><w:pStyle w:val="' .. style .. '"/>' ..
+    '<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9072"/></w:tabs>' ..
+    '<w:ind w:left="' .. ind .. '"/></w:pPr>' ..
+    '<w:hyperlink w:anchor="' .. e.id .. '" w:history="1">' ..
+    '<w:r>' .. bold .. '<w:t xml:space="preserve">' .. e.text .. '</w:t></w:r>' ..
+    '</w:hyperlink>' ..
+    '<w:r><w:tab/></w:r>' ..
+    '<w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r>' ..
+    '<w:r><w:instrText xml:space="preserve"> PAGEREF ' .. e.id .. ' \\h </w:instrText></w:r>' ..
+    '<w:r><w:fldChar w:fldCharType="separate"/></w:r>' ..
+    '<w:r><w:t>0</w:t></w:r>' ..
+    '<w:r><w:fldChar w:fldCharType="end"/></w:r>' ..
+    '</w:p>'
+end
+
+local function daftar_isi()
+  local out = pandoc.List{}
+  out[#out + 1] = pagebreak()
+  out[#out + 1] = pandoc.RawBlock(
+    "openxml",
+    '<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:outlineLvl w:val="-1"/></w:pPr>' ..
+      '<w:r><w:t>DAFTAR ISI</w:t></w:r></w:p>'
+  )
+  out[#out + 1] = pandoc.RawBlock(
+    "openxml",
+    '<w:p><w:pPr><w:pStyle w:val="TOC1"/></w:pPr>' ..
+      '<w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r>' ..
+      '<w:r><w:instrText xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText></w:r>' ..
+      '<w:r><w:fldChar w:fldCharType="separate"/></w:r></w:p>'
+  )
+  for _, e in ipairs(toc_entries) do
+    out[#out + 1] = pandoc.RawBlock("openxml", toc_entry(e))
+  end
+  out[#out + 1] = pandoc.RawBlock(
+    "openxml",
+    '<w:p><w:pPr><w:pStyle w:val="TOC1"/></w:pPr>' ..
+      '<w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>'
+  )
+  return out
 end
 
 function Pandoc(doc)
@@ -153,13 +251,8 @@ function Pandoc(doc)
   local year = meta_str(meta, "year")
 
   local blocks = pandoc.List{}
-  blocks[#blocks + 1] = pagebreak()
 
   if title ~= "" then
-    blocks[#blocks + 1] = pandoc.Div(
-      { pandoc.Para({ pandoc.Image({}, "logo.jpg", "", pandoc.Attr("", {}, { width = "4cm" })) }) },
-      pandoc.Attr("", {}, { ["custom-style"] = "CoverImage" })
-    )
     local tlines = balance_title(string.upper(title))
     local content = {}
     for i, l in ipairs(tlines) do
@@ -173,14 +266,20 @@ function Pandoc(doc)
       blocks[#blocks + 1] = para({ pandoc.Str(string.upper(subtitle)) }, "CoverSubtitle")
     end
     if course ~= "" then
-      blocks[#blocks + 1] = para({ pandoc.Strong(pandoc.Str(course)) }, "CoverLine")
+      blocks[#blocks + 1] = para({ pandoc.Strong(pandoc.Str(course)) }, "CoverCourse")
     end
     if lecturer ~= "" then
       blocks[#blocks + 1] = para(
         { pandoc.Str("Dosen Pengampu: "), pandoc.Strong(pandoc.Str(lecturer)) },
-        "CoverLine"
+        "CoverLecturer"
       )
     end
+    blocks[#blocks + 1] = spacer(640)
+    blocks[#blocks + 1] = pandoc.Div(
+      { pandoc.Para({ pandoc.Image({}, "logo.jpg", "", pandoc.Attr("", {}, { width = "4cm" })) }) },
+      pandoc.Attr("", {}, { ["custom-style"] = "CoverImage" })
+    )
+    blocks[#blocks + 1] = spacer(640)
   end
 
   local authors = meta["author"]
@@ -198,7 +297,7 @@ function Pandoc(doc)
       for _, a in ipairs(author_list) do
         local name = pandoc.utils.stringify(a["name"] or a)
         local nim = pandoc.utils.stringify(a["nim"] or "")
-        blocks[#blocks + 1] = para({ pandoc.Strong(pandoc.Str(name)) }, "CoverLine")
+        blocks[#blocks + 1] = para({ pandoc.Strong(pandoc.Str(name)) }, "CoverName")
         if nim ~= "" then
           blocks[#blocks + 1] = para({ pandoc.Str(nim) }, "CoverLine")
         end
@@ -207,6 +306,7 @@ function Pandoc(doc)
   end
 
   if faculty ~= "" or institution ~= "" or year ~= "" then
+    blocks[#blocks + 1] = spacer(640)
     if faculty ~= "" then
       blocks[#blocks + 1] = para({ pandoc.Str(string.upper(faculty)) }, "CoverInstitution")
     end
@@ -218,13 +318,30 @@ function Pandoc(doc)
     end
   end
 
-  blocks[#blocks + 1] = pagebreak()
-
   meta.title = nil
   meta.subtitle = nil
   meta.date = nil
   meta.author = nil
+  meta.abstract = nil
+  meta["abstract-title"] = nil
 
-  doc.blocks = blocks .. doc.blocks
+  local body = pandoc.List{}
+  local inserted = false
+  for _, blk in ipairs(doc.blocks) do
+    if
+      not inserted
+      and blk.tag == "Header"
+      and blk.level == 1
+      and not is_unnumbered(blk)
+    then
+      for _, b in ipairs(daftar_isi()) do
+        body[#body + 1] = b
+      end
+      inserted = true
+    end
+    body[#body + 1] = blk
+  end
+
+  doc.blocks = blocks .. body
   return doc
 end

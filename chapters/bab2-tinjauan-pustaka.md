@@ -14,10 +14,8 @@ Pandoc Markdown adalah varian yang paling kaya fitur karena dikembangkan khusus 
 
 Berikut adalah sintaks dasar Markdown yang digunakan dalam penulisan laporan:
 
-\setlength{\tabcolsep}{1pt}
-
 | Elemen | Sintaks | Contoh |
-|--------|---------|--------|
+|:-------|:--------|:-------|
 | Heading level 1 | `# Teks` | `# BAB 1: PENDAHULUAN` |
 | Heading level 2 | `## Teks` | `## 1.1 Latar Belakang` |
 | Heading level 3 | `### Teks` | `### 2.1.1 Sejarah` |
@@ -33,8 +31,6 @@ Berikut adalah sintaks dasar Markdown yang digunakan dalam penulisan laporan:
 | Blok kode | Diapit triple backtick | |
 | Matematika inline | `$...$` | `$E = mc^2$` |
 | Matematika display | `$$...$$` | `$$\sum_{i=1}^n i$$` |
-
-\setlength{\tabcolsep}{4pt}
 
 ### Keunggulan untuk Laporan Akademik
 
@@ -81,10 +77,8 @@ Document class yang digunakan dalam pipeline ini adalah `book`. Kelas ini menyed
 
 Berikut adalah packages yang digunakan dalam template LaTeX:
 
-\setlength{\tabcolsep}{6pt}
-
 | Package | Fungsi |
-|---------|--------|
+|:--------|:-------|
 | geometry | Pengaturan margin dan ukuran kertas |
 | setspace | Pengaturan spasi baris (1.5 spacing) |
 | graphicx | Penyisipan gambar ke dalam dokumen |
@@ -101,8 +95,6 @@ Berikut adalah packages yang digunakan dalam template LaTeX:
 | longtable | Tabel yang bisa melebihi satu halaman |
 | booktabs | Garis tabel profesional |
 | amsmath | Persamaan matematika tingkat lanjut |
-
-\setlength{\tabcolsep}{4pt}
 
 ### Font dan Encoding
 
@@ -195,28 +187,16 @@ Pandoc mendukung berbagai format input dan output:
 
 Berikut adalah flags Pandoc yang digunakan dalam pipeline:
 
-\begin{longtable}{p{3.2cm} p{4.5cm} p{5.5cm}}
-\hline
-\textbf{Flag} & \textbf{Fungsi} & \textbf{Contoh Penggunaan} \\
-\hline
-\endfirsthead
-\hline
-\textbf{Flag} & \textbf{Fungsi} & \textbf{Contoh Penggunaan} \\
-\hline
-\endhead
-\hline
-\endfoot
-\hline
-\endlastfoot
-\texttt{--template=FILE} & Menentukan template LaTeX & \texttt{--template=template.latex} \\
-\texttt{--include-before-body=FILE} & Menyisipkan konten sebelum body & \texttt{--include-before-body=cover.md} \\
-\texttt{--include-after-body=FILE} & Menyisipkan konten setelah body & \texttt{--include-after-body=daftar-pustaka.md} \\
-\texttt{--top-level-division=TYPE} & Menentukan tipe division tertinggi & \texttt{--top-level-division=chapter} \\
-\texttt{--pdf-engine=ENGINE} & Menentukan engine PDF & \texttt{--pdf-engine=pdflatex} \\
-\texttt{-o FILE} & Nama file output & \texttt{-o Laporan.pdf} \\
-\texttt{--from=FORMAT} & Format input (auto-detect) & \texttt{--from=markdown} \\
-\texttt{--to=FORMAT} & Format output (auto-detect) & \texttt{--to=latex} \\
-\end{longtable}
+| Flag | Fungsi | Contoh Penggunaan |
+|:-----|:-------|:------------------|
+| `--template=FILE` | Menentukan template LaTeX | `--template=template.latex` |
+| `--include-before-body=FILE` | Menyisipkan konten sebelum body | `--include-before-body=cover.md` |
+| `--include-after-body=FILE` | Menyisipkan konten setelah body | `--include-after-body=daftar-pustaka.md` |
+| `--top-level-division=TYPE` | Menentukan tipe division tertinggi | `--top-level-division=chapter` |
+| `--pdf-engine=ENGINE` | Menentukan engine PDF | `--pdf-engine=typst` |
+| `-o FILE` | Nama file output | `-o Laporan.pdf` |
+| `--from=FORMAT` | Format input (auto-detect) | `--from=markdown` |
+| `--to=FORMAT` | Format output (auto-detect) | `--to=latex` |
 
 ### Template Engine
 

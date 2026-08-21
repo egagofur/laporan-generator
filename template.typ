@@ -10,7 +10,7 @@
 )
 
 #set text(font: "Libertinus Serif", size: 12pt)
-#set par(justify: true, leading: 1.5em)
+#set par(justify: true, leading: 0.75em, first-line-indent: 1.25cm)
 
 #set heading(numbering: (..ns) => {
   if ns.len() == 1 {
@@ -25,7 +25,7 @@
 #show heading.where(level: 1): it => {
   pagebreak(weak: true)
   align(center)[
-    #block(inset: (top: 0.5em, bottom: 1em))[
+    #block(inset: (top: 0.5em, bottom: 1.8em))[
       #text(size: 14pt, weight: "bold")[
         #if it.numbering != none [
           #("BAB " + numbering("I", counter(heading).get().at(0)))
@@ -40,59 +40,86 @@
 }
 
 #show heading.where(level: 2): it => {
-  block(inset: (top: 0.6em, bottom: 0.3em))[
+  block(above: 1.0em, below: 0.5em)[
     #text(size: 12pt, weight: "bold")[#it]
   ]
+  par(leading: 0.75em)[]
 }
 
 #show heading.where(level: 3): it => {
-  block(inset: (top: 0.4em, bottom: 0.2em))[
+  block(above: 0.8em, below: 0.4em)[
     #text(size: 12pt, weight: "bold")[#it]
   ]
+  par(leading: 0.75em)[]
 }
 
-#show outline.entry.where(level: 1): set block(above: 0.9em, below: 0.2em)
-#show outline.entry.where(level: 1): set text(weight: "bold")
+#show figure: it => it + par[]
+#show list: it => it + par[]
+#show enum: it => it + par[]
+#show quote: it => it + par[]
+#show table: it => it + par[]
+#show raw.where(block: true): it => it + par[]
 
-#let balance-split(title, max-lines: 4) = {
+#show outline.entry.where(level: 1): set text(weight: "bold")
+#set par(leading: 0.75em)
+
+#let balance-split(title, k) = {
   let words = title.split(" ")
   let n = words.len()
   if n <= 1 {
     return (title,)
   }
-  let lens = words.map(w => w.len() + 1)
-  let pref = (0,)
-  for l in lens {
-    pref.push(pref.last() + l)
+  if n <= k {
+    return words
   }
-  let penalty = 100
-  let dp = ((0, (), 0),) + range(1, n + 1).map(_ => (calc.inf, (), calc.inf))
-  for i in range(1, n + 1) {
-    for j in range(0, i) {
-      let lines-before = dp.at(j).at(1).len()
-      if lines-before >= max-lines {
-        continue
-      }
-      let line-len = pref.at(i) - pref.at(j) - 1
-      let prev = dp.at(j)
-      let part = prev.at(1) + (words.slice(j, i).join(" "),)
-      let mx = calc.max(prev.at(2), line-len)
-      let single = part.map(l => if l.split(" ").len() <= 1 { 1 } else { 0 }).sum()
-      let cost = mx + penalty * single
-      if cost < dp.at(i).at(0) {
-        dp.at(i) = (cost, part, mx)
+  let single-count = lines => lines.map(l => if l.split(" ").len() <= 1 { 1 } else { 0 }).sum()
+  let candidates = ()
+  if k == 2 {
+    for c in range(1, n) {
+      let line1 = words.slice(0, c).join(" ")
+      let line2 = words.slice(c, n).join(" ")
+      let mx = calc.max(line1.len(), line2.len())
+      candidates = candidates + (
+        (mx + 100 * single-count((line1, line2)), (line1, line2)),
+      )
+    }
+  } else if k == 3 {
+    for c1 in range(1, n - 1) {
+      for c2 in range(c1 + 1, n) {
+        let line1 = words.slice(0, c1).join(" ")
+        let line2 = words.slice(c1, c2).join(" ")
+        let line3 = words.slice(c2, n).join(" ")
+        let mx = calc.max(line1.len(), line2.len(), line3.len())
+        candidates = candidates + (
+          (mx + 100 * single-count((line1, line2, line3)), (line1, line2, line3)),
+        )
       }
     }
   }
-  dp.at(n).at(1)
+  let best = candidates.at(0)
+  for cand in candidates {
+    if cand.at(0) < best.at(0) {
+      best = cand
+    }
+  }
+  best.at(1)
 }
 
 #let title-lines = layout(size => {
   let t = upper("$title$".replace("\n", " ").replace("\r", " "))
-  if measure(text(t, size: 14pt, weight: "bold")).width <= size.width {
-    return t
+  let lines = if measure(text(t, size: 14pt, weight: "bold")).width <= size.width {
+    (t,)
+  } else {
+    let two = balance-split(t, 2)
+    let w-two = two.map(l => measure(text(l, size: 14pt, weight: "bold")).width)
+      .fold(0pt, calc.max)
+    let orphan = two.any(l => l.split(" ").len() <= 1)
+    if (not orphan) and w-two <= size.width {
+      two
+    } else {
+      balance-split(t, 3)
+    }
   }
-  let lines = balance-split(t)
   let out = ()
   for i in range(lines.len()) {
     if i > 0 {
@@ -160,7 +187,7 @@ $endfor$
 #v(1cm)
 
 #pagebreak()
-#set page(numbering: "I")
+#set page(numbering: "i")
 #counter(page).update(1)
 
 $body$

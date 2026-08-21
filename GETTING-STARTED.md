@@ -9,8 +9,8 @@ Selamat datang! Dokumen ini dirancang khusus untuk membantu Anda--baik pemula ya
 | Jalur | Persyaratan | Cocok Untuk |
 |---|---|---|
 | **[1. Opsi AI Agent](#1-opsi-ai-agent-paling-cepat--otomatis)** | AI Agent (OpenCode, Claude Code, Antigravity) | Pemula yang ingin laporan dibuatkan otomatis dari project |
-| **[2. Opsi Docker](#2-opsi-docker-tanpa-install-tools-lokal)** | Docker Desktop | Pengguna yang tidak mau install Pandoc/LaTeX di komputer |
-| **[3. Opsi Manual (CLI)](#3-opsi-manual-cli-kompilasi-lokal)** | Pandoc + TeX Live + ImageMagick | Pengguna Linux/Mac yang sudah biasa dengan CLI |
+| **[2. Opsi Docker](#2-opsi-docker-tanpa-install-tools-lokal)** | Docker Desktop | Pengguna yang tidak mau install Pandoc/Typst di komputer |
+| **[3. Opsi Manual (CLI)](#3-opsi-manual-cli-kompilasi-lokal)** | Pandoc + Typst + ImageMagick | Pengguna Linux/Mac yang sudah biasa dengan CLI |
 
 ---
 
@@ -34,7 +34,7 @@ cd project-kamu/
 
 # 5. Setelah AI selesai, jalankan kompilasi PDF:
 docker compose run --rm laporan-generator
-# atau jika punya Pandoc/LaTeX lokal:
+# atau jika punya Pandoc/Typst lokal:
 ./build.sh
 ```
 
@@ -42,7 +42,7 @@ docker compose run --rm laporan-generator
 
 ## 2. Opsi Docker (Tanpa Install Tools Lokal)
 
-Tidak perlu menginstall Pandoc, TeX Live, atau ImageMagick di komputer Anda. Semua dependensi sudah terkemas dalam container Docker terisolasi.
+Tidak perlu menginstall Pandoc, Typst, atau ImageMagick di komputer Anda. Semua dependensi sudah terkemas dalam container Docker terisolasi.
 
 ### Langkah-langkah:
 1. Pastikan **Docker Desktop** sudah terinstall dan berjalan di komputer Anda. ([Download Docker](https://www.docker.com/products/docker-desktop/))
@@ -65,12 +65,18 @@ Jika Anda lebih menyukai kompilasi cepat di mesin lokal Linux/macOS:
 ### Prasyarat System Packages:
 * **Ubuntu/Debian**:
   ```bash
-  sudo apt install pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended imagemagick
-  sudo fmtutil-sys --all
+  sudo apt install pandoc imagemagick xz-utils
+  wget -q https://github.com/typst/typst/releases/download/v0.15.1/typst-x86_64-unknown-linux-musl.tar.xz -O /tmp/typst.tar.xz
+  tar -xJf /tmp/typst.tar.xz -C /tmp
+  sudo mv /tmp/typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
   ```
 * **Arch Linux**:
   ```bash
-  sudo pacman -S pandoc texlive-core texlive-latexextra imagemagick
+  sudo pacman -S pandoc typst imagemagick
+  ```
+* **Nix / NixOS**:
+  ```bash
+  nix develop
   ```
 
 ### Jalankan Build:
@@ -81,6 +87,9 @@ make init
 # Build PDF
 make build
 
+# Export Word (.docx)
+make docx
+
 # Buka PDF di viewer
 make view
 ```
@@ -89,18 +98,18 @@ make view
 
 ## Glosarium Istilah Teknis
 
-* **Pandoc**: Program pengubah format dokumen (mengonversi Markdown menjadi dokumen LaTeX/PDF/Word/HTML).
-* **LaTeX**: Bahasa markup pemformatan dokumen tingkat tinggi yang biasa digunakan pada publikasi ilmiah internasional.
-* **pdfLaTeX**: Engine kompilator yang mengubah kode LaTeX menjadi file PDF.
+* **Pandoc**: Program pengubah format dokumen (mengonversi Markdown menjadi Typst/PDF/Word/HTML).
+* **Typst**: Engine typesetting dokumen modern, cepat, dan ringan berbasis bahasa penataan letak yang intuitif.
 * **BibTeX**: Format standar untuk menyimpan data referensi/daftar pustaka akademik (`references.bib`).
 * **CSL (Citation Style Language)**: Berkas aturan penulisan sitasi (pada project ini menggunakan standar APA Style `apa.csl`).
+* **PAGEREF DOCX**: Mekanisme penomoran halaman otomatis pada Daftar Isi dokumen Microsoft Word.
 
 ---
 
 ## FAQ & Troubleshooting Singkat
 
 * **Q: Mengapa penomoran bab saya menjadi ganda seperti "BAB I: BAB 1"?**  
-  *A:* Di file Markdown `chapters/bab*.md`, gunakan heading `# Judul Bab` tanpa menyertakan kata "BAB 1". Template LaTeX akan menambahkan kata "BAB I" secara otomatis.
+  *A:* Di file Markdown `chapters/bab*.md`, gunakan heading `# Judul Bab` tanpa menyertakan kata "BAB 1". Template Typst akan menambahkan kata "BAB I" secara otomatis.
 
 * **Q: Bagaimana cara menambahkan gambar/screenshot?**  
   *A:* Simpan file gambar di folder `gambar/` lalu panggil di Markdown menggunakan sintaks `![](gambar/nama-file.png)`.

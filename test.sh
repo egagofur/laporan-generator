@@ -172,20 +172,35 @@ if command -v unzip &>/dev/null; then
     if [ -f Laporan.docx ]; then
       DOCXML=$(unzip -p Laporan.docx word/document.xml 2>/dev/null)
       STYXML=$(unzip -p Laporan.docx word/styles.xml 2>/dev/null)
-      if echo "$DOCXML" | grep -q 'BAB I PENDAHULUAN'; then
-        pass "docx punya penomoran BAB I (kapital)"
+      if echo "$DOCXML" | grep -q 'BAB I</w:t></w:r><w:r><w:br'; then
+        pass "docx penomoran BAB I dua baris"
       else
-        fail "docx tanpa penomoran BAB I"
+        fail "docx BAB I bukan dua baris"
+      fi
+      if echo "$DOCXML" | grep -q 'BAB I PENDAHULUAN'; then
+        pass "docx entri TOC BAB I PENDAHULUAN"
+      else
+        fail "docx tanpa entri TOC BAB I"
       fi
       if echo "$DOCXML" | grep -q 'KATA PENGANTAR' && ! echo "$DOCXML" | grep -q 'BAB I KATA PENGANTAR'; then
         pass "KATA PENGANTAR tanpa nomor bab"
       else
         fail "KATA PENGANTAR ke-numbering BAB I"
       fi
+      if echo "$DOCXML" | grep -q 'w:hyperlink w:anchor'; then
+        pass "docx daftar isi ber-hyperlink"
+      else
+        fail "docx daftar isi tanpa hyperlink"
+      fi
       if echo "$DOCXML" | grep -q 'instrText'; then
         pass "docx punya field DAFTAR ISI (TOC)"
       else
         fail "docx tanpa field TOC"
+      fi
+      if ! echo "$DOCXML" | grep -q 'AbstractTitle'; then
+        pass "docx tanpa halaman abstract"
+      else
+        fail "docx masih ada abstract"
       fi
       if echo "$STYXML" | grep -q 'Times New Roman'; then
         pass "docx memakai Times New Roman"
@@ -221,6 +236,56 @@ if command -v unzip &>/dev/null; then
         pass "title block bawaan pandoc dinonaktifkan"
       else
         fail "title block bawaan pandoc masih muncul"
+      fi
+      COVER_BR=$(echo "$DOCXML" | grep -oE 'w:val="CoverTitle".{0,500}' | grep -o '<w:br />' | wc -l)
+      if [ "$COVER_BR" -eq 1 ]; then
+        pass "judul cover docx 2 baris"
+      else
+        fail "judul cover docx bukan 2 baris (br=$COVER_BR)"
+      fi
+      if echo "$DOCXML" | grep -q 'w:anchor="kata-pengantar"'; then
+        pass "TOC memuat KATA PENGANTAR"
+      else
+        fail "TOC tanpa KATA PENGANTAR"
+      fi
+      PAGEREF_N=$(echo "$DOCXML" | grep -oE 'PAGEREF [a-z0-9-]+' | wc -l)
+      ZERO_N=$(echo "$DOCXML" | grep -oE 'PAGEREF [a-z0-9-]+ [^<]*</w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>0</w:t>' | wc -l)
+      if command -v soffice &>/dev/null; then
+        if [ "$PAGEREF_N" -gt 0 ] && [ "$ZERO_N" -eq 0 ]; then
+          pass "TOC memakai nomor halaman asli ($PAGEREF_N entri)"
+        else
+          fail "TOC masih pakai nomor halaman 0 (pagerref=$PAGEREF_N zero=$ZERO_N)"
+        fi
+      else
+        pass "TOC nomor halaman (soffice tidak ada, memakai cache)"
+      fi
+      if echo "$DOCXML" | grep -q 'w:anchor="bibliography"'; then
+        pass "TOC memuat DAFTAR PUSTAKA"
+      else
+        fail "TOC tanpa DAFTAR PUSTAKA"
+      fi
+      if echo "$DOCXML" | grep -q 'footerReference'; then
+        pass "docx memakai footer (nomor halaman)"
+      else
+        fail "docx tanpa footer"
+      fi
+      if echo "$DOCXML" | grep -q 'w:pgNumType w:fmt="lowerRoman" w:start="1"'; then
+        pass "front matter penomoran i, ii (lowerRoman)"
+      else
+        fail "front matter tanpa lowerRoman start 1"
+      fi
+      if echo "$DOCXML" | grep -q 'w:pgNumType w:fmt="decimal" w:start="1"'; then
+        pass "BAB I penomoran 1, 2, 3 (decimal)"
+      else
+        fail "BAB I tanpa decimal start 1"
+      fi
+      H1BLK=$(echo "$STYXML" | sed -n '/w:styleId="Heading1"/,/<\/w:style>/p')
+      H1B=$(echo "$H1BLK" | grep -oE 'w:before="360"' | wc -l)
+      H1A=$(echo "$H1BLK" | grep -oE 'w:after="720"' | wc -l)
+      if [ "$H1B" -eq 1 ] && [ "$H1A" -eq 1 ]; then
+        pass "Heading1 spasi setelah = 2 baris (gap ke sub-bab)"
+      else
+        fail "Heading1 spasi setelah bukan 720 (before=$H1B after=$H1A)"
       fi
     else
       fail "Laporan.docx tidak dihasilkan"

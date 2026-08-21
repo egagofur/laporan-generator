@@ -127,7 +127,7 @@ make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
 make reference-docx # Regenerasi reference.docx dari reference bawaan pandoc
 make html         # Export ke HTML
-make test         # Jalankan test suite (16 kategori tes / 39 assertions)
+make test         # Jalankan test suite (16 kategori tes / 54 assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
@@ -141,7 +141,7 @@ nix develop
 
 # Build PDF / test di dalam shell:
 ./build.sh            # atau: make build
-make test             # 39 assertions
+make test             # 54 assertions
 ```
 
 Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, Typst, atau ImageMagick secara manual.

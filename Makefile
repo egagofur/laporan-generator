@@ -48,7 +48,9 @@ docx:
 		--top-level-division=chapter \
 		--reference-doc=reference.docx \
 		--lua-filter=docx.lua \
-		-o Laporan.docx 2>&1
+		-o /tmp/Laporan-tmp.docx 2>&1
+	python3 scripts/finalize-docx.py /tmp/Laporan-tmp.docx /tmp/Laporan-sect.docx
+	python3 scripts/docx-pagenum.py /tmp/Laporan-sect.docx Laporan.docx
 
 reference-docx:
 	@command -v pandoc >/dev/null 2>&1 || { echo "ERROR: pandoc not found"; exit 1; }

@@ -9,7 +9,7 @@ Penulis menyadari bahwa laporan ini tidak dapat terselesaikan tanpa bantuan dari
 Penulis menyadari bahwa laporan ini masih jauh dari sempurna. Oleh karena itu, kritik dan saran yang membangun sangat diharapkan untuk perbaikan di masa mendatang. Semoga laporan ini dapat memberikan manfaat bagi pembaca dalam memahami konsep otomatisasi dokumen akademik.
 
 ```{=typst}
-#v(1fr)
+#v(0.8cm)
 #align(right)[
   Juli 2026
 
@@ -27,16 +27,8 @@ Penulis menyadari bahwa laporan ini masih jauh dari sempurna. Oleh karena itu, k
 ```
 
 ```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
-<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:outlineLvl w:val="-1"/></w:pPr><w:r><w:t>DAFTAR ISI</w:t></w:r></w:p>
-<w:p>
-  <w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r>
-  <w:r><w:instrText xml:space="preserve"> TOC \o "1-3" \h \z \u </w:instrText></w:r>
-  <w:r><w:fldChar w:fldCharType="separate"/></w:r>
-  <w:r><w:t xml:space="preserve">Perbarui daftar isi: klik kanan lalu pilih Update Field (F9)</w:t></w:r>
-  <w:r><w:fldChar w:fldCharType="end"/></w:r>
-</w:p>
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="454"/></w:pPr><w:r><w:t>Juli 2026</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="567"/></w:pPr><w:r><w:t>Tim Penyusun</w:t></w:r></w:p>
 ```
 
 ```{=latex}

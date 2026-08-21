@@ -164,10 +164,8 @@ Kedua file ditulis langsung dari dalam script menggunakan heredoc, sehingga tida
 
 Pipeline menghasilkan satu file output utama: `Laporan.pdf`. File ini merupakan dokumen PDF yang siap digunakan dengan format sebagai berikut:
 
-\setlength{\tabcolsep}{6pt}
-
 | Aspek | Spesifikasi |
-|-------|-------------|
+|:------|:------------|
 | Ukuran kertas | A4 (210 mm x 297 mm) |
 | Font | Times New Roman (Nimbus Serif) |
 | Ukuran font | 12pt |
@@ -180,14 +178,10 @@ Pipeline menghasilkan satu file output utama: `Laporan.pdf`. File ini merupakan 
 | Daftar isi | Otomatis |
 | Lisensi font | Open source (GPL) |
 
-\setlength{\tabcolsep}{4pt}
-
 ### Perbandingan dengan Metode Konvensional
 
-\setlength{\tabcolsep}{6pt}
-
 | Aspek | Pipeline Otomatis | Word Processor |
-|-------|------------------|----------------|
+|:------|:------------------|:---------------|
 | Format konten | Markdown (teks) | Binary (docx) |
 | Version control | Git-friendly | Tidak kompatibel |
 | Konsistensi format | Terjamin oleh template | Bergantung pengguna |
@@ -195,8 +189,6 @@ Pipeline menghasilkan satu file output utama: `Laporan.pdf`. File ini merupakan 
 | Kolaborasi | Merge via Git | Track changes terbatas |
 | Output | PDF langsung | Export manual |
 | Dependensi | Pandoc + LaTeX | MS Word / LibreOffice |
-
-\setlength{\tabcolsep}{4pt}
 
 Pipeline otomatis unggul dalam konsistensi format, kemudahan revisi, dan kompatibilitas dengan version control. Sementara word processor unggul dalam kemudahan penggunaan awal (WYSIWYG) dan tidak memerlukan instalasi tools tambahan.
 
