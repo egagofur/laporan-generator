@@ -34,6 +34,15 @@
   <b><a href="examples/Laporan-Akademik-Example.pdf">Contoh PDF</a></b>
 </p>
 
+<p align="center" id="video-tutorial">
+  <a href="https://youtu.be/jSSGIccmp7E">
+    <img src="https://img.youtube.com/vi/jSSGIccmp7E/maxresdefault.jpg"
+         alt="Video Tutorial Penggunaan Laporan Generator" width="600"/>
+  </a>
+  <br/>
+  <sub>Tonton video tutorial penggunaan</sub>
+</p>
+
 ---
 
 ## Daftar Isi
