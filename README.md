@@ -112,9 +112,12 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 
 ### Opsi 1: CLI Helper Terpadu (Paling Mudah)
 ```bash
-./laporan init        # Wizard interaktif setup metadata (judul, penulis, NIM, dosen)
-./laporan build       # Build PDF dan DOCX sekaligus
-./laporan check       # Cek kelengkapan dependensi dan berkas proyek
+./laporan init                   # Wizard interaktif setup metadata (judul, penulis, preset)
+./laporan preset list            # Tampilkan daftar preset format kampus yang tersedia
+./laporan preset scan <file.pdf> # Pindai otomatis pedoman penulisan PDF kampus baru
+./laporan preset apply <id>      # Terapkan preset kampus ke metadata.yml
+./laporan build                  # Build PDF dan DOCX sekaligus
+./laporan check                  # Cek kelengkapan dependensi dan berkas proyek
 ```
 
 ### Opsi 2: Docker (Zero Dependencies)
@@ -143,7 +146,7 @@ make watch        # Auto-build saat file berubah (butuh inotify-tools)
 make docx         # Export ke Microsoft Word (.docx)
 make reference-docx # Regenerasi reference.docx dari reference bawaan pandoc
 make html         # Export ke HTML
-make test         # Jalankan test suite (17 kategori tes / 58 assertions)
+make test         # Jalankan test suite (20 kategori tes / 80+ assertions)
 make clean        # Hapus Laporan.pdf dan folder tmp/
 ```
 
@@ -157,7 +160,7 @@ nix develop
 
 # Build PDF / test di dalam shell:
 ./laporan build       # Build PDF + DOCX
-make test             # 58 assertions
+make test             # 80+ assertions
 ```
 
 Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua perangkat (Linux/macOS) -- tidak perlu install Pandoc, Typst, atau ImageMagick secara manual.
@@ -169,7 +172,8 @@ Dengan `flake.lock` yang di-commit, environment akan selalu identik di semua per
 Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 - **[GETTING-STARTED.md](GETTING-STARTED.md)**: Panduan langkah-demi-langkah dari nol hingga jadi PDF, glosarium istilah, dan FAQ.
-- **[docs/campus-guide.md](docs/campus-guide.md)**: Panduan preset margin (standard vs skripsi 4-4-3-3) dan format kampus Indonesia (UI, ITB, UGM, dll).
+- **[docs/campus-guide.md](docs/campus-guide.md)**: Panduan preset kampus (UI, ITB, UGM, ITS, UNPAD), margin, dan pemindaian PDF pedoman.
+- **[docs/preset-schema.md](docs/preset-schema.md)**: Spesifikasi skema konfigurasi preset format kampus (`presets/*.yml`).
 - **[docs/metadata-schema.md](docs/metadata-schema.md)**: Panduan lengkap skema konfigurasi `metadata.yml` (Single & Multi-Author).
 - **[docs/template-guide.md](docs/template-guide.md)**: Penjelasan arsitektur `template.typ`, font Libertinus Serif, margin, dan penomoran bab otomatis Typst.
 - **[docs/troubleshooting.md](docs/troubleshooting.md)**: Solusi lengkap masalah ImageMagick policy, font Typst, dan izin Docker.
@@ -182,31 +186,33 @@ Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 ```
 laporan-generator/
-├── laporan                  # CLI Helper interaktif (./laporan build/init/check)
+├── laporan                  # CLI Helper interaktif (./laporan build/init/preset/check)
 ├── GETTING-STARTED.md       # Panduan pemula (Zero to PDF)
 ├── CONTRIBUTING.md          # Panduan kontribusi open-source
 ├── CHANGELOG.md             # Catatan rilis versi
 ├── docs/                    # Dokumentasi teknis terpisah
-│   ├── campus-guide.md      # Panduan preset kampus (UI, ITB, UGM, dll)
+│   ├── campus-guide.md      # Panduan preset kampus & PDF scanner
+│   ├── preset-schema.md     # Spesifikasi skema preset YAML
 │   ├── metadata-schema.md   # Skema metadata.yml
 │   ├── template-guide.md    # Arsitektur template Typst
 │   └── troubleshooting.md   # Solusi error lengkap
-├── examples/                # Contoh PDF laporan hasil kompilasi
+├── presets/                 # Preset format kampus resmi (UI, ITB, UGM, ITS, UNPAD)
+├── examples/                # Contoh PDF laporan & mock pedoman kampus
 ├── .github/                 # Workflows CI/CD, Issue & PR templates
 ├── apa.csl                  # Citation Style Language (APA)
 ├── build.sh                 # Skrip build utama
 ├── template.typ             # Template Typst (font, margin preset, format)
-├── template.latex           # Template LaTeX (arsip legacy di branch legacy/latex-engine)
-├── metadata.yml             # Judul, penulis, dosen, matkul, institusi
+├── metadata.yml             # Judul, penulis, dosen, matkul, preset
 ├── references.bib           # Daftar pustaka (BibTeX)
 ├── chapters/                # Konten laporan per bab (bab1-5)
 ├── cover.md                 # Kata pengantar
+├── gambar/                  # Direktori gambar/screenshot laporan
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
 ├── Makefile                 # Target build, watch, test, docker, init, view
-├── test.sh                  # Test suite (16 kategori tes)
+├── test.sh                  # Test suite (20 kategori tes / 80 assertions)
 ├── reference.docx           # Template gaya Word (A4, TNR 12pt, Heading 14pt)
 ├── docx.lua                 # Filter penomoran BAB/1.1./1.1.1 + cover DOCX
-├── scripts/                 # Skrip bantu (make-reference-docx.py)
+├── scripts/                 # Skrip bantu (scan-preset.py, validate-preset.py, docx-pagenum.py)
 ├── flake.nix                # Nix devShell (pandoc, typst, ImageMagick, tooling)
 ├── flake.lock               # Lockfile untuk environment reproducible
 ├── Dockerfile               # Container build (Ubuntu 22.04 + Pandoc + Typst)

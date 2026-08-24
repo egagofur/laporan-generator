@@ -117,9 +117,14 @@ make view
 * **Q: Bagaimana format sitasi yang benar?**  
   *A:* Masukkan entri BibTeX di `references.bib`, lalu panggil di Markdown menggunakan sintaks `[@citekey]`.
 
+* **Q: Bagaimana cara menyesuaikan format dengan kampus saya?**  
+  *A:* Gunakan `./laporan preset list` untuk memilih preset kampus bawaan (UI, ITB, UGM, ITS, UNPAD), atau pindai buku pedoman PDF kampus Anda dengan `./laporan preset scan /path/ke/pedoman.pdf`.
+
 ---
 
-Untuk panduan lebih mendalam mengenai skema metadata dan arsitektur template, silakan baca dokumentasi di folder `docs/`:
+Untuk panduan lebih mendalam mengenai skema metadata, preset kampus, dan arsitektur template, silakan baca dokumentasi di folder `docs/`:
+- [docs/campus-guide.md](docs/campus-guide.md)
+- [docs/preset-schema.md](docs/preset-schema.md)
 - [docs/metadata-schema.md](docs/metadata-schema.md)
 - [docs/template-guide.md](docs/template-guide.md)
 - [docs/troubleshooting.md](docs/troubleshooting.md)

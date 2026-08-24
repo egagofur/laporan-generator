@@ -33,6 +33,7 @@ show_help() {
     echo -e "  ${GREEN}pdf${NC}          Kompilasi dokumen PDF (via Typst)"
     echo -e "  ${GREEN}docx${NC}         Kompilasi dokumen Microsoft Word (.docx)"
     echo -e "  ${GREEN}init${NC}         Wizard interaktif untuk konfigurasi awal metadata"
+    echo -e "  ${GREEN}preset${NC}       Kelola preset format kampus (list/show/apply)"
     echo -e "  ${GREEN}check${NC}        Audit dependensi sistem dan struktur proyek"
     echo -e "  ${GREEN}test${NC}         Jalankan suite pengujian otomatis (test.sh)"
     echo -e "  ${GREEN}view${NC}         Buka dokumen Laporan.pdf di viewer"
@@ -40,7 +41,10 @@ show_help() {
     echo -e "  ${GREEN}clean${NC}        Bersihkan berkas output dan direktori sementara"
     echo -e "  ${GREEN}help${NC}         Tampilkan panduan bantuan ini"
     echo ""
-    echo -e "${YELLOW}Contoh:${NC} ./laporan build"
+    echo -e "${YELLOW}Contoh:${NC}"
+    echo -e "  ./laporan build"
+    echo -e "  ./laporan preset list"
+    echo -e "  ./laporan preset apply itb-ta"
 }
 
 cmd_check() {
@@ -85,11 +89,24 @@ cmd_check() {
         fi
     }
 
+    check_dir() {
+        local dir="$1"
+        local desc="$2"
+        if [ -d "$dir" ]; then
+            echo -e "  [${GREEN}OK${NC}] $desc ($dir)"
+        else
+            echo -e "  [${RED}FAIL${NC}] $desc ($dir) tidak ditemukan"
+            all_ok=false
+        fi
+    }
+
     check_file "metadata.yml" "Metadata laporan"
     check_file "cover.md" "Kata pengantar & outline"
     check_file "template.typ" "Template Typst"
     check_file "reference.docx" "Template Word"
     check_file "references.bib" "Daftar pustaka"
+    check_dir  "presets" "Direktori preset kampus"
+    check_dir  "chapters" "Direktori bab laporan"
 
     echo ""
     if [ "$all_ok" = true ]; then
@@ -98,6 +115,144 @@ cmd_check() {
         echo -e "${RED}${BOLD}Ada beberapa komponen yang kurang. Silakan lengkapi sebelum build.${NC}"
         echo -e "${YELLOW}Tips: Gunakan 'nix develop' atau Docker untuk instalasi instan.${NC}"
     fi
+}
+
+cmd_preset() {
+    local subcmd="${1:-list}"
+    case "$subcmd" in
+        list)
+            show_banner
+            echo -e "${BLUE}${BOLD}Daftar Preset Format Kampus Tersedia:${NC}"
+            echo ""
+            if [ -d presets ]; then
+                for p in presets/*.yml; do
+                    if [ -f "$p" ]; then
+                        local pid
+                        pid=$(basename "$p" .yml)
+                        local pname
+                        pname=$(grep -E '^[[:space:]]*name:' "$p" 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '"\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+                        local pdesc
+                        pdesc=$(grep -E '^[[:space:]]*description:' "$p" 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '"\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+                        echo -e "  * ${GREEN}${BOLD}$pid${NC} - ${BOLD}${pname:-$pid}${NC}"
+                        if [ -n "$pdesc" ]; then
+                            echo -e "    ${pdesc}"
+                        fi
+                        echo ""
+                    fi
+                done
+            else
+                echo -e "${RED}Direktori presets/ tidak ditemukan.${NC}"
+            fi
+            echo -e "${YELLOW}Perintah Terkait:${NC}"
+            echo -e "  Pindai pedoman PDF : ${CYAN}./laporan preset scan <pedoman.pdf>${NC}"
+            echo -e "  Lihat detail preset: ${CYAN}./laporan preset show <preset-id>${NC}"
+            echo -e "  Bandingkan preset  : ${CYAN}./laporan preset diff <preset-1> [preset-2]${NC}"
+            echo -e "  Validasi preset    : ${CYAN}./laporan preset validate [preset-id]${NC}"
+            echo -e "  Terapkan preset    : ${CYAN}./laporan preset apply <preset-id>${NC}"
+            ;;
+        scan)
+            local pdf_file="$2"
+            if [ -z "$pdf_file" ]; then
+                echo -e "${RED}Error: Masukkan path file PDF pedoman kampus.${NC}"
+                echo "Contoh: ./laporan preset scan /path/ke/pedoman.pdf"
+                exit 1
+            fi
+            if [ ! -f "$pdf_file" ]; then
+                echo -e "${RED}Error: Berkas '$pdf_file' tidak ditemukan.${NC}"
+                exit 1
+            fi
+            shift
+            python3 scripts/scan-preset.py "$@"
+            ;;
+        validate)
+            shift
+            if [ -n "$1" ]; then
+                local t="$1"
+                [ -f "presets/${t}.yml" ] && t="presets/${t}.yml"
+                python3 scripts/validate-preset.py "$t"
+            else
+                python3 scripts/validate-preset.py --all
+            fi
+            ;;
+        diff)
+            local p1="$2"
+            local p2="$3"
+            if [ -z "$p1" ]; then
+                echo -e "${RED}Error: Sebutkan setidaknya 1 preset untuk dibandingkan.${NC}"
+                echo "Contoh: ./laporan preset diff itb-ta ui-skripsi"
+                exit 1
+            fi
+            if [ ! -f "presets/${p1}.yml" ]; then
+                echo -e "${RED}Preset '${p1}' tidak ditemukan di folder presets/${NC}"
+                exit 1
+            fi
+            show_banner
+            if [ -n "$p2" ]; then
+                if [ ! -f "presets/${p2}.yml" ]; then
+                    echo -e "${RED}Preset '${p2}' tidak ditemukan di folder presets/${NC}"
+                    exit 1
+                fi
+                echo -e "${CYAN}${BOLD}Perbandingan Preset: ${p1}  VS  ${p2}${NC}"
+                echo "========================================================"
+                diff -u "presets/${p1}.yml" "presets/${p2}.yml" || true
+            else
+                local curr
+                curr=$(grep -E '^[[:space:]]*(preset|margin_preset):' metadata.yml 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '\"'\''\r\n ')
+                curr=${curr:-"standard"}
+                echo -e "${CYAN}${BOLD}Perbandingan: Aktif (${curr})  VS  Target (${p1})${NC}"
+                echo "========================================================"
+                diff -u "presets/${curr}.yml" "presets/${p1}.yml" 2>/dev/null || true
+            fi
+            echo "========================================================"
+            ;;
+        show)
+            local target="$2"
+            if [ -z "$target" ]; then
+                echo -e "${RED}Error: Sebutkan ID preset. Contoh: ./laporan preset show itb-ta${NC}"
+                exit 1
+            fi
+            if [ -f "presets/${target}.yml" ]; then
+                show_banner
+                echo -e "${CYAN}${BOLD}Konfigurasi Preset: ${target}${NC}"
+                echo "--------------------------------------------------------"
+                cat "presets/${target}.yml"
+                echo "--------------------------------------------------------"
+            else
+                echo -e "${RED}Preset '${target}' tidak ditemukan di folder presets/${NC}"
+                exit 1
+            fi
+            ;;
+        apply)
+            local target="$2"
+            if [ -z "$target" ]; then
+                echo -e "${RED}Error: Sebutkan ID preset. Contoh: ./laporan preset apply itb-ta${NC}"
+                exit 1
+            fi
+            if [ ! -f "presets/${target}.yml" ]; then
+                echo -e "${RED}Preset '${target}' tidak ditemukan di presets/${NC}"
+                exit 1
+            fi
+            if [ ! -f "metadata.yml" ]; then
+                echo -e "${RED}metadata.yml tidak ditemukan. Jalankan './laporan init' terlebih dahulu.${NC}"
+                exit 1
+            fi
+            if grep -qE '^\s*preset:' metadata.yml; then
+                sed -i.bak -E "s/^\s*preset:.*/preset: \"$target\"/" metadata.yml && rm -f metadata.yml.bak
+            elif grep -qE '^\s*margin_preset:' metadata.yml; then
+                sed -i.bak -E "s/^\s*margin_preset:.*/preset: \"$target\"/" metadata.yml && rm -f metadata.yml.bak
+            elif grep -q '^\.\.\.' metadata.yml; then
+                sed -i.bak -E "s/^\.\.\./preset: \"$target\"\n.../" metadata.yml && rm -f metadata.yml.bak
+            else
+                echo "preset: \"$target\"" >> metadata.yml
+            fi
+            echo -e "${GREEN}${BOLD}[OK] Preset '${target}' berhasil diterapkan ke metadata.yml!${NC}"
+            ;;
+        *)
+            echo -e "${RED}Sub-perintah preset tidak dikenal: $subcmd${NC}"
+            echo "Gunakan: ./laporan preset [list | scan <file> | show <id> | diff <id> | validate | apply <id>]"
+            exit 1
+            ;;
+    esac
 }
 
 cmd_init() {
@@ -133,8 +288,11 @@ cmd_init() {
     read -rp "Tahun Akademik [2026/2027]: " in_year
     in_year=${in_year:-"2026/2027"}
 
-    read -rp "Preset Margin (standard / skripsi-4433) [standard]: " in_margin
-    in_margin=${in_margin:-"standard"}
+    echo ""
+    echo -e "${BLUE}Pilihan Preset Format Kampus:${NC}"
+    echo "  standard / skripsi-4433 / ui-skripsi / itb-ta / ugm-skripsi / its-skripsi"
+    read -rp "Preset Format [standard]: " in_preset
+    in_preset=${in_preset:-"standard"}
 
     cat << YAML_EOF > metadata.yml
 title: "$in_title"
@@ -148,7 +306,7 @@ institution: "$in_institution"
 faculty: "$in_faculty"
 year: "$in_year"
 date: "$(date +'%B %Y')"
-margin_preset: "$in_margin"
+preset: "$in_preset"
 YAML_EOF
 
     echo ""
@@ -213,6 +371,10 @@ case "${1:-help}" in
         ;;
     init)
         cmd_init
+        ;;
+    preset)
+        shift
+        cmd_preset "$@"
         ;;
     check)
         cmd_check

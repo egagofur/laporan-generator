@@ -2,7 +2,7 @@
 
 File `template.typ` merupakan jantung dari pemformatan visual PDF pada **Laporan Generator**. Template ini dirancang untuk memenuhi standar penyusunan laporan akademik resmi di Indonesia, dan dikompilasi dengan **Typst** sebagai engine typesetting.
 
-> **Catatan**: Template LaTeX lama (`template.latex`) masih disimpan di repositori sebagai arsip, tetapi tidak lagi digunakan oleh pipeline utama.
+> **Catatan**: Pipeline utama sepenuhnya menggunakan **Typst** (`template.typ`). Template LaTeX lama diarsipkan pada branch `legacy/latex-engine`.
 
 ---
 

@@ -268,15 +268,20 @@ function Pandoc(doc)
     if course ~= "" then
       blocks[#blocks + 1] = para({ pandoc.Strong(pandoc.Str(course)) }, "CoverCourse")
     end
-    if lecturer ~= "" then
+    local hide_lecturer = meta_str(meta, "cover_hide_lecturer") == "true" or meta_str(meta, "cover_show_lecturer") == "false"
+    if lecturer ~= "" and not hide_lecturer then
       blocks[#blocks + 1] = para(
         { pandoc.Str("Dosen Pengampu: "), pandoc.Strong(pandoc.Str(lecturer)) },
         "CoverLecturer"
       )
     end
+    local logo_width = meta_str(meta, "cover_logo_width")
+    if logo_width == "" then
+      logo_width = "4cm"
+    end
     blocks[#blocks + 1] = spacer(640)
     blocks[#blocks + 1] = pandoc.Div(
-      { pandoc.Para({ pandoc.Image({}, "logo.jpg", "", pandoc.Attr("", {}, { width = "4cm" })) }) },
+      { pandoc.Para({ pandoc.Image({}, "logo.jpg", "", pandoc.Attr("", {}, { width = logo_width })) }) },
       pandoc.Attr("", {}, { ["custom-style"] = "CoverImage" })
     )
     blocks[#blocks + 1] = spacer(640)
