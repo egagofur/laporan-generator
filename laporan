@@ -146,6 +146,8 @@ cmd_preset() {
             echo -e "${YELLOW}Perintah Terkait:${NC}"
             echo -e "  Pindai pedoman PDF : ${CYAN}./laporan preset scan <pedoman.pdf>${NC}"
             echo -e "  Lihat detail preset: ${CYAN}./laporan preset show <preset-id>${NC}"
+            echo -e "  Bandingkan preset  : ${CYAN}./laporan preset diff <preset-1> [preset-2]${NC}"
+            echo -e "  Validasi preset    : ${CYAN}./laporan preset validate [preset-id]${NC}"
             echo -e "  Terapkan preset    : ${CYAN}./laporan preset apply <preset-id>${NC}"
             ;;
         scan)
@@ -161,6 +163,47 @@ cmd_preset() {
             fi
             shift
             python3 scripts/scan-preset.py "$@"
+            ;;
+        validate)
+            shift
+            if [ -n "$1" ]; then
+                local t="$1"
+                [ -f "presets/${t}.yml" ] && t="presets/${t}.yml"
+                python3 scripts/validate-preset.py "$t"
+            else
+                python3 scripts/validate-preset.py --all
+            fi
+            ;;
+        diff)
+            local p1="$2"
+            local p2="$3"
+            if [ -z "$p1" ]; then
+                echo -e "${RED}Error: Sebutkan setidaknya 1 preset untuk dibandingkan.${NC}"
+                echo "Contoh: ./laporan preset diff itb-ta ui-skripsi"
+                exit 1
+            fi
+            if [ ! -f "presets/${p1}.yml" ]; then
+                echo -e "${RED}Preset '${p1}' tidak ditemukan di folder presets/${NC}"
+                exit 1
+            fi
+            show_banner
+            if [ -n "$p2" ]; then
+                if [ ! -f "presets/${p2}.yml" ]; then
+                    echo -e "${RED}Preset '${p2}' tidak ditemukan di folder presets/${NC}"
+                    exit 1
+                fi
+                echo -e "${CYAN}${BOLD}Perbandingan Preset: ${p1}  VS  ${p2}${NC}"
+                echo "========================================================"
+                diff -u "presets/${p1}.yml" "presets/${p2}.yml" || true
+            else
+                local curr
+                curr=$(grep -E '^[[:space:]]*(preset|margin_preset):' metadata.yml 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '\"'\''\r\n ')
+                curr=${curr:-"standard"}
+                echo -e "${CYAN}${BOLD}Perbandingan: Aktif (${curr})  VS  Target (${p1})${NC}"
+                echo "========================================================"
+                diff -u "presets/${curr}.yml" "presets/${p1}.yml" 2>/dev/null || true
+            fi
+            echo "========================================================"
             ;;
         show)
             local target="$2"
@@ -206,7 +249,7 @@ cmd_preset() {
             ;;
         *)
             echo -e "${RED}Sub-perintah preset tidak dikenal: $subcmd${NC}"
-            echo "Gunakan: ./laporan preset [list | scan <file.pdf> | show <id> | apply <id>]"
+            echo "Gunakan: ./laporan preset [list | scan <file> | show <id> | diff <id> | validate | apply <id>]"
             exit 1
             ;;
     esac

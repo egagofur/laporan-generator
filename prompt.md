@@ -39,7 +39,7 @@ Tanya user satu per satu, jangan sekaligus. Gali informasi secara mendalam:
 5. "Nama dosen/guru pengampu mata kuliah/pelajaran ini?"
 6. "Apakah ada nama asisten dosen, mentor, atau pihak lain yang ingin disebut di kata pengantar?"
 7. "Tahun ajaran berapa? (contoh: 2025/2026)"
-8. "Apakah ada template atau pedoman penulisan laporan dari dosen atau kampus? Jika ada, berikan filenya agar saya sesuaikan. Jika tidak, saya akan gunakan template default Laporan Generator."
+8. "Apakah ada template atau pedoman penulisan laporan dari dosen atau kampus? (Pilihan:\n   - Berikan file PDF pedoman untuk dipindai otomatis via './laporan preset scan'\n   - Atau pilih preset kampus bawaan: ui-skripsi, itb-ta, ugm-skripsi, its-skripsi, unpad-skripsi, skripsi-4433, standard)"
 9. "Ceritakan latar belakang project Anda secara singkat — apa yang dibuat, masalah apa yang diselesaikan, teknologi apa yang dipakai?"
 10. "Struktur BAB 1 Pendahuluan — mau berapa sub-bab? \n\n  Pilihan:\n  - 2 sub-bab: Latar Belakang, Rumusan Masalah\n  - 3 sub-bab: + Tujuan\n  - 4 sub-bab: + Manfaat\n  - 5 sub-bab: + Batasan Masalah\n  - 6 sub-bab: + Sistematika Penulisan"
 11. "Font yang digunakan? (default: Times New Roman)"
@@ -190,6 +190,7 @@ institution: "Universitas/Sekolah"
 faculty: "Program Studi"
 year: "2025/2026"
 date: "Bulan Tahun"
+preset: "standard"   # atau preset kampus: ui-skripsi, itb-ta, ugm-skripsi, its-skripsi, unpad-skripsi, skripsi-4433
 ```
 
 ### references.bib

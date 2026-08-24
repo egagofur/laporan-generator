@@ -389,6 +389,29 @@ else
 fi
 echo ""
 
+echo "[T20] Preset Linter, Validator & Diff CLI check"
+if [ -x "scripts/validate-preset.py" ]; then
+  pass "scripts/validate-preset.py dapat dieksekusi"
+else
+  fail "scripts/validate-preset.py bukan berkas executable"
+fi
+if python3 scripts/validate-preset.py --all >/dev/null 2>&1; then
+  pass "Seluruh preset bawaan lulus validasi skema (validate-preset.py)"
+else
+  fail "Terdapat preset bawaan yang tidak valid skemanya"
+fi
+if ./laporan preset validate >/dev/null 2>&1; then
+  pass "./laporan preset validate berhasil dijalankan"
+else
+  fail "./laporan preset validate gagal"
+fi
+if ./laporan preset diff itb-ta ui-skripsi 2>&1 | grep -q "Perbandingan Preset: itb-ta  VS  ui-skripsi"; then
+  pass "./laporan preset diff menampilkan perbandingan antar preset"
+else
+  fail "./laporan preset diff gagal menampilkan perbandingan"
+fi
+echo ""
+
 echo "========================"
 echo "Hasil: $PASS passed, $FAIL failed"
 echo "========================"
