@@ -95,5 +95,26 @@ Pipeline akan secara otomatis menyesuaikan ukuran dan memposisikannya secara pro
 
 ---
 
-## 5. Membuat Preset Kustom Kampus Lain
-Jika kampus Anda belum tersedia dalam daftar, Anda dapat menambahkan file preset YAML baru di direktori `presets/`. Baca panduan lengkapnya di [docs/preset-schema.md](preset-schema.md).
+## 5. Memindai Otomatis Pedoman Kampus Baru (PDF Scanner)
+
+Jika kampus Anda belum tersedia di daftar preset bawaan, Anda dapat memindai berkas PDF Buku Pedoman Penulisan Skripsi / Tugas Akhir kampus Anda secara otomatis:
+
+```bash
+./laporan preset scan /path/ke/pedoman-penulisan-kampus.pdf
+```
+
+Sistem pemindai cerdas akan:
+1. Mengekstraksi teks dokumen dan mencari pasal format fisik/tata cara pengetikan.
+2. Mendeteksi margin (kiri, atas, kanan, bawah), jenis dan ukuran font, spasi baris, format penomoran bab/sub-bab, dan nama institusi.
+3. Menampilkan ringkasan temuan aturan format di terminal.
+4. Menyimpan konfigurasi otomatis ke berkas `presets/<preset-id>.yml`.
+
+Contoh pemindaian dengan opsi khusus:
+```bash
+./laporan preset scan pedoman-unpad.pdf --preset-id unpad-skripsi --name "Universitas Padjadjaran" --apply
+```
+
+---
+
+## 6. Membuat Preset Kustom Secara Manual
+Selain pemindaian otomatis, Anda juga dapat menulis berkas preset YAML baru secara manual di direktori `presets/`. Baca panduan lengkapnya di [docs/preset-schema.md](preset-schema.md).

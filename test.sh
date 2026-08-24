@@ -356,6 +356,39 @@ else
 fi
 echo ""
 
+echo "[T19] PDF Preset Scanner & Extractor check"
+if [ -x "scripts/scan-preset.py" ]; then
+  pass "scripts/scan-preset.py dapat dieksekusi"
+else
+  fail "scripts/scan-preset.py bukan berkas executable"
+fi
+if [ -f "examples/mock-pedoman-unpad.txt" ]; then
+  python3 scripts/scan-preset.py examples/mock-pedoman-unpad.txt --preset-id test-scanner-unpad --output-dir /tmp/presets-test --non-interactive >/dev/null 2>&1
+  if [ -f "/tmp/presets-test/test-scanner-unpad.yml" ]; then
+    pass "scan-preset.py berhasil menghasilkan file preset YAML"
+    if grep -q 'margin_left: 4cm' /tmp/presets-test/test-scanner-unpad.yml && grep -q 'margin_top: 4cm' /tmp/presets-test/test-scanner-unpad.yml; then
+      pass "Scanner mengekstrak margin 4-4-3-3 dengan benar"
+    else
+      fail "Scanner salah mengekstrak margin"
+    fi
+    if grep -q 'font_size: 12pt' /tmp/presets-test/test-scanner-unpad.yml; then
+      pass "Scanner mengekstrak font size 12pt dengan benar"
+    else
+      fail "Scanner salah mengekstrak font size"
+    fi
+    if grep -q 'UNIVERSITAS PADJADJARAN' /tmp/presets-test/test-scanner-unpad.yml; then
+      pass "Scanner mendeteksi nama institusi dengan benar"
+    else
+      fail "Scanner gagal mendeteksi institusi"
+    fi
+  else
+    fail "scan-preset.py gagal membuat file preset"
+  fi
+else
+  fail "examples/mock-pedoman-unpad.txt tidak ditemukan untuk pengujian"
+fi
+echo ""
+
 echo "========================"
 echo "Hasil: $PASS passed, $FAIL failed"
 echo "========================"

@@ -144,8 +144,23 @@ cmd_preset() {
                 echo -e "${RED}Direktori presets/ tidak ditemukan.${NC}"
             fi
             echo -e "${YELLOW}Perintah Terkait:${NC}"
+            echo -e "  Pindai pedoman PDF : ${CYAN}./laporan preset scan <pedoman.pdf>${NC}"
             echo -e "  Lihat detail preset: ${CYAN}./laporan preset show <preset-id>${NC}"
             echo -e "  Terapkan preset    : ${CYAN}./laporan preset apply <preset-id>${NC}"
+            ;;
+        scan)
+            local pdf_file="$2"
+            if [ -z "$pdf_file" ]; then
+                echo -e "${RED}Error: Masukkan path file PDF pedoman kampus.${NC}"
+                echo "Contoh: ./laporan preset scan /path/ke/pedoman.pdf"
+                exit 1
+            fi
+            if [ ! -f "$pdf_file" ]; then
+                echo -e "${RED}Error: Berkas '$pdf_file' tidak ditemukan.${NC}"
+                exit 1
+            fi
+            shift
+            python3 scripts/scan-preset.py "$@"
             ;;
         show)
             local target="$2"
@@ -191,7 +206,7 @@ cmd_preset() {
             ;;
         *)
             echo -e "${RED}Sub-perintah preset tidak dikenal: $subcmd${NC}"
-            echo "Gunakan: ./laporan preset [list | show <id> | apply <id>]"
+            echo "Gunakan: ./laporan preset [list | scan <file.pdf> | show <id> | apply <id>]"
             exit 1
             ;;
     esac
