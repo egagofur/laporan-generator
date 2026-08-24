@@ -14,6 +14,7 @@ cp "$OUTDIR/logo.jpg" "$TMPDIR/"
 cp "$OUTDIR/metadata.yml" "$TMPDIR/" 2>/dev/null || true
 cp "$OUTDIR/references.bib" "$TMPDIR/" 2>/dev/null || true
 cp "$OUTDIR/apa.csl" "$TMPDIR/" 2>/dev/null || true
+cp -r "$OUTDIR/presets" "$TMPDIR/" 2>/dev/null || true
 
 if [ -d "$OUTDIR/chapters" ]; then
   cp "$OUTDIR/chapters"/*.md "$TMPDIR/"
@@ -31,9 +32,18 @@ fi
 
 cd "$TMPDIR"
 
+PRESET_NAME=$(grep -E '^[[:space:]]*(preset|margin_preset):' "$TMPDIR/metadata.yml" 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '"'\''\r\n ')
+PRESET_OPTS=""
+if [ -n "$PRESET_NAME" ] && [ -f "$TMPDIR/presets/${PRESET_NAME}.yml" ]; then
+  PRESET_OPTS="--metadata-file=$TMPDIR/presets/${PRESET_NAME}.yml"
+elif [ -f "$TMPDIR/presets/standard.yml" ]; then
+  PRESET_OPTS="--metadata-file=$TMPDIR/presets/standard.yml"
+fi
+
 if ! pandoc \
   $INPUT_FILES \
   --template="template.typ" \
+  $PRESET_OPTS \
   --metadata-file="metadata.yml" \
   --citeproc \
   --bibliography="references.bib" \

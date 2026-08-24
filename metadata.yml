@@ -20,4 +20,5 @@ abstract: |
   memungkinkan penulisan konten laporan dalam format Markdown
   yang kemudian dikonversi menjadi PDF profesional melalui
   Pandoc dan pdfLaTeX.
+preset: "standard"
 ...

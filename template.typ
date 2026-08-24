@@ -3,11 +3,20 @@
   author: ($for(author)$"$author.name$"$sep$,$endfor$),
 )
 
+$if(margin_top)$
+#let doc-margin = (
+  top: $margin_top$,
+  bottom: $margin_bottom$,
+  left: $margin_left$,
+  right: $margin_right$,
+)
+$else$
 #let doc-margin = if "$margin_preset$" == "skripsi-4433" or "$margin_preset$" == "4-4-3-3" {
   (top: 4cm, bottom: 3cm, left: 4cm, right: 3cm)
 } else {
   (top: 2cm, bottom: 3cm, left: 2.5cm, right: 2.5cm)
 }
+$endif$
 
 #set page(
   paper: "a4",
@@ -15,17 +24,26 @@
   numbering: none,
 )
 
+$if(font_family)$
+#set text(font: "$font_family$", size: $if(font_size)$$font_size$$else$12pt$endif$)
+$else$
 #set text(font: "Libertinus Serif", size: 12pt)
+$endif$
+
+$if(line_spacing)$
+#set par(justify: true, leading: $line_spacing$, first-line-indent: $if(first_line_indent)$$first_line_indent$$else$1.25cm$endif$)
+$else$
 #set par(justify: true, leading: 0.75em, first-line-indent: 1.25cm)
-#show bibliography: set par(hanging-indent: 1.25cm, first-line-indent: 0cm)
+$endif$
+#show bibliography: set par(hanging-indent: $if(first_line_indent)$$first_line_indent$$else$1.25cm$endif$, first-line-indent: 0cm)
 
 #set heading(numbering: (..ns) => {
   if ns.len() == 1 {
-    "BAB " + numbering("I", ns.at(0))
+    "$if(heading_chapter_prefix)$$heading_chapter_prefix$$else$BAB $endif$" + numbering("I", ns.at(0))
   } else if ns.len() == 2 {
-    numbering("1.1.", ..ns)
+    numbering("$if(heading_sub_dot)$1.1.$else$1.1$endif$", ..ns)
   } else {
-    numbering("1.1.1", ..ns)
+    numbering("$if(heading_subsub_dot)$1.1.1.$else$1.1.1$endif$", ..ns)
   }
 })
 
@@ -159,16 +177,19 @@ $if(course)$
 ]
 $endif$
 $if(lecturer)$
+$if(cover_hide_lecturer)$
+$else$
 #v(0.4cm)
 #align(center)[
   #text(size: 11pt)[Dosen Pengampu:]
   #text(size: 12pt, weight: "bold")[$lecturer$]
 ]
 $endif$
+$endif$
 
 #v(1fr)
 #align(center)[
-  #image("logo.jpg", width: 4cm)
+  #image("logo.jpg", width: $if(cover_logo_width)$$cover_logo_width$$else$4cm$endif$)
 ]
 #v(1fr)
 

@@ -1,40 +1,42 @@
 # Panduan Preset & Kustomisasi Format Kampus
 
-Dokumen ini berisi panduan untuk menyesuaikan format laporan akademik sesuai dengan pedoman penulisan di berbagai perguruan tinggi di Indonesia.
+Dokumen ini berisi panduan untuk menyesuaikan format laporan akademik sesuai dengan pedoman penulisan di berbagai perguruan tinggi di Indonesia menggunakan sistem **Preset Declarative** (`presets/*.yml`).
 
 ---
 
-## 1. Pilihan Preset Margin Dokumen
+## 1. Menggunakan Preset Kampus
 
-Anda dapat mengatur preset margin melalui berkas `metadata.yml`:
+Setiap perguruan tinggi memiliki aturan tata letak, margin, jenis huruf, dan gaya sampul tersendiri. Anda dapat memilih preset yang diinginkan melalui berkas `metadata.yml`:
 
-### A. Preset Standar Modern (`standard`)
-* **Penggunaan:** Tugas akhir, laporan magang, praktikum, seminar.
-* **Konfigurasi `metadata.yml`:**
-  ```yaml
-  margin_preset: "standard"
-  ```
-* **Ukuran Margin:**
-  * Kiri: 2.5 cm
-  * Kanan: 2.5 cm
-  * Atas: 2.0 cm
-  * Bawah: 3.0 cm
+```yaml
+preset: "itb-ta"   # Ganti dengan ID preset kampus Anda
+```
 
-### B. Preset Skripsi Tradisional (`skripsi-4433` / `4-4-3-3`)
-* **Penggunaan:** Format skripsi/tesis jilid tebal (hardcover) yang mewajibkan margin kiri lebih lebar untuk area jilidan.
-* **Konfigurasi `metadata.yml`:**
-  ```yaml
-  margin_preset: "skripsi-4433"
-  ```
-* **Ukuran Margin:**
-  * Kiri: 4.0 cm (area jilid)
-  * Atas: 4.0 cm
-  * Kanan: 3.0 cm
-  * Bawah: 3.0 cm
+Atau gunakan bantuan CLI interaktif:
+```bash
+./laporan preset list                # Lihat semua preset yang tersedia
+./laporan preset show ui-skripsi      # Lihat rincian konfigurasi preset
+./laporan preset apply itb-ta        # Terapkan langsung ke metadata.yml
+```
+
+> **Kompatibilitas**: Field lama `margin_preset: "skripsi-4433"` atau `margin_preset: "standard"` tetap didukung penuh.
 
 ---
 
-## 2. Contoh Konfigurasi Berbagai Kampus
+## 2. Daftar Preset Kampus Bawaan
+
+| ID Preset | Institusi / Format | Margin (Atas - Bawah - Kiri - Kanan) | Catatan Khusus |
+|---|---|---|---|
+| `standard` | Standar Modern | 2.0 cm - 3.0 cm - 2.5 cm - 2.5 cm | Format default tugas akhir, magang, praktikum |
+| `skripsi-4433` | Skripsi Tradisional | 4.0 cm - 3.0 cm - 4.0 cm - 3.0 cm | Hardcover jilid tebal margin kiri 4cm |
+| `ui-skripsi` | Universitas Indonesia (UI) | 2.5 cm - 2.5 cm - 2.5 cm - 2.5 cm | Sesuai Pedoman Karya Ilmiah UI |
+| `itb-ta` | Institut Teknologi Bandung (ITB) | 4.0 cm - 3.0 cm - 4.0 cm - 3.0 cm | Cover minimalis (tanpa dosen pembimbing di cover luar) |
+| `ugm-skripsi` | Universitas Gadjah Mada (UGM) | 4.0 cm - 3.0 cm - 4.0 cm - 3.0 cm | Full academic cover |
+| `its-skripsi` | Institut Teknologi Sepuluh Nopember (ITS) | 4.0 cm - 3.0 cm - 4.0 cm - 3.0 cm | Standard Tugas Akhir & Tesis ITS |
+
+---
+
+## 3. Contoh Konfigurasi Berbagai Kampus
 
 ### A. Format Universitas Indonesia (UI)
 ```yaml
@@ -48,7 +50,7 @@ author:
 institution: "UNIVERSITAS INDONESIA"
 faculty: "FAKULTAS ILMU KOMPUTER"
 year: "2026"
-margin_preset: "standard"
+preset: "ui-skripsi"
 ```
 
 ### B. Format Institut Teknologi Bandung (ITB)
@@ -56,14 +58,13 @@ margin_preset: "standard"
 title: "RANCANG BANGUN SISTEM KONTROL DAN MONITORING SMART GRID BERBASIS IOT"
 subtitle: "LAPORAN TUGAS AKHIR"
 course: "Sistem Tertanam"
-lecturer: "Dr. Eng. Pembimbing Utama, S.T., M.T."
 author:
   - name: "Nama Mahasiswa"
     nim: "13521001"
 institution: "INSTITUT TEKNOLOGI BANDUNG"
 faculty: "SEKOLAH TEKNIK ELEKTRO DAN INFORMATIKA"
 year: "2026"
-margin_preset: "skripsi-4433"
+preset: "itb-ta"
 ```
 
 ### C. Format Universitas Gadjah Mada (UGM)
@@ -80,14 +81,19 @@ author:
 institution: "UNIVERSITAS GADJAH MADA"
 faculty: "FAKULTAS TEKNIK"
 year: "2026"
-margin_preset: "skripsi-4433"
+preset: "ugm-skripsi"
 ```
 
 ---
 
-## 3. Mengganti Logo Kampus
+## 4. Mengganti Logo Kampus
 Cukup salin gambar logo resmi kampus Anda ke direktori utama dengan nama **`logo.jpg`** (atau format PNG yang dikonversi ke JPEG):
 ```bash
 cp /path/ke/logo-kampus.png logo.jpg
 ```
-Pipeline akan secara otomatis menyesuaikan ukuran dan memposisikannya secara proporsional di tengah halaman sampul.
+Pipeline akan secara otomatis menyesuaikan ukuran dan memposisikannya secara proporsional di tengah halaman sampul sesuai konfigurasi `cover_logo_width` pada preset.
+
+---
+
+## 5. Membuat Preset Kustom Kampus Lain
+Jika kampus Anda belum tersedia dalam daftar, Anda dapat menambahkan file preset YAML baru di direktori `presets/`. Baca panduan lengkapnya di [docs/preset-schema.md](preset-schema.md).

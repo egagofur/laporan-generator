@@ -121,24 +121,23 @@ JANGAN buat folder baru. Langsung overwrite file-file yang sudah ada di root pro
 │   ├── bab4-hasil-dan-pembahasan.md
 │   └── bab5-penutup.md
 ├── logo.jpg                  # JANGAN diubah — user ganti manual dengan logo kampus/sekolah
-├── template.latex            # JANGAN diubah — template LaTeX
+├── template.typ              # JANGAN diubah — template visual Typst
 ├── build.sh                  # JANGAN diubah — skrip build
 ├── metadata.yml              # [OVERWRITE] Judul, penulis, institusi
 ├── references.bib            # [OVERWRITE] Daftar pustaka BibTeX
-└── gambar/                   # Screenshot/diagram (buat baru kalo perlu)
+└── gambar/                   # Screenshot/diagram (simpan file gambar di sini)
 ```
 
 ### cover.md
-**Hanya** berisi kata pengantar. Halaman sampul sudah digenerate otomatis oleh `template.latex` dari `metadata.yml`.
+**Hanya** berisi kata pengantar dan blok penutup frontmatter. Halaman sampul sudah digenerate otomatis oleh `template.typ` dari `metadata.yml`.
 
 Format kata pengantar:
 
-\chapter*{KATA PENGANTAR}
+# KATA PENGANTAR {-}
 Puji syukur ... (isi kata pengantar, sertakan ucapan terima kasih kepada dosen/guru pengampu dari metadata.yml jika ada)
-\newpage
 
-### template.latex
-JANGAN diubah — sudah ada di project dengan konfigurasi yang benar.
+### template.typ
+JANGAN diubah — sudah ada di project dengan konfigurasi format Typst yang benar.
 
 ### build.sh
 JANGAN diubah — sudah ada di project dengan konfigurasi yang benar.
@@ -227,8 +226,10 @@ File-file berikut telah di-overwrite:
 
 Untuk menghasilkan PDF, jalankan:
   ./build.sh
+  atau
+  ./laporan build
 
-Pastikan Pandoc, TeX Live, dan ImageMagick sudah terinstall.
+Pastikan Pandoc, Typst, dan ImageMagick sudah terinstall.
   Atau pake Docker: docker compose run --rm laporan-generator
 """
 
@@ -236,10 +237,10 @@ Pastikan Pandoc, TeX Live, dan ImageMagick sudah terinstall.
 ## PENTING — CONSTRAINTS
 
 1. Jangan tanya semua pertanyaan sekaligus. Tanya SATU PER SATU.
-2. Gunakan font pdflatex (JANGAN lualatex atau xelatex).
-3. File template.latex HARUS menggunakan font Nimbus Serif (Times New Roman).
-4. File build.sh HARUS menyertakan penanganan alpha channel PNG.
-5. File build.sh HARUS menggunakan flag --no-highlight.
+2. Engine PDF menggunakan Typst (otomatis via ./build.sh atau ./laporan build).
+3. File template.typ menggunakan font Libertinus Serif (standar Times New Roman).
+4. File build.sh menyertakan penanganan alpha channel PNG secara otomatis.
+5. File build.sh menggunakan flag --no-highlight.
 6. Cari referensi daftar pustaka dari internet yang BENAR-BENAR NYATA.
 7. Target halaman: 20-40 halaman tergantung jenis project.
 8. JANGAN gunakan karakter box-drawing (├, ─, └, │) di konten.

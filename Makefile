@@ -40,7 +40,15 @@ docx:
 		echo "ERROR: Direktori chapters/ tidak ditemukan."; \
 		exit 1; \
 	fi; \
+	PRESET=$$(grep -E '^[[:space:]]*(preset|margin_preset):' metadata.yml 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '\"'\''\r\n '); \
+	PRESET_FILE=""; \
+	if [ -n "$$PRESET" ] && [ -f "presets/$${PRESET}.yml" ]; then \
+		PRESET_FILE="--metadata-file=presets/$${PRESET}.yml"; \
+	elif [ -f "presets/standard.yml" ]; then \
+		PRESET_FILE="--metadata-file=presets/standard.yml"; \
+	fi; \
 	pandoc cover.md chapters/bab*.md \
+		$$PRESET_FILE \
 		--metadata-file=metadata.yml \
 		--citeproc --bibliography=references.bib \
 		--csl=apa.csl \
@@ -63,7 +71,15 @@ html:
 		echo "ERROR: Direktori chapters/ tidak ditemukan."; \
 		exit 1; \
 	fi; \
+	PRESET=$$(grep -E '^[[:space:]]*(preset|margin_preset):' metadata.yml 2>/dev/null | head -n 1 | cut -d: -f2- | tr -d '\"'\''\r\n '); \
+	PRESET_FILE=""; \
+	if [ -n "$$PRESET" ] && [ -f "presets/$${PRESET}.yml" ]; then \
+		PRESET_FILE="--metadata-file=presets/$${PRESET}.yml"; \
+	elif [ -f "presets/standard.yml" ]; then \
+		PRESET_FILE="--metadata-file=presets/standard.yml"; \
+	fi; \
 	pandoc chapters/bab*.md \
+		$$PRESET_FILE \
 		--metadata-file=metadata.yml \
 		--citeproc --bibliography=references.bib \
 		--csl=apa.csl \

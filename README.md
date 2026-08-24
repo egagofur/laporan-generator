@@ -196,14 +196,14 @@ laporan-generator/
 ├── apa.csl                  # Citation Style Language (APA)
 ├── build.sh                 # Skrip build utama
 ├── template.typ             # Template Typst (font, margin preset, format)
-├── template.latex           # Template LaTeX (arsip legacy di branch legacy/latex-engine)
 ├── metadata.yml             # Judul, penulis, dosen, matkul, institusi
 ├── references.bib           # Daftar pustaka (BibTeX)
 ├── chapters/                # Konten laporan per bab (bab1-5)
 ├── cover.md                 # Kata pengantar
+├── gambar/                  # Direktori gambar/screenshot laporan
 ├── logo.jpg                 # Logo kampus/sekolah (WAJIB ganti)
 ├── Makefile                 # Target build, watch, test, docker, init, view
-├── test.sh                  # Test suite (16 kategori tes)
+├── test.sh                  # Test suite (17 kategori tes / 58 assertions)
 ├── reference.docx           # Template gaya Word (A4, TNR 12pt, Heading 14pt)
 ├── docx.lua                 # Filter penomoran BAB/1.1./1.1.1 + cover DOCX
 ├── scripts/                 # Skrip bantu (make-reference-docx.py)

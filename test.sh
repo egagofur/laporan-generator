@@ -75,7 +75,7 @@ echo ""
 
 # T8: Cek box-drawing di konten
 echo "[T8] No box-drawing characters"
-if grep -rn '[├─└│]' chapters/ 2>/dev/null; then
+if grep -rn -E '(├|─|└|│)' chapters/ 2>/dev/null; then
   fail "Masih ada box-drawing characters"
 else
   pass "Tidak ada box-drawing characters"
@@ -318,6 +318,41 @@ if [ -f "docs/campus-guide.md" ]; then
   pass "docs/campus-guide.md tersedia"
 else
   fail "docs/campus-guide.md tidak ditemukan"
+fi
+echo ""
+
+echo "[T18] Preset Architecture & University Presets check"
+if [ -d "presets" ]; then
+  pass "Direktori presets/ tersedia"
+else
+  fail "Direktori presets/ tidak ditemukan"
+fi
+for p in standard.yml skripsi-4433.yml ui-skripsi.yml itb-ta.yml ugm-skripsi.yml its-skripsi.yml; do
+  if [ -f "presets/$p" ]; then
+    pass "Preset $p tersedia"
+  else
+    fail "Preset $p tidak ditemukan"
+  fi
+done
+if ./laporan preset list | grep -q "itb-ta"; then
+  pass "./laporan preset list menampilkan preset kampus"
+else
+  fail "./laporan preset list gagal menampilkan preset kampus"
+fi
+if ./laporan preset show ui-skripsi | grep -q "Universitas Indonesia"; then
+  pass "./laporan preset show menampilkan konfigurasi preset"
+else
+  fail "./laporan preset show gagal"
+fi
+if [ -f "docs/preset-schema.md" ]; then
+  pass "docs/preset-schema.md tersedia"
+else
+  fail "docs/preset-schema.md tidak ditemukan"
+fi
+if grep -q 'presets' build.sh && grep -q 'presets' Makefile; then
+  pass "build.sh dan Makefile mendukung pemrosesan preset dinamis"
+else
+  fail "build.sh atau Makefile belum mendukung preset dinamis"
 fi
 echo ""
 
