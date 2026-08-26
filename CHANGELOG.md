@@ -6,6 +6,22 @@ Format dokumen ini mengacu pada [Keep a Changelog](https://keepachangelog.com/id
 
 ---
 
+## [2.3.0] - 2026-08-27
+
+### Added
+- **Windows Native PowerShell CLI Helper (`laporan.ps1`)**: Memungkinkan pengguna Windows tanpa WSL/Git Bash untuk menjalankan perintah `.\laporan.ps1 build`, `init`, `preset list/show/apply`, `check`, dan `view` langsung dari PowerShell.
+- **Standarisasi Referensi Akademik Valid (`references.bib`)**: Pembaruan menyeluruh basis data pustaka dengan sumber ilmiah dan standar internasional terverifikasi (Typst, Pandoc, Pandoc Lua Filters, CommonMark, ImageMagick, GNU Bash, Nix Flakes, Docker Containers, APA 7th Edition, ISO/IEC OpenXML, The TeXbook, dan LaTeX).
+- **Pengujian PowerShell Helper pada Test Suite**: Penambahan verifikasi ketersediaan `laporan.ps1` pada test suite otomatis (`test.sh`).
+
+### Changed
+- **Sinkronisasi Total Konten Dokumen Bawaan (`chapters/bab1-5.md`)**:
+  - Memodernisasi seluruh bab 1 s/d 5 agar mencerminkan arsitektur terkini (Typst engine, Lua AST filters, multi-pass OpenXML partitioning, Nix hermetic builds).
+  - Menghapus artefak sintaks lama dari era LaTeX v1.0.
+  - Memastikan seluruh sitasi terhubung ke entri BibTeX valid format APA Edisi ke-7.
+- **Pembaruan `metadata.yml`**: Judul dan abstrak disesuaikan dengan arsitektur multi-engine modern.
+
+---
+
 ## [2.2.0] - 2026-08-21
 
 ### Added

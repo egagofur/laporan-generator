@@ -78,13 +78,21 @@ Jika Anda lebih menyukai kompilasi cepat di mesin lokal Linux/macOS:
   ```bash
   nix develop
   ```
+* **Windows (PowerShell / Winget)**:
+  ```powershell
+  winget install JohnMacFarlane.Pandoc
+  winget install Typst.Typst
+  winget install ImageMagick.ImageMagick
+  ```
 
 ### Jalankan Build:
+
+**Linux / macOS:**
 ```bash
 # Inisialisasi git hooks (opsional)
 make init
 
-# Build PDF
+# Build PDF (atau ./laporan build)
 make build
 
 # Export Word (.docx)
@@ -92,6 +100,18 @@ make docx
 
 # Buka PDF di viewer
 make view
+```
+
+**Windows (PowerShell):**
+```powershell
+# Cek dependensi & berkas
+.\laporan.ps1 check
+
+# Build PDF
+.\laporan.ps1 build
+
+# Buka PDF di viewer
+.\laporan.ps1 view
 ```
 
 ---

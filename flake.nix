@@ -25,7 +25,6 @@
             pkgs.shellcheck
             pkgs.typst
             pkgs.unzip
-            pkgs.libreoffice
           ];
         };
       });

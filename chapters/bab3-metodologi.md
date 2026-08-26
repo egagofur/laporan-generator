@@ -1,338 +1,116 @@
 # METODOLOGI
 
-## Arsitektur Pipeline
+## Arsitektur Sistem dan Alur Kerja Pipeline
 
-Pipeline otomatisasi dokumen terdiri dari tiga tahap utama yang berjalan secara sekuensial:
+Pengembangan sistem **Laporan Generator** dirancang dengan prinsip modularitas tinggi dan pemisahan lapisan tugas (*separation of concerns*). Arsitektur sistem dibagi menjadi tiga lapisan utama: Lapisan Masukan (*Input Layer*), Lapisan Pemrosesan (*Processing Layer*), dan Lapisan Keluaran (*Output Layer*).
 
-\vspace{10pt}
-\begin{center}
-\begin{minipage}{0.9\textwidth}
-\footnotesize
-\begin{verbatim}
-+------------------+     +------------------+     +------------------+
-|   TAHAP INPUT    |     |  TAHAP PROSES    |     |   TAHAP OUTPUT   |
-+------------------+     +------------------+     +------------------+
-|                  |     |                  |     |                  |
-| cover.md         |     |   +--------+     |     | Laporan.pdf      |
-| chapters/bab*.md |---->|   | Pandoc |     |     |                  |
-| daftar-pustaka.md|     |   +--------+     |     | Format:          |
-| metadata.yml     |     |      |           |     | - A4, 12pt       |
-| references.bib   |     |      v           |     | - Times New Roman |
-| template.latex   |     | +----------+     |     | - Spasi 1.5      |
-| logo.jpg  |     | | pdflatex |     |     | - BAB Romawi     |
-| gambar/*.png     |     | +----------+     |     | - Spasi 1.5      |
-|                  |     | | pdflatex |     |     | - BAB Romawi     |
-+------------------+     | +----------+     |     | - Daftar Isi     |
-        |                +------------------+     +------------------+
-        v                         |
-+------------------+              |
-| build.sh         |              |
-| (Bash Script)    |<-------------+
-| - mktemp         |
-| - copy files     |
-| - convert alpha  |
-| - generate font  |
-| - pandoc command |
-| - cleanup        |
-+------------------+
-\end{verbatim}
-\end{minipage}
-\end{center}
-\vspace{10pt}
-
-### Tahap Input
-
-Tahap input terdiri dari persiapan file-file sumber yang diperlukan:
-
-1. **File konten**: `cover.md` (halaman sampul), `chapters/bab*.md` (BAB 1-5), `daftar-pustaka.md` (referensi)
-2. **File metadata**: `metadata.yml` (judul, penulis, institusi), `references.bib` (daftar pustaka)
-3. **File template**: `template.latex` (format dan layout)
-4. **File pendukung**: `logo.jpg` (logo institusi), `gambar/*.png` (gambar pendukung)
-
-Semua file sumber ditulis dalam format Markdown (kecuali template yang menggunakan LaTeX dan logo yang menggunakan JPG).
-
-### Tahap Proses
-
-Tahap proses dijalankan oleh skrip `build.sh` yang mengorkestrasi seluruh pipeline:
-
-1. **Persiapan**: Membuat direktori temporer, menyalin file-file sumber
-2. **Pre-processing**: Menghapus alpha channel dari gambar PNG
-3. **Konversi**: Pandoc mengkonversi Markdown ke LaTeX menggunakan template
-4. **Kompilasi**: pdfLaTeX mengkompilasi LaTeX menjadi PDF
-5. **Pembersihan**: Menghapus direktori temporer
-
-### Tahap Output
-
-Tahap output menghasilkan file PDF yang siap digunakan. File PDF ini memiliki format yang konsisten:
-
-- Ukuran kertas A4
-- Font Times New Roman (Nimbus Serif) 12pt
-- Spasi baris 1,5
-- Margin sesuai standar
-- Penomoran bab dengan angka Romawi (BAB I, BAB II)
-- Penomoran sub-bab dengan angka Arab (1.1, 2.1)
-- Daftar isi otomatis
-
-## Template LaTeX
-
-Template LaTeX adalah komponen kunci yang menentukan format dan tampilan akhir dokumen. Template ini berisi seluruh pengaturan format yang diperlukan untuk menghasilkan laporan akademik standar Indonesia.
-
-### Struktur Template
-
-Template LaTeX (`template.latex`) dibagi menjadi dua bagian utama:
-
-**Preamble (baris 1--109):**
-
-Document class:
-```latex
-\documentclass[12pt,a4paper,oneside]{book}
+```
++-------------------------------------------------------------------------+
+|                              INPUT LAYER                                |
+|  chapters/bab*.md  |  cover.md  |  metadata.yml  |  presets/*.yml       |
+|  references.bib    |  apa.csl   |  logo.jpg      |  gambar/*            |
++-------------------------------------------------------------------------+
+                                    |
+            +-----------------------+-----------------------+
+            |                                               |
+            v                                               v
++---------------------------------------+ +-------------------------------+
+|       PIPELINE 1: TYPST (PDF)         | |   PIPELINE 2: DOCX MULTI-PASS |
+|                                       | |                               |
+| 1. ImageMagick Alpha Normalization    | | 1. Pandoc + docx.lua Filter   |
+| 2. Preset Metadata Extraction         | | 2. Base reference.docx Styling|
+| 3. Pandoc AST + Citeproc Processing   | | 3. finalize-docx.py (3 Sect)  |
+| 4. Typst Typesetting Engine Render    | | 4. docx-pagenum.py (Page Inj) |
++---------------------------------------+ +-------------------------------+
+            |                                               |
+            v                                               v
++---------------------------------------+ +-------------------------------+
+|             Laporan.pdf               | |          Laporan.docx         |
+| (Clean Vector, APA Style, Typst)      | | (Roman Front, Arabic Body)    |
++---------------------------------------+ +-------------------------------+
 ```
 
-Pengaturan font:
-```latex
-\usepackage[T1]{fontenc}
-\pdfmapfile{+nimbus15.map}
-\renewcommand{\rmdefault}{NimbusSerif}
-\renewcommand{\familydefault}{\rmdefault}
+## Perancangan Template Visual Typst (`template.typ`)
+
+Template visual Typst berfungsi sebagai pengatur tata letak halaman, tipografi, dan penomoran dokumen PDF. Template dirancang fleksibel untuk mendukung preset margin dinamis dan penomoran otomatis.
+
+### Pengaturan Geometri Halaman dan Margin
+
+Geometri halaman diatur secara adaptif melalui blok evaluasi kondisi Typst:
+
+```typst
+#set page(
+  paper: "a4",
+  margin: doc-margin,
+  numbering: none,
+)
 ```
 
-Package geometry untuk margin:
-```latex
-\usepackage[margin=2.5cm,top=2cm,bottom=3cm,footskip=40pt]{geometry}
+Variabel `doc-margin` dievaluasi dari berkas konfigurasi preset (`margin_top`, `margin_bottom`, `margin_left`, `margin_right`) yang diinjeksikan oleh Pandoc pada saat kompilasi.
+
+### Penomoran Heading Bertingkat
+
+Penomoran judul bab dan sub-bab ditangani melalui fungsi callback `#set heading()`:
+
+```typst
+#set heading(numbering: (..ns) => {
+  if ns.len() == 1 {
+    "BAB " + numbering("I", ns.at(0))
+  } else if ns.len() == 2 {
+    numbering("1.1.", ..ns)
+  } else {
+    numbering("1.1.1", ..ns)
+  }
+})
 ```
 
-Pengaturan chapter dan section numbering:
-```latex
-\renewcommand{\chaptername}{BAB}
-\renewcommand{\thechapter}{\Roman{chapter}}
-\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
-\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.%
-  \arabic{subsection}}
-```
+Penanganan khusus diimplementasikan pada `#show heading.where(level: 1)` untuk menghasilkan jeda halaman otomatis (*pagebreak*) dan meletakkan nomor bab ("BAB I") di atas judul bab dengan gaya huruf kapital tebal 14pt di tengah halaman.
 
-Format chapter (14pt bold centered):
-```latex
-\titleformat{\chapter}[display]
-  {\normalfont\bfseries\centering\fontsize{14}{18}\selectfont}
-  {\chaptername\ \thechapter}{10pt}{\fontsize{14}{18}\selectfont}
-```
+### Algoritma Keseimbangan Judul Sampul (*Balanced Title Splitting*)
 
-**Body (baris 111--137):**
+Untuk mencegah terjadinya fenomena kata menggantung sendirian di baris bawah (*orphan words*), template mengintegrasikan fungsi pembagi judul berbasis Dynamic Programming (`balance-split`). Algoritma ini mengevaluasi jumlah karakter per baris dan meminimalisir fungsi biaya (*cost function*) agar panjang tiap baris judul sampul depan simetris menyerupai bentuk piramida terbalik.
 
-Front matter dengan halaman Romawi:
-```latex
-\frontmatter
-\pagenumbering{roman}
-```
+## Perancangan Pipeline Dokumen Microsoft Word (DOCX)
 
-Penyisipan cover melalui variabel Pandoc:
-```latex
-$for(include-before)$
-$include-before$
-$endfor$
-```
+Penyusunan dokumen DOCX resmi memerlukan integrasi tiga komponen pemrosesan berurutan:
 
-Daftar isi:
-```latex
-\tableofcontents
-```
+### Filter Lua docx.lua
+Filter Lua mengintersepsi pohon sintaks abstrak (AST) Pandoc. Fungsi `Header(el)` menghitung indeks bab dan sub-bab serta menyusun entri Daftar Isi ber-hyperlink. Fungsi `Pandoc(doc)` membangun halaman sampul formal menggantikan title block bawaan Pandoc.
 
-Main matter dengan halaman Arab:
-```latex
-\mainmatter
-\pagenumbering{arabic}
-```
+### Partisi Tiga Seksi Dokumen finalize-docx.py
+Skrip Python memanipulasi struktur OpenXML berkas `word/document.xml` dengan membagi dokumen ke dalam tiga penanda seksi (`w:sectPr`):
+- **Seksi 1 (Sampul)**: Menghapus elemen `<w:footerReference>` sehingga nomor halaman tidak tampil pada sampul luar.
+- **Seksi 2 (Front Matter)**: Menginjeksikan `<w:pgNumType w:fmt="lowerRoman" w:start="1"/>` agar halaman KATA PENGANTAR dan DAFTAR ISI diberi nomor *i, ii, iii*.
+- **Seksi 3 (Main Body)**: Menginjeksikan `<w:pgNumType w:fmt="decimal" w:start="1"/>` sebelum judul BAB I agar penomoran dimulai ulang dari angka 1, 2, 3.
 
-Konten utama:
-```latex
-$body$
-```
+### Sinkronisasi Nomor Halaman Aktual docx-pagenum.py
+Untuk memastikan Daftar Isi pada dokumen DOCX menampilkan nomor halaman yang akurat di seluruh aplikasi pengolah kata, skrip `docx-pagenum.py` melakukan:
+1. Render headless berkas DOCX menjadi PDF temporer menggunakan LibreOffice (`soffice --headless`).
+2. Ekstraksi teks per halaman menggunakan utilitas `pdftotext`.
+3. Pencocokan teks heading dengan footer halaman aktual.
+4. Pengisian nilai cache pada field OpenXML `<w:instrText>PAGEREF</w:instrText>`.
 
-### Variabel Pandoc
+## Sistem Preset Kampus Deklaratif
 
-Template menggunakan variabel Pandoc yang diisi secara otomatis:
-- `$for(include-before)$` --- Berisi file yang disertakan melalui `--include-before-body`
-- `$body$` --- Berisi seluruh konten file input Markdown
+Untuk memfasilitasi keberagaman pedoman penulisan skripsi di berbagai perguruan tinggi di Indonesia, arsitektur preset deklaratif (`presets/*.yml`) dibangun dengan skema standar:
 
-## Build Script
+| Kategori Parameter | Kunci Konfigurasi | Contoh Nilai | Keterangan |
+|:---|:---|:---|:---|
+| **Identitas** | `preset_id`, `name` | `ui-skripsi`, `itb-ta` | Identifikasi unik dan nama institusi |
+| **Geometri Margin** | `margin_top`, `margin_left` | `4cm`, `3cm`, `2.5cm` | Batas tepi kertas A4 |
+| **Tipografi** | `font_family`, `font_size` | `Libertinus Serif`, `12pt` | Jenis font dan ukuran teks isi |
+| **Spasi & Indentasi** | `line_spacing`, `first_line_indent` | `0.75em`, `1.25cm` | Spasi 1.5 dan indent alinea |
+| **Sampul (Cover)** | `cover_show_lecturer` | `true` / `false` | Pengaturan tampilan dosen pembimbing |
 
-Skrip `build.sh` adalah otak dari pipeline. Skrip ini mengatur seluruh proses build dari awal hingga akhir.
+Sistem ini didukung oleh dua utilitas otomatis:
+1. **`scripts/scan-preset.py`**: Mengekstraksi aturan margin, spasi, dan font secara otomatis dari berkas PDF Buku Pedoman Skripsi kampus baru menggunakan regex heuristik.
+2. **`scripts/validate-preset.py`**: Melakukan validasi sintaks dan verifikasi skema pada seluruh berkas preset YAML sebelum digunakan pada proses kompilasi.
 
-### Alur Kerja Build Script
+## Metodologi Pengujian dan Verifikasi
 
-**Langkah 1: Setup**
-```bash
-set -e
-DIR="$(cd "$(dirname "$0")" && pwd)"
-OUTDIR="$DIR"
-REPORT="$OUTDIR/Laporan.pdf"
-TMPDIR=$(mktemp -d)
-trap "rm -rf $TMPDIR" EXIT
-```
-
-Script menentukan direktori kerja, membuat direktori temporer dengan `mktemp`, dan mendaftarkan pembersihan otomatis dengan `trap`.
-
-**Langkah 2: Copy File Sumber**
-```bash
-cp "$OUTDIR/cover.md" "$TMPDIR/"
-cp "$OUTDIR/template.latex" "$TMPDIR/"
-cp "$OUTDIR/logo.jpg" "$TMPDIR/"
-cp "$OUTDIR/metadata.yml" "$TMPDIR/"
-cp "$OUTDIR/references.bib" "$TMPDIR/"
-
-if [ -d "$OUTDIR/chapters" ]; then
-  cp "$OUTDIR/chapters"/*.md "$TMPDIR/"
-else
-  cp "$OUTDIR/isi-laporan.md" "$TMPDIR/"
-fi
-```
-
-Semua file sumber disalin ke direktori temporer untuk menjaga kebersihan direktori kerja.
-
-**Langkah 3: Proses Gambar**
-```bash
-if [ -d "$OUTDIR/gambar" ]; then
-  cp -r "$OUTDIR/gambar" "$TMPDIR/"
-  for f in "$TMPDIR/gambar/"*.png; do
-    [ -f "$f" ] && convert "$f" -alpha off "$f" 2>/dev/null || true
-  done
-fi
-```
-
-Jika folder `gambar/` ada, script menyalin dan memproses setiap file PNG untuk menghapus alpha channel.
-
-**Langkah 4: Generate File Pendukung**
-
-Script menghasilkan file `fontools_ts1.enc` yang diperlukan oleh encoding TS1 LaTeX, dan file `t1jtm.fd` yang mendefinisikan font shape untuk Nimbus Serif. Kedua file ditulis langsung dari dalam script menggunakan heredoc.
-
-**Langkah 5: Eksekusi Pandoc**
-```bash
-pandoc \
-  $INPUT_FILES \
-  --template="template.latex" \
-  --include-before-body="cover.md" \
-  --include-after-body="daftar-pustaka.md" \
-  --metadata-file="metadata.yml" \
-  --citeproc \
-  --bibliography="references.bib" \
-  --top-level-division=chapter \
-  --pdf-engine=pdflatex \
-  -o "$REPORT" 2>&1
-```
-
-Pandoc menjalankan konversi dengan parameter:
-- Input: `chapters/bab*.md` (BAB 1-5)
-- Template: `template.latex`
-- Metadata: `metadata.yml` (judul, penulis, institusi)
-- Cover: disisipkan sebelum body
-- Daftar pustaka: digenerate otomatis dari `references.bib` via `--citeproc`
-- Division: chapter (heading level 1 = \chapter)
-- Engine: pdfLaTeX
-- Output: `Laporan.pdf`
-
-Error dan output normal digabungkan dengan `2>&1` untuk memudahkan debugging.
-
-### Penanganan Error
-
-Script menggunakan beberapa mekanisme penanganan error:
-
-1. `set -e` --- Menghentikan script jika ada perintah yang gagal
-2. `|| true` --- Pada perintah `convert`, error diabaikan jika gambar tidak memerlukan pemrosesan
-3. `trap ... EXIT` --- Membersihkan direktori temporer meskipun terjadi error
-4. `[ -f "$f" ]` --- Memeriksa keberadaan file sebelum memproses
-
-## Penulisan Konten Markdown
-
-### Struktur File
-
-Konten laporan ditulis dalam file-file terpisah per bab di direktori `chapters/` (misal `chapters/bab1-pendahuluan.md`, `chapters/bab2-tinjauan-pustaka.md`, dst.). Format penulisan mengikuti aturan Pandoc Markdown:
-
-- Heading level 1 (`#`) digunakan untuk judul BAB
-- Heading level 2 (`##`) digunakan untuk sub-bab
-- Heading level 3 (`###`) digunakan untuk sub-sub-bab
-- Paragraf dipisahkan dengan baris kosong
-- Tabel menggunakan sintaks pipe
-
-### Penulisan Tabel
-
-Tabel ditulis menggunakan format pipe dengan baris header dan separator:
-
-```markdown
-| Kolom 1 | Kolom 2 | Kolom 3 |
-|---------|:-------:|--------:|
-| Kiri    | Tengah  | Kanan   |
-| Teks    | Teks    | Teks    |
-```
-
-Alignment dikontrol dengan posisi titik dua (`:`) pada baris separator:
-- `:---` --- Rata kiri
-- `:---:` --- Rata tengah
-- `---:` --- Rata kanan
-
-### Penulisan Matematika
-
-Matematika inline ditulis dengan tanda dollar tunggal:
-```markdown
-Rumus $E = mc^2$ adalah rumus relativitas.
-```
-
-Matematika display ditulis dengan tanda dollar ganda:
-```markdown
-$$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
-```
-
-Pandoc akan meneruskan sintaks LaTeX ini langsung ke template LaTeX tanpa perubahan.
-
-### Penulisan Kode
-
-Kode inline ditulis dengan backtick tunggal:
-```markdown
-Gunakan perintah `pandoc --help` untuk melihat bantuan.
-```
-
-Blok kode ditulis dengan triple backtick dan dapat menyertakan bahasa untuk syntax highlighting:
-```markdown
-```bash
-pandoc input.md -o output.pdf --pdf-engine=pdflatex
-```
-```
-
-### Referensi Gambar
-
-Gambar direferensikan dengan path relatif terhadap direktori kerja Pandoc:
-
-```markdown
-![Caption Gambar](gambar/nama-file.png)
-```
-
-Pandoc akan menghasilkan lingkungan `figure` LaTeX secara otomatis. Caption akan muncul di bawah gambar dengan format "Gambar 4.1" sesuai pengaturan template.
-
-## Studi Kasus: Project Laporan Generator
-
-Project Laporan Generator adalah implementasi nyata dari pipeline otomatisasi dokumen yang dibahas dalam laporan ini. Project ini berisi seluruh komponen pipeline:
-
-1. **File konten**: `cover.md`, `chapters/bab*.md`, `daftar-pustaka.md`
-2. **File metadata**: `metadata.yml`, `references.bib`
-3. **File template**: `template.latex`
-4. **Skrip build**: `build.sh`
-5. **File pendukung**: `logo.jpg`
-
-Semua file berada dalam satu direktori yang merupakan root dari project. Struktur ini sengaja dibuat sederhana untuk memudahkan penggunaan dan modifikasi.
-
-Untuk menghasilkan PDF, pengguna cukup menjalankan:
-
-```bash
-cd ~/Projects/laporan-generator
-chmod +x build.sh
-./build.sh
-```
-
-Skrip akan secara otomatis:
-1. Membaca file-file sumber
-2. Memproses gambar (jika ada)
-3. Menjalankan Pandoc dengan template LaTeX
-4. Menghasilkan file `Laporan.pdf`
-
-Seluruh proses berlangsung dalam hitungan detik dan menghasilkan dokumen dengan format yang konsisten dan profesional.
-
-
+Keandalan seluruh komponen pipeline diuji menggunakan test suite otomatis (`test.sh`) yang mencakup 20 kategori pengujian dan 78 *test assertions*. Pengujian memverifikasi:
+1. Ketersediaan dependensi dan kelengkapan struktur direktori proyek.
+2. Validitas metadata YAML dan integritas basis data sitasi BibTeX.
+3. Keterbacaan teks berkas PDF dan kelayakan ukuran berkas keluaran.
+4. Validitas struktur OpenXML dokumen DOCX (pemeriksaan 3 seksi, format nomor Romawi/Arab, gaya font Times New Roman, dan field TOC).
+5. Integritas sistem preset kampus, fungsionalitas scanner PDF, dan CLI helper.

@@ -1,352 +1,83 @@
 # TINJAUAN PUSTAKA
 
-## Markdown
+## Markdown dan Standardisasi Dokumen Teks
 
-### Sejarah dan Perkembangan
+### Sejarah dan Filosofi Markdown
 
-Markdown diciptakan oleh John Gruber pada tahun 2004 dengan tujuan menciptakan format penulisan yang mudah dibaca dan mudah ditulis dalam bentuk teks biasa [@gruber2004markdown]. Filosofi utama Markdown adalah bahwa format teks biasa sudah cukup untuk menulis dokumen sederhana, dan elemen markup yang digunakan harus seminimal mungkin.
+Markdown pertama kali diciptakan oleh John Gruber pada tahun 2004 sebagai format penulisan berbasis teks polos (*plain text*) yang dirancang agar mudah dibaca dan ditulis oleh manusia tanpa perlu proses kompilasi visual [@gruber2004markdown]. Filosofi dasar Markdown menempatkan keterbacaan (*human-readability*) sebagai prioritas tertinggi, di mana markup struktural tidak boleh mengaburkan arti teks substantif.
 
-Sejak diperkenalkan, Markdown telah berkembang menjadi berbagai varian dan ekstensi. Beberapa varian populer antara lain GitHub Flavored Markdown (GFM), CommonMark, dan Pandoc Markdown. Masing-masing varian memiliki fitur tambahan seperti dukungan tabel, daftar tugas (task list), sintaks matematika, dan metadata.
+Seiring meluasnya penggunaan Markdown dalam ekosistem rekayasa perangkat lunak, inisiatif standardisasi melahirkan spesifikasi formal CommonMark [@commonmark2021]. Varian Pandoc Markdown memperluas spesifikasi ini dengan mendukung sintaks akademik tingkat lanjut seperti tabel bergaya *pipe*, blok kode beranotasi, catatan kaki (*footnotes*), persamaan matematika LaTeX inline maupun display, metadata berbasis YAML front matter, dan sitasi bibliografi terintegrasi [@pandoc2024].
 
-Pandoc Markdown adalah varian yang paling kaya fitur karena dikembangkan khusus untuk Pandoc. Varian ini mendukung hampir semua ekstensi yang ada, termasuk tabel multi-baris, catatan kaki, definisi metadata (YAML front matter), sintaks matematika LaTeX, dan berbagai jenis blok kode.
+### Sintaks Penulisan Akademik dalam Markdown
 
-### Sintaks Dasar
+Tabel berikut merangkum pemetaan sintaks Markdown yang digunakan dalam pipeline penyusunan laporan akademik:
 
-Berikut adalah sintaks dasar Markdown yang digunakan dalam penulisan laporan:
+| Elemen Struktur | Sintaks Markdown | Contoh Penulisan | Representasi Keluaran |
+|:---|:---|:---|:---|
+| Judul Bab (Level 1) | `# Judul` | `# PENDAHULUAN` | BAB I PENDAHULUAN |
+| Sub-Bab (Level 2) | `## Sub Judul` | `## Latar Belakang` | 1.1. Latar Belakang |
+| Sub-Sub-Bab (Level 3) | `### Rincian` | `### Identifikasi Masalah` | 1.1.1 Rincian Masalah |
+| Sitasi Bibliografi | `[@citekey]` | `[@typst2024]` | (Mädje & Haug, 2024) |
+| Tabel Akademik | Pipe & Header Syntax | `| Kolom 1 | Kolom 2 |` | Tabel formal bergaris 0.5pt |
+| Gambar / Diagram | `![Keterangan](path)` | `![Arsitektur](gambar/flow.png)` | Gambar terpusat ber-caption |
+| Persamaan Matematika | `$...$` / `$$...$$` | `$E = m c^2$` | Notasi rumus terformat presisi |
 
-| Elemen | Sintaks | Contoh |
-|:-------|:--------|:-------|
-| Heading level 1 | `# Teks` | `# BAB 1: PENDAHULUAN` |
-| Heading level 2 | `## Teks` | `## 1.1 Latar Belakang` |
-| Heading level 3 | `### Teks` | `### 2.1.1 Sejarah` |
-| Paragraf | Baris teks biasa, dipisahkan baris kosong | |
-| Teks tebal | `**teks**` atau `__teks__` | `**penting**` |
-| Teks miring | `*teks*` atau `_teks_` | `*catatan*` |
-| List tidak berurut | `- item` atau `* item` | `- poin pertama` |
-| List berurut | `1. item` | `1. langkah pertama` |
-| Link | `[teks](url)` | `[Pandoc](https://pandoc.org)` |
-| Gambar | `![caption](path/file.png)` | `![Diagram](gambar/arsitektur.png)` |
-| Tabel | Menggunakan pipe dan dash | (lihat contoh di bawah) |
-| Kode inline | `` `kode` `` | `` `print("hello")` `` |
-| Blok kode | Diapit triple backtick | |
-| Matematika inline | `$...$` | `$E = mc^2$` |
-| Matematika display | `$$...$$` | `$$\sum_{i=1}^n i$$` |
+## Sistem Typesetting Modern: Typst
 
-### Keunggulan untuk Laporan Akademik
+### Arsitektur dan Prinsip Kerja Typst
 
-Markdown memiliki beberapa keunggulan yang membuatnya cocok sebagai format penulisan laporan akademik:
+Typst adalah sistem typesetting berbasis markup yang dapat diprogram (*programmable markup-based typesetting system*) yang dikembangkan oleh Laurenz Mädje dan Martin Haug [@typst2024]. Typst dirancang sebagai respons terhadap keterbatasan sistem typesetting klasik seperti TeX dan LaTeX [@knuth1984texbook; @lamport1994latex] yang memiliki waktu kompilasi lambat, pesan galat yang sulit diurai, serta sintaks makro yang kompleks.
 
-1. **Format teks biasa** --- File Markdown dapat dibaca dan diedit dengan editor teks apa pun. Tidak memerlukan perangkat lunak berbayar atau aplikasi khusus.
+Typst mengadopsi model kompilasi inkremental modern berbasis bahasa pemrograman Rust. Karakteristik utama Typst mencakup:
 
-2. **Kompatibilitas dengan Git** --- Karena berbasis teks, file Markdown dapat di-version control dengan Git. Perubahan dapat di-diff, di-merge, dan dilacak dengan mudah.
+1. **Kecepatan Kompilasi Tinggi** --- Typst mampu mengompilasi puluhan halaman dokumen dalam hitungan milidetik, memungkinkan pengalaman pratinjau langsung (*live reload*) yang sangat responsif.
+2. **Binary Ringan dan Mandiri** --- Ukuran binary Typst hanya berkisar 25 MB dan tidak membutuhkan dependensi eksternal dari repositori paket yang besar.
+3. **Tipografi Bawaan yang Portabel** --- Typst menyertakan font berkualitas tinggi seperti Libertinus Serif dan DejaVu Sans Mono langsung di dalam binary, sehingga menjamin konsistensi render di semua platform tanpa isu font hilang (*missing fonts*).
+4. **Model Tata Letak Deklaratif** --- Pengaturan margin halaman, penomoran heading bertingkat, dan aturan jeda halaman (*pagebreak*) dikonfigurasi melalui fungsi bawaan yang elegan seperti `#set page()`, `#set heading()`, dan `#show heading()`.
 
-3. **Sintaks sederhana** --- Markdown dapat dipelajari dalam hitungan menit. Penulis dapat langsung fokus pada konten tanpa terganggu oleh kompleksitas format.
+## Pandoc dan Pemrosesan Dokumen Abstrak
 
-4. **Konversi multi-format** --- File Markdown dapat dikonversi ke berbagai format output seperti PDF, HTML, EPUB, DOCX, dan LaTeX.
+### Universal Document Converter
 
-5. **Integrasi LaTeX** --- Markdown mendukung sintaks matematika LaTeX secara inline maupun display, memungkinkan penulisan rumus ilmiah dengan mudah.
+Pandoc adalah perangkat lunak konversi dokumen universal yang dikembangkan oleh John MacFarlane [@pandoc2024]. Pandoc bekerja dengan membaca format masukan (seperti Markdown), mengonversinya ke dalam struktur pohon sintaks abstrak internal yang disebut *Abstract Syntax Tree* (AST), lalu mengekspor AST tersebut ke berbagai format target, termasuk Typst, HTML, EPUB, dan Microsoft Word (DOCX).
 
-6. **Portabilitas** --- File Markdown bersifat platform-independen dan dapat dibuka di sistem operasi apa pun.
+### Filter Lua dan Ekstensibilitas AST
 
-## LaTeX
+Sejak versi 2.0, Pandoc menyediakan mesin scripting tertanam berbasis bahasa pemrograman Lua yang memungkinkan manipulasi AST sebelum proses penulisan dokumen akhir dilakukan [@krewinkel2020pandoc]. Dalam proyek ini, berkas `docx.lua` berperan penting dalam:
 
-### Sejarah dan Perkembangan
+1. Mendeteksi elemen heading level 1, 2, dan 3 untuk menambahkan penomoran otomatis berformat Romawi (`BAB I`) dan Arab (`1.1.`, `1.1.1`).
+2. Menghasilkan struktur XML untuk halaman sampul formal dan Daftar Isi yang terhubung dengan tautan hiperteks internal (*hyperlink anchor*).
+3. Mencegah penomoran ganda pada bagian khusus seperti KATA PENGANTAR dan DAFTAR PUSTAKA.
 
-LaTeX dikembangkan oleh Leslie Lamport pada tahun 1994 sebagai kumpulan makro (macro package) di atas sistem typesetting TeX yang diciptakan oleh Donald Knuth pada tahun 1984 [@lamport1994latex; @knuth1984texbook]. LaTeX menyediakan antarmuka yang lebih mudah digunakan dibandingkan TeX murni, dengan menyediakan perintah-perintah standar untuk format dokumen.
+## Arsitektur Dokumen Office Open XML (DOCX)
 
-LaTeX dirancang berdasarkan prinsip bahwa penulis harus fokus pada konten dan struktur logis dokumen, bukan pada tampilan visual. Format dan tata letak ditangani secara otomatis oleh sistem berdasarkan kelas dokumen dan packages yang digunakan.
+Standar internasional ISO/IEC 29500 mendefinisikan Office Open XML (OpenXML) sebagai representasi berkas dokumen teks berbasis arsip ZIP yang berisi serangkaian berkas XML dan relasi strukturalnya [@iso2021openxml]. Berkas utama `word/document.xml` menyimpan seluruh elemen paragraf (`<w:p>`), teks (`<w:t>`), dan properti seksi (`<w:sectPr>`).
 
-### Struktur Dokumen LaTeX
+Pengaturan *section break* (`<w:sectPr>`) menentukan perilaku penomoran halaman pada setiap bagian dokumen. Agar mematuhi kaidah akademik Indonesia, dokumen DOCX dibagi menjadi tiga seksi:
+1. **Seksi Sampul**: Referensi footer dihapus sehingga halaman pertama bersih tanpa nomor.
+2. **Seksi Front Matter**: Properti penomoran diset ke format Romawi kecil (`w:fmt="lowerRoman"` dan `w:start="1"`).
+3. **Seksi Main Body (BAB I)**: Properti penomoran di-reset menjadi format angka Arab (`w:fmt="decimal"` dan `w:start="1"`).
 
-Dokumen LaTeX terdiri dari dua bagian utama:
+## Pemrosesan Citra Digital dengan ImageMagick
 
-1. **Preamble** --- Bagian sebelum `\begin{document}` yang berisi:
-   - Deklarasi document class: `\documentclass[12pt,a4paper,oneside]{book}`
-   - Penggunaan packages: `\usepackage{geometry}`, `\usepackage{setspace}`, dll.
-   - Pengaturan global: font, margin, header, footer
-   - Definisi perintah kustom
-
-2. **Body** --- Bagian antara `\begin{document}` dan `\end{document}` yang berisi konten dokumen:
-   - Front matter: cover, kata pengantar, daftar isi
-   - Main matter: bab-bab utama
-   - Back matter: daftar pustaka, lampiran
-
-Document class yang digunakan dalam pipeline ini adalah `book`. Kelas ini menyediakan struktur chapter, section, dan subsection yang sesuai untuk laporan akademik. Pengaturan `12pt` menentukan ukuran font dasar, `a4paper` menentukan ukuran kertas, dan `oneside` mengatur pencetakan satu sisi.
-
-### Packages Penting
-
-Berikut adalah packages yang digunakan dalam template LaTeX:
-
-| Package | Fungsi |
-|:--------|:-------|
-| geometry | Pengaturan margin dan ukuran kertas |
-| setspace | Pengaturan spasi baris (1.5 spacing) |
-| graphicx | Penyisipan gambar ke dalam dokumen |
-| hyperref | Pembuatan tautan internal dan eksternal |
-| fancyhdr | Header dan footer kustom |
-| titlesec | Format judul chapter dan section |
-| tocloft | Format daftar isi |
-| indentfirst | Indentasi pada paragraf pertama setelah judul |
-| caption | Format caption gambar dan tabel |
-| float | Penempatan floating objects (gambar, tabel) |
-| listings | Penulisan kode program dengan syntax highlighting |
-| xcolor | Penggunaan warna dalam dokumen |
-| enumitem | Format daftar (list) kustom |
-| longtable | Tabel yang bisa melebihi satu halaman |
-| booktabs | Garis tabel profesional |
-| amsmath | Persamaan matematika tingkat lanjut |
-
-### Font dan Encoding
-
-Font default yang digunakan adalah Nimbus Serif, yang merupakan font open source dengan bentuk hampir identik dengan Times New Roman. Nimbus Serif adalah bagian dari proyek font URW++ yang dirilis di bawah lisensi GPL.
-
-Encoding font menggunakan T1 (Cork encoding) melalui package `fontenc`. T1 encoding mendukung karakter-karakter bahasa Indonesia dan Eropa Barat dengan lebih baik dibandingkan encoding default OT1. Font Nimbus Serif diaktifkan melalui file mapping `nimbus15.map` dan perintah `\renewcommand{\rmdefault}{NimbusSerif}`.
-
-Definisi font untuk Nimbus Serif memerlukan file `fontools_ts1.enc` untuk encoding TS1 (Text Companion Symbols) dan file `t1jtm.fd` untuk mendeklarasikan font shape keluarga JTM yang digunakan oleh Nimbus.
-
-### Pengaturan Halaman dan Margin
-
-Pengaturan halaman dilakukan dengan package `geometry`:
-
-- Margin kiri: 2,5 cm
-- Margin kanan: 2,5 cm
-- Margin atas: 2 cm
-- Margin bawah: 3 cm
-- Jarak footer: 40pt dari bawah
-
-Spasi baris diatur menjadi 1,5 spasi menggunakan package `setspace` dengan perintah `\onehalfspacing`. Indentasi paragraf diatur sebesar 1,5 cm dengan `\setlength{\parindent}{1.5cm}`.
-
-### Penomoran dan Daftar Isi
-
-Penomoran bab menggunakan angka Romawi dengan prefix "BAB":
-- Output: BAB I, BAB II, BAB III, dst.
-- Konfigurasi: `\renewcommand{\chaptername}{BAB}` dan
-  `\renewcommand{\thechapter}{\Roman{chapter}}`
-
-Penomoran sub-bab menggunakan angka Arab:
-- Output: 1.1, 1.2, 2.1, 2.2, dst.
-- Konfigurasi: `\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}`
-
-Daftar isi menampilkan entri BAB dengan format tebal dan prefix "BAB":
-- Konfigurasi:
-  `\renewcommand{\cftchappresnum}{BAB }`
-- Spasi antar entri diatur dengan
-  `\setlength{\cftbeforechapskip}{5pt}`
-
-## Pandoc
-
-### Sejarah dan Perkembangan
-
-Pandoc dikembangkan oleh John MacFarlane sejak tahun 2006 [@pandoc2024]. Nama "Pandoc" berasal dari bahasa Yunani yang berarti "semua hal yang diterima". Pandoc adalah universal document converter yang dapat mengkonversi dokumen antar berbagai format markup.
-
-Awalnya dikembangkan untuk memenuhi kebutuhan konversi antara Haskell documentation dan Markdown, Pandoc kini telah berkembang menjadi salah satu alat konversi dokumen paling komprehensif yang tersedia. Pandoc ditulis dalam bahasa pemrograman Haskell dan dirilis di bawah lisensi GPL.
-
-### Arsitektur Pandoc
-
-Pandoc bekerja melalui arsitektur berbasis **AST** (Abstract Syntax Tree). AST adalah representasi internal dokumen yang bersifat netral terhadap format input maupun output.
-
-Proses konversi terdiri dari tiga tahap:
-
-1. **Parsing (Reader)** --- Pandoc membaca dokumen input dan mem-parsing-nya menjadi AST. Setiap format input memiliki reader yang sesuai (Markdown reader, HTML reader, LaTeX reader, dll.).
-
-2. **Transformasi (AST)** --- AST yang dihasilkan dapat ditransformasi atau difilter sebelum dikonversi. Filter dapat ditulis dalam Lua, Python, atau bahasa lain untuk memodifikasi AST.
-
-3. **Generasi (Writer)** --- Pandoc menulis AST ke format output yang diinginkan melalui writer yang sesuai (PDF writer, HTML writer, DOCX writer, dll.).
-
-Pendekatan AST ini memungkinkan Pandoc untuk mengkonversi antar format yang sangat beragam dengan hasil yang konsisten. Jika suatu fitur didukung oleh AST, fitur tersebut secara otomatis dapat dikonversi ke format output apa pun.
-
-### Format Input dan Output
-
-Pandoc mendukung berbagai format input dan output:
-
-**Format Input:**
-- Markdown (beberapa varian)
-- HTML
-- LaTeX
-- Docx (Microsoft Word)
-- EPUB
-- OPML
-- org-mode (Emacs)
-- reStructuredText
-- Textile
-- MediaWiki markup
-- Jupyter Notebook (.ipynb)
-
-**Format Output:**
-- PDF (melalui engine LaTeX)
-- HTML (+ slide show)
-- DOCX
-- LaTeX
-- EPUB
-- Markdown
-- AsciiDoc
-- Man page
-- Plain text
-
-### Flags Penting
-
-Berikut adalah flags Pandoc yang digunakan dalam pipeline:
-
-| Flag | Fungsi | Contoh Penggunaan |
-|:-----|:-------|:------------------|
-| `--template=FILE` | Menentukan template LaTeX | `--template=template.latex` |
-| `--include-before-body=FILE` | Menyisipkan konten sebelum body | `--include-before-body=cover.md` |
-| `--include-after-body=FILE` | Menyisipkan konten setelah body | `--include-after-body=daftar-pustaka.md` |
-| `--top-level-division=TYPE` | Menentukan tipe division tertinggi | `--top-level-division=chapter` |
-| `--pdf-engine=ENGINE` | Menentukan engine PDF | `--pdf-engine=typst` |
-| `-o FILE` | Nama file output | `-o Laporan.pdf` |
-| `--from=FORMAT` | Format input (auto-detect) | `--from=markdown` |
-| `--to=FORMAT` | Format output (auto-detect) | `--to=latex` |
-
-### Template Engine
-
-Pandoc menggunakan sistem template yang fleksibel. Template ditulis dalam format yang mirip dengan format output, dengan tambahan variabel yang diisi oleh Pandoc.
-
-Variabel template yang umum digunakan:
-- `$body$` --- Konten utama dokumen
-- `$title$` --- Judul dokumen
-- `$author$` --- Penulis
-- `$date$` --- Tanggal
-- `$for(include-before)$$include-before$$endfor$`\
-  --- Konten sebelum body
-- `$for(include-after)$$include-after$$endfor$`\
-  --- Konten setelah body
-- `$toc$` --- Daftar isi
-- `$header-includes$` --- Kustomisasi header LaTeX
-
-Template memungkinkan kustomisasi penuh terhadap format output tanpa mengubah konten dokumen. Ini adalah inti dari konsep pemisahan konten dan tampilan.
-
-## ImageMagick
-
-### Sejarah dan Perkembangan
-
-ImageMagick adalah software suite untuk manipulasi gambar yang pertama kali dikembangkan oleh John Cristy pada tahun 1990 [@imagemagick2024]. ImageMagick mendukung lebih dari 200 format file gambar dan menyediakan berbagai tool untuk mengolah gambar melalui command line.
-
-ImageMagick ditulis dalam bahasa C dan dirilis di bawah lisensi Apache 2.0. Software ini tersedia untuk Linux, macOS, dan Windows.
-
-### Perintah Convert
-
-Perintah `convert` adalah tool utama ImageMagick yang digunakan untuk:
-- Konversi antar format gambar (PNG ke JPG, dll.)
-- Resize gambar
-- Rotasi dan flipping
-- Manipulasi warna dan channel
-- Penambahan efek dan filter
-- Optimasi ukuran file
-
-Dalam pipeline ini, `convert` digunakan terutama untuk menghapus alpha channel dari gambar PNG.
-
-### Penanganan Alpha Channel
-
-Gambar PNG seringkali memiliki alpha channel yang merepresentasikan transparansi. Saat gambar dengan alpha channel dikonversi ke PDF oleh pdfLaTeX, area transparan dapat menyebabkan masalah seperti:
-
-- Background gambar menjadi hitam
-- Gambar tidak muncul sama sekali
-- Warna gambar berubah
-
-Untuk mengatasi masalah ini, perintah berikut digunakan:
+ImageMagick adalah rangkaian perangkat lunak untuk manipulasi citra digital via baris perintah [@imagemagick2024]. Pada pipeline dokumen ilmiah, diagram dan tangkapan layar sering kali berformat PNG dengan saluran transparansi (*alpha channel*). Saluran alfa yang tidak diatur dapat menimbulkan artefak visual seperti latar belakang hitam atau distorsi warna pada saat citra dirender ke dalam dokumen PDF. Pipeline menggunakan perintah normalisasi:
 
 ```bash
 convert input.png -alpha off output.png
 ```
 
-Flag `-alpha off` menghapus alpha channel dari gambar dan mengganti area transparan dengan latar belakang putih. Gambar yang dihasilkan kompatibel penuh dengan pdfLaTeX.
+Perintah ini secara rekursif menonaktifkan transparansi dan menggantinya dengan latar belakang putih pekat, menjamin gambar tampil bersih pada media cetak.
 
-### Optimasi Gambar
+## Reproducibility dan Lingkungan Terisolasi
 
-Selain penanganan alpha channel, ImageMagick juga digunakan untuk mengoptimasi ukuran file gambar:
+### Manajemen Dependensi Berbasis Nix Flakes
 
-```bash
-convert input.png -quality 85% -resize 800x600 output.jpg
-```
+Nix adalah manajer paket murni fungsional yang menjamin *reproducible builds* dengan menyimpan setiap dependensi dalam direktori unik berbasis *cryptographic hash* di `/nix/store` [@dolstra2004nix]. Melalui berkas konfigurasi `flake.nix` dan berkas pengunci `flake.lock`, seluruh dependensi toolchain (Pandoc, Typst, ImageMagick, poppler-utils, dan LibreOffice) dapat diinisialisasi secara deterministik di berbagai mesin pengembang tanpa konflik dependensi sistem operasi.
 
-Parameter `-quality` mengontrol tingkat kompresi (semakin rendah, semakin kecil ukuran file). Parameter `-resize` mengubah dimensi gambar. Kedua parameter ini membantu mengurangi ukuran file PDF akhir.
+### Kontainerisasi Menggunakan Docker
 
-## Bash dan Linux
+Docker menyediakan isolasi tingkat sistem operasi menggunakan teknologi Linux *cgroups* dan *namespaces* [@merkel2014docker]. Melalui `Dockerfile` multi-arsitektur (amd64 dan arm64), lingkungan kompilasi dokumen dapat dijalankan langsung pada platform apapun yang mendukung runtime container tanpa perlu instalasi perangkat lunak lokal.
 
-### Bash Shell
+## Standar Sitasi Akademik APA Edisi ke-7
 
-Bash (Bourne Again SHell) adalah shell dan bahasa scripting yang dikembangkan oleh Brian Fox pada tahun 1989 untuk GNU Project [@gnu2024bash]. Bash adalah shell default pada sebagian besar distribusi Linux dan macOS.
-
-Bash menggabungkan fitur-fitur dari berbagai shell sebelumnya:
-- Dari Bourne Shell (sh): syntax dasar, variabel, redirection
-- Dari C Shell (csh): history, job control, aliases
-- Dari Korn Shell (ksh): command completion, arithmetic
-
-### Konsep Dasar Shell Scripting
-
-**Shebang:**
-Baris pertama script Bash dimulai dengan `#!/usr/bin/env bash` yang memberitahu sistem bahwa script harus dijalankan dengan interpreter Bash.
-
-**Variabel:**
-```bash
-NAMA="Laporan Generator"
-echo $NAMA
-```
-
-**Command Substitution:**
-```bash
-DIR="$(cd "$(dirname "$0")" && pwd)"
-```
-Perintah di atas mendapatkan direktori tempat script berada.
-
-**Conditional:**
-```bash
-if [ -d "$OUTDIR/gambar" ]; then
-    cp -r "$OUTDIR/gambar" "$TMPDIR/"
-fi
-```
-
-**Error Handling:**
-```bash
-set -e
-```
-Perintah `set -e` menghentikan script jika ada perintah yang mengembalikan exit code non-zero (gagal). Ini mencegah script melanjutkan eksekusi setelah terjadi error.
-
-### Fitur Penting dalam Pipeline Script
-
-**`set -e`:**
-Menghentikan eksekusi script jika ada perintah yang gagal. Ini penting untuk pipeline karena kegagalan pada salah satu tahap harus menghentikan seluruh proses.
-
-**`mktemp -d`:**
-Membuat direktori temporer dengan nama unik. Direktori ini digunakan untuk menyimpan file-file sementara selama proses build.
-
-```bash
-TMPDIR=$(mktemp -d)
-```
-
-**`trap`:**
-Mendaftarkan perintah yang akan dijalankan saat script selesai atau menerima sinyal. Ini digunakan untuk membersihkan direktori temporer.
-
-```bash
-trap "rm -rf $TMPDIR" EXIT
-```
-
-Dengan `trap`, direktori temporer akan dihapus otomatis baik saat script selesai normal maupun saat terjadi error.
-
-**Exit Codes:**
-Setiap perintah di Linux/Bash mengembalikan exit code:
-- 0: sukses
-- Non-0: gagal (angka berbeda menunjukkan jenis error berbeda)
-
-**Pipes dan Redirection:**
-```bash
-pandoc ... 2>&1
-```
-`2>&1` menggabungkan stderr (file descriptor 2) ke stdout (file descriptor 1), sehingga error dan output normal tercetak bersamaan.
-
-### Linux sebagai Platform Pipeline
-
-Linux menyediakan lingkungan yang ideal untuk pipeline otomatisasi dokumen [@love2010kernel; @welsh2019running]:
-
-1. **Package Manager** --- Distribusi Linux menyediakan package manager (apt, dnf, pacman) yang memudahkan instalasi Pandoc, TeX Live, dan ImageMagick.
-
-2. **Filesystem** --- Struktur filesystem Linux yang terstandarisasi memudahkan pengelolaan file dan path.
-
-3. **Dukungan Bash** --- Bash tersedia secara default dan terintegrasi penuh dengan sistem operasi.
-
-4. **Headless Operation** --- Pipeline dapat dijalankan di server tanpa GUI, memungkinkan integrasi dengan CI/CD.
-
-5. **Skripability** --- Linux menyediakan berbagai tool command line yang dapat digabungkan dalam pipeline scripting.
-
-
+Karya ilmiah dan laporan akademik mengadopsi standar pengutipan dan penulisan daftar pustaka berdasarkan *Publication Manual of the American Psychological Association* (APA) Edisi ke-7 [@apa2020manual]. Standar APA menerapkan sistem pengutipan Nama Penulis dan Tahun Penerbitan (*Author-Date System*), misalnya `(MacFarlane, 2024)` untuk sitasi dalam kurung (*parenthetical*) atau `MacFarlane (2024)` untuk sitasi naratif. Pemrosesan sitasi pada pipeline dijalankan secara otomatis oleh mesin `pandoc-citeproc` menggunakan berkas definisi gaya `apa.csl` dan basis data pustaka BibTeX `references.bib`.

@@ -111,6 +111,8 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 ## Build PDF -- Pilih 1 dari 4 Cara
 
 ### Opsi 1: CLI Helper Terpadu (Paling Mudah)
+
+**Linux / macOS (Bash):**
 ```bash
 ./laporan init                   # Wizard interaktif setup metadata (judul, penulis, preset)
 ./laporan preset list            # Tampilkan daftar preset format kampus yang tersedia
@@ -118,6 +120,15 @@ Jika Anda ingin menulis konten laporan secara manual tanpa AI:
 ./laporan preset apply <id>      # Terapkan preset kampus ke metadata.yml
 ./laporan build                  # Build PDF dan DOCX sekaligus
 ./laporan check                  # Cek kelengkapan dependensi dan berkas proyek
+```
+
+**Windows (PowerShell):**
+```powershell
+.\laporan.ps1 check              # Cek kelengkapan dependensi sistem & berkas
+.\laporan.ps1 build              # Build PDF laporan
+.\laporan.ps1 preset list        # Tampilkan daftar preset kampus yang tersedia
+.\laporan.ps1 preset apply itb-ta # Terapkan preset kampus ke metadata.yml
+.\laporan.ps1 view               # Buka dokumen Laporan.pdf di viewer
 ```
 
 ### Opsi 2: Docker (Zero Dependencies)
@@ -186,7 +197,8 @@ Untuk informasi teknis lebih mendalam, silakan baca dokumentasi terpisah kami:
 
 ```
 laporan-generator/
-├── laporan                  # CLI Helper interaktif (./laporan build/init/preset/check)
+├── laporan                  # CLI Helper interaktif Bash (Linux/macOS)
+├── laporan.ps1              # CLI Helper native PowerShell (Windows)
 ├── GETTING-STARTED.md       # Panduan pemula (Zero to PDF)
 ├── CONTRIBUTING.md          # Panduan kontribusi open-source
 ├── CHANGELOG.md             # Catatan rilis versi

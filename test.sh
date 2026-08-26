@@ -304,6 +304,11 @@ if [ -x "./laporan" ]; then
 else
   fail "./laporan bukan berkas executable"
 fi
+if [ -f "./laporan.ps1" ]; then
+  pass "./laporan.ps1 (PowerShell helper Windows) tersedia"
+else
+  fail "./laporan.ps1 tidak ditemukan"
+fi
 if ./laporan help | grep -q "LAPORAN GENERATOR CLI"; then
   pass "./laporan help menampilkan panduan CLI"
 else

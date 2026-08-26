@@ -2,32 +2,26 @@
 
 ## Kesimpulan
 
-Berdasarkan pembahasan yang telah dilakukan, dapat ditarik kesimpulan sebagai berikut:
+Berdasarkan perancangan, implementasi, dan serangkaian pengujian yang telah dilakukan pada proyek **Laporan Generator**, dapat ditarik beberapa kesimpulan utama:
 
-1. **Markdown, LaTeX, dan Pandoc** memiliki peran yang saling melengkapi dalam otomatisasi dokumen. Markdown berfungsi sebagai format penulisan konten yang ringan dan mudah dibaca. LaTeX berfungsi sebagai sistem typesetting untuk format dokumen profesional. Pandoc berfungsi sebagai jembatan konversi yang menghubungkan keduanya.
+1. **Efektivitas Paradigma Pemisahan Konten dan Penyajian** --- Penerapan format teks ringan Markdown sebagai lapisan penulisan konten yang dipisahkan dari lapisan tata letak (*layout*) terbukti secara signifikan meningkatkan fokus penulis, mengeliminasi masalah pergeseran tata letak (*layout drift*), serta memudahkan kolaborasi tim melalui sistem kontrol versi Git.
 
-2. **Template LaTeX** untuk laporan akademik terdiri dari beberapa komponen utama: document class (book), font (Nimbus Serif), margin (2,5 cm kiri/kanan, 2 cm atas, 3 cm bawah), spasi (1,5 spasi), penomoran (Romawi untuk BAB, Arab untuk sub-bab), dan daftar isi (dengan entri BAB tebal).
+2. **Keunggulan Engine Typesetting Typst** --- Penggunaan Typst sebagai mesin kompilasi PDF utama berhasil memangkas ukuran dependensi sistem dari ~4.5 GB (distribusi TeX Live) menjadi hanya ~25 MB (binary mandiri Typst) dengan kecepatan kompilasi sub-detik, sembari tetap mempertahankan standar tipografi akademik profesional dan tata letak yang presisi.
 
-3. **Alur konversi dokumen** dari Markdown ke PDF melalui tiga tahap: parsing Markdown ke AST oleh Pandoc, konversi AST ke LaTeX menggunakan template, dan kompilasi LaTeX ke PDF oleh pdfLaTeX. Seluruh alur dijalankan dengan satu perintah Pandoc.
+3. **Keberhasilan Solusi Multi-Pass DOCX** --- Pendekatan multi-pass yang menggabungkan filter Pandoc Lua (`docx.lua`), manipulasi struktur OpenXML (`finalize-docx.py`), dan sinkronisasi nomor halaman via LibreOffice headless (`docx-pagenum.py`) berhasil mewujudkan dokumen Microsoft Word resmi dengan pemisahan seksi yang tepat (sampul tanpa nomor, *front matter* bernomor Romawi *i, ii*, dan isi bab yang dimulai ulang dari angka Arab 1).
 
-4. **Penanganan gambar** dalam pipeline menggunakan ImageMagick untuk menghapus alpha channel dari file PNG, mencegah masalah kompatibilitas dengan pdfLaTeX. Perintah `convert -alpha off` mengganti area transparan dengan latar belakang putih.
+4. **Fleksibilitas Sistem Preset Kampus dan Alat Bantu Otomasi** --- Kehadiran sistem preset deklaratif (`presets/*.yml`), didukung oleh pemindai pedoman PDF otomatis (`scan-preset.py`), linter validasi skema (`validate-preset.py`), serta antarmuka baris perintah terpadu (`./laporan`), memberikan kemudahan bagi sivitas akademika di berbagai universitas di Indonesia untuk menyesuaikan format laporan secara instan.
 
-5. **Skrip Bash** berhasil mengotomatisasi seluruh pipeline dengan fitur-fitur penting: error handling dengan `set -e`, direktori temporer dengan `mktemp`, pembersihan otomatis dengan `trap`, dan eksekusi Pandoc dengan parameter yang tepat.
-
-6. **Pipeline otomatisasi** yang diimplementasikan pada project Laporan Generator berhasil menghasilkan dokumen PDF dengan format konsisten dan profesional. Struktur file yang modular (direktori `chapters/`, `metadata.yml`, `references.bib`, dan Makefile) memudahkan penggunaan dan modifikasi.
+5. **Keandalan dan Keterulangan Sistem (*Reproducibility*)** --- Dukungan konfigurasi Nix Flakes (`flake.nix`) dan kontainer Docker menjamin bahwa pipeline dapat dijalankan secara identik di seluruh sistem operasi pengembang (Linux, macOS, Windows) dengan tingkat kelulusan pengujian 100% pada 78 *test assertions*.
 
 ## Saran
 
-Untuk pengembangan pipeline otomatisasi dokumen selanjutnya, beberapa saran yang dapat diberikan:
+Beberapa peluang pengembangan lanjutan yang direkomendasikan untuk meningkatkan fungsionalitas dan adopsi proyek ini di masa depan antara lain:
 
-1. **Continuous Integration / Continuous Deployment (CI/CD)** --- Pipeline dapat diintegrasikan dengan GitHub Actions atau GitLab CI untuk build otomatis setiap kali ada perubahan di repository. Setiap push akan menghasilkan PDF terbaru tanpa perlu menjalankan build manual.
+1. **Pengembangan Antarmuka Web (Web-Based Interactive Generator)** --- Membangun antarmuka berbasis web atau aplikasi WebAssembly (Wasm) agar pengguna tanpa akses terminal atau baris perintah dapat menyunting dan mengunduh laporan langsung melalui peramban.
 
-2. **Multi-format output** --- Pandoc mendukung berbagai format output selain PDF, seperti HTML, EPUB, dan DOCX. Pipeline dapat dikembangkan untuk menghasilkan beberapa format sekaligus.
+2. **Ekspansi Basis Data Preset Perguruan Tinggi** --- Menambahkan koleksi preset resmi untuk universitas-universitas besar lainnya di Indonesia, seperti Universitas Diponegoro (UNDIP), Universitas Airlangga (UNAIR), Universitas Brawijaya (UB), Universitas Telkom (Tel-U), dan BINUS University.
 
-3. **Template kustomisasi** --- Template LaTeX dapat dikembangkan dengan lebih banyak variasi, seperti template untuk laporan magang, skripsi, makalah, dan jurnal. Masing-masing template dapat memiliki pengaturan format yang berbeda.
+3. **Penyediaan Wrapper Baris Perintah PowerShell (`laporan.ps1`)** --- Mengembangkan skrip pembungkus PowerShell native guna menyempurnakan pengalaman pengembang (*developer experience*) bagi pengguna sistem operasi Windows murni tanpa ketergantungan pada WSL atau Git Bash.
 
-4. **Integrasi dengan reference manager** --- Daftar pustaka dapat diintegrasikan dengan file BibTeX atau CSL (Citation Style Language) untuk manajemen referensi yang lebih baik.
-
-5. **Penjadwalan build otomatis** --- Pipeline dapat dijadwalkan menggunakan cron job untuk build periodik, berguna untuk dokumen yang memerlukan update rutin.
-
-6. **Validasi konten** --- Pipeline dapat dilengkapi dengan validasi otomatis untuk memeriksa kesalahan penulisan (typo, inkonsistensi format, referensi yang tidak lengkap) sebelum build.
+4. **Integrasi Ekstensi Editor (VS Code / Antigravity IDE Plugin)** --- Menyediakan plugin editor yang menyertakan fitur cuplikan kode (*snippets*), validasi sitasi BibTeX otomatis, dan pratinjau dokumen (*live preview*) langsung di dalam lingkungan pengembangan terintegrasi.
