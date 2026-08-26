@@ -35,8 +35,12 @@ jobs:
       - name: Extract Release Notes from CHANGELOG
         id: changelog
         run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          NOTES=$(awk "/^## \[$VERSION\]/,/^---/" CHANGELOG.md | tail -n +2 | head -n -1 || echo "Release $VERSION")
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          CLEAN_VER=${TAG_NAME#v}
+          NOTES=$(awk "/^## \[${CLEAN_VER}\]/,/^---/" CHANGELOG.md | tail -n +2 | head -n -1)
+          if [ -z "$NOTES" ]; then
+            NOTES="Release $TAG_NAME"
+          fi
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
